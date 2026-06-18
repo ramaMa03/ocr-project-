@@ -1,4 +1,9 @@
 
 Flask
+gunicorn
 pytesseract
 Pillow
+opencv-python
+numpy
+sqlite3-binary
+
