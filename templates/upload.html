@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>رفع الاستمارة</title>
+
+<style>
+
+:root{
+--navy:#152944;
+--orange:#f0913f;
+--cream:#f7f5f0;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tajawal,sans-serif;
+}
+
+body{
+background:var(--cream);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:30px;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:20px;
+width:100%;
+max-width:700px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+h1{
+text-align:center;
+color:var(--navy);
+margin-bottom:15px;
+}
+
+p{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+.upload-box{
+border:2px dashed #ccc;
+padding:40px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+}
+
+.upload-box:hover{
+border-color:var(--orange);
+}
+
+input[type=file]{
+width:100%;
+margin-top:20px;
+}
+
+.preview{
+margin-top:20px;
+text-align:center;
+}
+
+.preview img{
+max-width:100%;
+max-height:300px;
+border-radius:10px;
+display:none;
+}
+
+.btn{
+margin-top:25px;
+width:100%;
+padding:15px;
+border:none;
+background:var(--orange);
+color:white;
+font-size:16px;
+font-weight:bold;
+border-radius:10px;
+cursor:pointer;
+}
+
+.btn:hover{
+opacity:.9;
+}
+
+.back{
+display:block;
+margin-top:15px;
+text-align:center;
+color:var(--navy);
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>رفع الاستمارة</h1>
+
+<p>
+ارفعي صورة الاستمارة وسيقوم النظام باستخراج البيانات تلقائياً.
+</p>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+
+<div class="upload-box">
+
+<input
+type="file"
+name="file"
+id="fileInput"
+accept="image/*"
+capture="environment"
+required>
+
+</div>
+
+<div class="preview">
+
+<img id="previewImage">
+
+</div>
+
+<button type="submit" class="btn">
+
+بدء قراءة البيانات
+
+</button>
+
+</form>
+
+<a href="/" class="back">
+
+العودة للرئيسية
+
+</a>
+
+</div>
+
+<script>
+
+const fileInput =
+document.getElementById("fileInput");
+
+const previewImage =
+document.getElementById("previewImage");
+
+fileInput.addEventListener("change",function(){
+
+const file = this.files[0];
+
+if(!file) return;
+
+if(file.type.startsWith("image")){
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+previewImage.src = e.target.result;
+
+previewImage.style.display = "block";
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>
