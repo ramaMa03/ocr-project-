@@ -1,7 +1,4 @@
-import pytesseract
-from PIL import Image, ImageEnhance
-import cv2
-import numpy as np
+import easyocr
 import re
 
 # -----------------------------
@@ -9,38 +6,13 @@ import re
 # -----------------------------
 def extract_text(image_path):
     try:
-        # قراءة الصورة
-        img = cv2.imread(image_path)
-
-        # تحويل إلى تدرج رمادي
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        # إزالة التشويش
-        gray = cv2.fastNlMeansDenoising(gray, h=30)
-
-        # رفع التباين
-        pil_img = Image.fromarray(gray)
-        pil_img = ImageEnhance.Contrast(pil_img).enhance(2)
-
-        # تحويل إلى أبيض وأسود
-        thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-
-        # حفظ نسخة مؤقتة
-        temp_path = "temp_ocr.png"
-        cv2.imwrite(temp_path, thresh)
-
-        # إعدادات Tesseract
-        custom_config = r"--oem 3 --psm 6 -l ara+eng"
-
-        # قراءة النص
-        text = pytesseract.image_to_string(temp_path, config=custom_config)
-
+        reader = easyocr.Reader(['ar', 'en'])
+        result = reader.readtext(image_path, detail=0)
+        text = "\n".join(result)
         return text
-
     except Exception as e:
         print("OCR Error:", e)
         return ""
-
 
 # -----------------------------
 # دالة استخراج الحقول من النص
@@ -80,4 +52,3 @@ def classify_text(text):
             data["gender"] = "أنثى"
 
     return data
-
