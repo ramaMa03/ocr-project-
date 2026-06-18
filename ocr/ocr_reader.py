@@ -1,38 +1,37 @@
-import pytesseract
-from PIL import Image, ImageFilter, ImageEnhance
-import cv2
-import numpy as np
+import re
 
-def extract_text(image_path):
-    try:
-        # قراءة الصورة باستخدام OpenCV
-        img = cv2.imread(image_path)
+def classify_text(text):
 
-        # تحويل إلى تدرج رمادي
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    data = {
+        "full_name": "",
+        "national_id": "",
+        "phone": "",
+        "gender": "",
+        "service_type": "",
+        "request_description": ""
+    }
 
-        # إزالة التشويش
-        gray = cv2.fastNlMeansDenoising(gray, h=30)
+    lines = text.split("\n")
 
-        # زيادة التباين
-        pil_img = Image.fromarray(gray)
-        pil_img = ImageEnhance.Contrast(pil_img).enhance(2)
+    for line in lines:
+        line = line.strip()
 
-        # تحويل إلى أبيض وأسود (Threshold)
-        thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        # الاسم
+        if any(word in line for word in ["الاسم", "اسم المستفيد", "اسم", "الاســم"]):
+            data["full_name"] = re.sub(r"(الاسم|اسم المستفيد|اسم|:)", "", line).strip()
 
-        # حفظ نسخة مؤقتة
-        temp_path = "temp_ocr.png"
-        cv2.imwrite(temp_path, thresh)
+        # الهوية
+        if any(word in line for word in ["الهوية", "رقم الهوية", "هويه", "هوية"]):
+            data["national_id"] = re.sub(r"\D", "", line)
 
-        # إعدادات Tesseract
-        custom_config = r"--oem 3 --psm 6 -l ara+eng"
+        # الجوال
+        if any(word in line for word in ["الجوال", "رقم الجوال", "هاتف", "جوال"]):
+            data["phone"] = re.sub(r"\D", "", line)
 
-        # قراءة النص
-        text = pytesseract.image_to_string(temp_path, config=custom_config)
+        # الجنس
+        if "ذكر" in line:
+            data["gender"] = "ذكر"
+        if "أنثى" in line or "انثى" in line:
+            data["gender"] = "أنثى"
 
-        return text
-
-    except Exception as e:
-        print("OCR Error:", e)
-        return ""
+    return data
