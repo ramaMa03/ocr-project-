@@ -1,72 +1,113 @@
 
-:root{
---navy:#152944;
---orange:#f0913f;
---cream:#f7f5f0;
---white:#ffffff;
+:root {
+    --primary-green: #11998e;
+    --accent-green: #27ae60;
+    --navy-dark: #152944;
+    --bg-cream: #f6f8f5;
+    --white: #ffffff;
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tajawal,sans-serif;
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+
+body { 
+    background: var(--bg-cream); 
+    color: var(--navy-dark); 
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
 }
 
-body{
-background:var(--cream);
+.screen { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    display: none; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    opacity: 1; 
+    transition: opacity 0.5s ease; 
+}
+.screen.active { display: flex; }
+
+/* 1. تصميم شاشة التحميل */
+#splash-screen { background: var(--white); z-index: 1000; }
+.splash-logo { width: 200px; margin-bottom: 40px; animation: pulse 2s infinite; }
+.loader-bar { width: 180px; height: 6px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
+.loader-progress { width: 40%; height: 100%; background: var(--primary-green); animation: loadMove 1.5s infinite ease-in-out; }
+
+/* 2. تصميم البطاقة الرئيسية (الجمالية والاحترافية) */
+.main-card { 
+    background: var(--white); 
+    padding: 45px 35px; 
+    border-radius: 35px; 
+    text-align: center; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06); 
+    max-width: 450px; 
+    border: 1px solid rgba(230, 235, 232, 0.8);
+    margin-bottom: 30px;
 }
 
-.container{
-width:90%;
-max-width:1200px;
-margin:auto;
+.dashboard-title { 
+    font-size: 28px; 
+    margin-bottom: 15px; 
+    color: var(--navy-dark); 
+    font-weight: 800; 
+    line-height: 1.3;
 }
 
-.btn{
-background:var(--orange);
-color:white;
-padding:12px 20px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
+.dashboard-desc { 
+    color: #6a7c74; 
+    font-size: 16px; 
+    line-height: 1.7; 
+    margin-bottom: 25px; 
 }
 
-.btn:hover{
-opacity:.9;
+/* 3. تصميم الزر (أنيق وبارز) */
+.start-btn { 
+    width: 100%; 
+    max-width: 400px; 
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green)); 
+    color: var(--white); 
+    padding: 18px; 
+    border-radius: 20px; 
+    text-decoration: none; 
+    font-weight: 700; 
+    font-size: 18px;
+    display: block; 
+    box-shadow: 0 10px 25px rgba(17, 153, 142, 0.25); 
+    transition: all 0.3s ease;
 }
 
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
+.start-btn:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 15px 30px rgba(17, 153, 142, 0.35); 
 }
 
-input,
-select,
-textarea{
-width:100%;
-padding:12px;
-border:1px solid #ddd;
-border-radius:10px;
-margin-top:5px;
+/* الحركات */
+.animate-card { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* شريط تحميل احترافي */
+.loader-bar { 
+    width: 200px; 
+    height: 4px; 
+    background: #eef2f0; 
+    border-radius: 2px; 
+    overflow: hidden; 
+    margin-top: 20px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
+.loader-progress { 
+    width: 100%; 
+    height: 100%; 
+    background: var(--primary-green); 
+    /* نستخدم ease-out ليكون التحميل طبيعياً ويصل للنهاية */
+    animation: loadMove 2.5s ease-out forwards; 
 }
 
-th{
-background:var(--navy);
-color:white;
-padding:12px;
-}
-
-td{
-padding:12px;
-border-bottom:1px solid #eee;
-text-align:center;
+@keyframes loadMove { 
+    0% { transform: translateX(-100%); } 
+    100% { transform: translateX(0); } /* التوقف عند النهاية */
 }

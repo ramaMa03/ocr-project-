@@ -1,54 +1,23 @@
-import easyocr
-import re
 
-# -----------------------------
-# دالة قراءة النص من الصورة OCR
-# -----------------------------
+import pytesseract
+from PIL import Image
+import cv2
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
 def extract_text(image_path):
     try:
-        reader = easyocr.Reader(['ar', 'en'])
-        result = reader.readtext(image_path, detail=0)
-        text = "\n".join(result)
+        # قراءة الصورة
+        image = Image.open(image_path)
+        
+        # تحويل الصورة إلى RGB للتأكد من توافق الألوان
+        image = image.convert('RGB')
+        
+        # استخراج النص مباشرة بدون معالجة OpenCV (المعالج الذاتي لـ Tesseract يعمل جيداً)
+        # إعداد psm 6 مخصص لجداول الاستمارات
+        text = pytesseract.image_to_string(image, lang="ara+eng", config="--psm 6")
+        
         return text
     except Exception as e:
-        print("OCR Error:", e)
+        print("خطأ في قراءة النص:", e)
         return ""
-
-# -----------------------------
-# دالة استخراج الحقول من النص
-# -----------------------------
-def classify_text(text):
-
-    data = {
-        "full_name": "",
-        "national_id": "",
-        "phone": "",
-        "gender": "",
-        "service_type": "",
-        "request_description": ""
-    }
-
-    lines = text.split("\n")
-
-    for line in lines:
-        line = line.strip()
-
-        # الاسم
-        if any(word in line for word in ["الاسم", "اسم المستفيد", "اسم", "الاســم"]):
-            data["full_name"] = re.sub(r"(الاسم|اسم المستفيد|اسم|:)", "", line).strip()
-
-        # الهوية
-        if any(word in line for word in ["الهوية", "رقم الهوية", "هويه", "هوية"]):
-            data["national_id"] = re.sub(r"\D", "", line)
-
-        # الجوال
-        if any(word in line for word in ["الجوال", "رقم الجوال", "هاتف", "جوال"]):
-            data["phone"] = re.sub(r"\D", "", line)
-
-        # الجنس
-        if "ذكر" in line:
-            data["gender"] = "ذكر"
-        if "أنثى" in line or "انثى" in line:
-            data["gender"] = "أنثى"
-
-    return data

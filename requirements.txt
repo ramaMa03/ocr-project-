@@ -4,8 +4,6 @@ gunicorn
 pytesseract
 Pillow
 opencv-python
-numpy==1.26.4
-easyocr
-gunicorn
+numpy
 
 

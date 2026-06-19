@@ -1,100 +1,53 @@
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>نظام الإدخال الذكي</title>
-
-<style>
-
-:root{
---navy:#152944;
---orange:#f0913f;
---cream:#f7f5f0;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tajawal,sans-serif;
-}
-
-body{
-background:var(--cream);
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.container{
-background:white;
-padding:50px;
-border-radius:20px;
-max-width:700px;
-width:90%;
-text-align:center;
-box-shadow:0 15px 40px rgba(0,0,0,.08);
-}
-
-h1{
-color:var(--navy);
-margin-bottom:20px;
-}
-
-p{
-line-height:1.8;
-color:#666;
-margin-bottom:30px;
-}
-
-.btn{
-display:inline-block;
-padding:15px 30px;
-background:var(--orange);
-color:white;
-text-decoration:none;
-border-radius:10px;
-font-weight:bold;
-font-size:16px;
-}
-
-.btn:hover{
-opacity:.9;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayan OCR - نظام الإدخال الذكي</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+    <div id="splash-screen" class="screen active">
+        <div class="splash-content">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bayan OCR" class="splash-logo">
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
 
-<h1>
-نظام الإدخال الذكي للمستفيدين
-</h1>
+    <div id="dashboard-screen" class="screen">
+        
+     
 
-<p>
+        <div class="main-card animate-card">
+            <h1 class="dashboard-title">نظام الإدخال الذكي للبيانات</h1>
+            <p class="dashboard-desc">
+                قم برفع استمارة المستفيد الورقية ليقوم نظام <strong>Bayan OCR</strong> بقراءة واستخراج البيانات تلقائياً وبثوانٍ معدودة وبدقة عالية.
+            </p>
+        </div>
 
-نظام يعتمد على تقنية OCR والذكاء الاصطناعي
-لاستخراج بيانات المستفيدين من الاستمارات
-وإدخالها تلقائياً إلى قاعدة البيانات.
+        <a href="/upload" class="start-btn">ابدأ عملية القراءة والرفع ←</a>
+    </div>
 
-</p>
-
-<a href="/upload" class="btn">
-
-بدء الإدخال
-
-</a>
-
-</div>
-
+   <script>
+    // ننتظر 2.5 ثانية (نفس مدة الـ animation)
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        const dashboard = document.getElementById('dashboard-screen');
+        
+        // تلاشي الشاشة الأولى
+        splash.style.transition = "opacity 0.5s ease";
+        splash.style.opacity = '0';
+        
+        // إزالتها تماماً من مسار الصفحة
+        setTimeout(() => {
+            splash.style.display = 'none';
+            dashboard.classList.add('active');
+        }, 500);
+    }, 2500);
+</script>
 </body>
-
 </html>

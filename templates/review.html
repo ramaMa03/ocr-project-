@@ -1,235 +1,136 @@
 
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة البيانات - Bayan OCR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f6f8f5; padding: 40px 20px; }
+        
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            border: 1px solid rgba(230, 235, 232, 0.8);
+        }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        h1 { color: var(--navy-dark); margin-bottom: 25px; font-size: 24px; }
 
-<title>مراجعة البيانات</title>
+        .warning {
+            background: #e3f7f0;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            color: #0f786d;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+        }
 
-<style>
+        .form-group { margin-bottom: 20px; text-align: right; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--navy-dark); font-size: 14px; }
 
-:root{
---navy:#152944;
---orange:#f0913f;
---cream:#f7f5f0;
-}
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e5e2;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #fafcfb;
+            transition: 0.3s;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tajawal,sans-serif;
-}
+        input:focus { border-color: var(--primary-green); outline: none; background: white; }
 
-body{
-background:var(--cream);
-padding:40px;
-}
+        .actions { display: flex; gap: 15px; margin-top: 35px; }
 
-.container{
-max-width:900px;
-margin:auto;
-background:white;
-padding:35px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-h1{
-text-align:center;
-color:var(--navy);
-margin-bottom:30px;
-}
+        .save {
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            color: white;
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.2);
+        }
 
-.form-group{
-margin-bottom:20px;
-}
+        .back {
+            background: #eef2f0;
+            color: var(--navy-dark);
+        }
 
-label{
-display:block;
-margin-bottom:8px;
-font-weight:bold;
-color:var(--navy);
-}
-
-input,
-select,
-textarea{
-width:100%;
-padding:12px;
-border:1px solid #ddd;
-border-radius:10px;
-font-size:15px;
-}
-
-textarea{
-height:120px;
-resize:none;
-}
-
-.actions{
-display:flex;
-gap:15px;
-margin-top:30px;
-}
-
-.btn{
-flex:1;
-padding:15px;
-border:none;
-border-radius:10px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.save{
-background:var(--orange);
-color:white;
-}
-
-.back{
-background:var(--navy);
-color:white;
-}
-
-.warning{
-background:#fff8e8;
-padding:15px;
-border-radius:10px;
-margin-bottom:25px;
-color:#8a6200;
-font-size:14px;
-}
-
-</style>
-
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="container animate-card">
+    <h1>مراجعة البيانات المستخرجة</h1>
 
-<h1>
-مراجعة البيانات المستخرجة
-</h1>
+    <div class="warning">
+        ✓ يرجى مراجعة البيانات بدقة قبل الحفظ النهائي في السجلات.
+    </div>
 
-<div class="warning">
+    <form action="/save" method="POST">
+        <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input type="text" name="full_name" value="{{data.full_name}}">
+        </div>
 
-يرجى مراجعة البيانات قبل الحفظ النهائي.
+        <div class="form-group">
+            <label>رقم الهوية</label>
+            <input type="text" name="national_id" maxlength="10" value="{{data.national_id}}">
+        </div>
 
-</div>
+        <div class="form-group">
+            <label>رقم الجوال</label>
+            <input type="text" name="phone" value="{{data.phone}}">
+        </div>
 
-<form action="/save" method="POST">
+        <div class="form-group">
+            <label>الجنس</label>
+            <select name="gender">
+                <option value="ذكر" {% if data.gender == 'ذكر' %}selected{% endif %}>ذكر</option>
+                <option value="أنثى" {% if data.gender == 'أنثى' %}selected{% endif %}>أنثى</option>
+            </select>
+        </div>
 
-<div class="form-group">
+        <div class="form-group">
+            <label>نوع الخدمة</label>
+            <select name="service_type">
+                <option>دعم اجتماعي</option>
+                <option>استشارة أسرية</option>
+                <option>برنامج تدريبي</option>
+                <option>تمكين اقتصادي</option>
+                <option>أخرى</option>
+            </select>
+        </div>
 
-<label>الاسم الكامل</label>
+        <div class="form-group">
+            <label>وصف الطلب</label>
+            <textarea name="request_description">{{data.request_description}}</textarea>
+        </div>
 
-<input
-type="text"
-name="full_name"
-value="{{data.full_name}}">
-
-</div>
-
-<div class="form-group">
-
-<label>رقم الهوية</label>
-
-<input
-type="text"
-name="national_id"
-maxlength="10"
-value="{{data.national_id}}">
-
-</div>
-
-<div class="form-group">
-
-<label>رقم الجوال</label>
-
-<input
-type="text"
-name="phone"
-value="{{data.phone}}">
-
-
-</div>
-
-<div class="form-group">
-
-<label>الجنس</label>
-
-<select name="gender">
-
-<option>ذكر</option>
-
-<option>أنثى</option>
-
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label>نوع الخدمة</label>
-
-<select name="service_type">
-
-<option>دعم اجتماعي</option>
-
-<option>استشارة أسرية</option>
-
-<option>برنامج تدريبي</option>
-
-<option>تمكين اقتصادي</option>
-
-<option>أخرى</option>
-
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label>وصف الطلب</label>
-
-<textarea
-name="request_description">
-</textarea>
-
-</div>
-
-<div class="actions">
-
-<button
-type="button"
-class="btn back"
-onclick="history.back()">
-
-رجوع
-
-</button>
-
-<button
-type="submit"
-class="btn save">
-
-حفظ البيانات
-
-</button>
-
-</div>
-
-</form>
-
+        <div class="actions">
+            <button type="button" class="btn back" onclick="history.back()">رجوع</button>
+            <button type="submit" class="btn save">حفظ البيانات ←</button>
+        </div>
+    </form>
 </div>
 
 </body>
-
 </html>

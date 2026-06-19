@@ -1,198 +1,80 @@
 
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>رفع الاستمارة</title>
-
-<style>
-
-:root{
---navy:#152944;
---orange:#f0913f;
---cream:#f7f5f0;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tajawal,sans-serif;
-}
-
-body{
-background:var(--cream);
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:30px;
-}
-
-.container{
-background:white;
-padding:40px;
-border-radius:20px;
-width:100%;
-max-width:700px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-h1{
-text-align:center;
-color:var(--navy);
-margin-bottom:15px;
-}
-
-p{
-text-align:center;
-color:#666;
-margin-bottom:25px;
-}
-
-.upload-box{
-border:2px dashed #ccc;
-padding:40px;
-border-radius:15px;
-text-align:center;
-cursor:pointer;
-}
-
-.upload-box:hover{
-border-color:var(--orange);
-}
-
-input[type=file]{
-width:100%;
-margin-top:20px;
-}
-
-.preview{
-margin-top:20px;
-text-align:center;
-}
-
-.preview img{
-max-width:100%;
-max-height:300px;
-border-radius:10px;
-display:none;
-}
-
-.btn{
-margin-top:25px;
-width:100%;
-padding:15px;
-border:none;
-background:var(--orange);
-color:white;
-font-size:16px;
-font-weight:bold;
-border-radius:10px;
-cursor:pointer;
-}
-
-.btn:hover{
-opacity:.9;
-}
-
-.back{
-display:block;
-margin-top:15px;
-text-align:center;
-color:var(--navy);
-text-decoration:none;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رفع الاستمارة - Bayan OCR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .drop-zone {
+            border: 2px dashed #11998e;
+            background: #fbfdfc;
+            padding: 30px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .drop-zone:hover { background: #e3f7f0; }
+        
+        #image-preview {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 15px;
+            border-radius: 12px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #loading-overlay { display: none; text-align: center; color: var(--primary-green); font-weight: bold; margin-top: 20px; }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <div class="screen active" style="justify-content: center; background: #f6f8f5;">
+        <div class="main-card animate-card" style="max-width: 500px; padding: 40px; text-align: center;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bayan OCR" style="width: 100px; margin-bottom: 20px;">
+            <h1 class="dashboard-title">رفع استمارة المستفيد</h1>
+            <p class="dashboard-desc">التقط صورة بوضوح أو اختر ملفاً من جهازك.</p>
 
-<h1>رفع الاستمارة</h1>
+            <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
+                <div class="drop-zone">
+                    <input type="file" name="file" id="file-input" accept="image/*" capture="environment" required onchange="previewImage(event)">
+                    <img id="image-preview" src="#" alt="معاينة">
+                </div>
+                
+                <button type="submit" class="start-btn" id="submit-btn" style="border:none; cursor:pointer; width: 100%;">بدء تحليل البيانات ←</button>
+            </form>
+            
+            <div id="loading-overlay">
+                <p>⚙️ جاري تحليل الصورة... يرجى الانتظار</p>
+            </div>
 
-<p>
-ارفعي صورة الاستمارة وسيقوم النظام باستخراج البيانات تلقائياً.
-</p>
+            <a href="/" style="display:block; margin-top:20px; color:#8fa196; text-decoration:none; font-size:14px;">إلغاء والعودة للرئيسية</a>
+        </div>
+    </div>
 
-<form action="/upload" method="POST" enctype="multipart/form-data">
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('image-preview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-<div class="upload-box">
-
-<input
-type="file"
-name="file"
-id="fileInput"
-accept="image/*"
-capture="environment"
-required>
-
-</div>
-
-<div class="preview">
-
-<img id="previewImage">
-
-</div>
-
-<button type="submit" class="btn">
-
-بدء قراءة البيانات
-
-</button>
-
-</form>
-
-<a href="/" class="back">
-
-العودة للرئيسية
-
-</a>
-
-</div>
-
-<script>
-
-const fileInput =
-document.getElementById("fileInput");
-
-const previewImage =
-document.getElementById("previewImage");
-
-fileInput.addEventListener("change",function(){
-
-const file = this.files[0];
-
-if(!file) return;
-
-if(file.type.startsWith("image")){
-
-const reader = new FileReader();
-
-reader.onload = function(e){
-
-previewImage.src = e.target.result;
-
-previewImage.style.display = "block";
-
-};
-
-reader.readAsDataURL(file);
-
-}
-
-});
-
-</script>
-
+        document.getElementById('upload-form').onsubmit = function() {
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('loading-overlay').style.display = 'block';
+        };
+    </script>
 </body>
-
 </html>
