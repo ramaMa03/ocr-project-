@@ -1,20 +1,28 @@
-
 import pytesseract
 from PIL import Image
-import cv2
+import os
+import sys
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# التعديل الذكي: نتحقق من نظام التشغيل
+if sys.platform == "win32":
+    # إذا كنتِ على جهازك (ويندوز)، استخدمي هذا المسار
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+else:
+    # إذا كنتِ على السيرفر (Linux/Render)، لا نحتاج لتحديد مسار، 
+    # سيقوم النظام بالبحث عن المحرك تلقائياً في المسار العام
+    pass
 
 def extract_text(image_path):
     try:
-        # قراءة الصورة
+        # التأكد من وجود الملف قبل المعالجة
+        if not os.path.exists(image_path):
+            print("خطأ: ملف الصورة غير موجود.")
+            return ""
+
         image = Image.open(image_path)
-        
-        # تحويل الصورة إلى RGB للتأكد من توافق الألوان
         image = image.convert('RGB')
         
-        # استخراج النص مباشرة بدون معالجة OpenCV (المعالج الذاتي لـ Tesseract يعمل جيداً)
-        # إعداد psm 6 مخصص لجداول الاستمارات
+        # استخراج النص
         text = pytesseract.image_to_string(image, lang="ara+eng", config="--psm 6")
         
         return text
