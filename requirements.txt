@@ -3,7 +3,6 @@ Flask
 gunicorn
 pytesseract
 Pillow
-opencv-python
-numpy
+
 
 
