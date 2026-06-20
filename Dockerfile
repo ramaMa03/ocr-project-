@@ -1,6 +1,6 @@
 FROM python:3.9-slim
 
-# تحديث وتثبيت المحرك + ملف اللغة العربية
+# تثبيت Tesseract مع دعم اللغة العربية
 RUN apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-ara && apt-get clean
 
 WORKDIR /app
@@ -10,4 +10,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD gunicorn app:app
+# الحل الجذري: زيادة وقت المهلة (Timeout) إلى 120 ثانية بدلاً من 30
+# وزيادة عدد العمال (Workers) ليكونوا خفيفين على الذاكرة
+CMD gunicorn --timeout 120 --workers 1 app:app
