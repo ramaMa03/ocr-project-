@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>سجلات الشهر | Bayan OCR</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+
+body{
+    margin:0;
+    background:#f5f7f6;
+    font-family:Tajawal,sans-serif;
+}
+
+.top-header{
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+    color:white;
+    padding:25px 40px;
+}
+
+.header-content{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    background:white;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.logo img{
+    width:70px;
+}
+
+.top-header h1{
+    margin:0;
+    font-size:36px;
+}
+
+.top-header p{
+    margin-top:8px;
+    font-size:18px;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.card h2{
+    margin:0;
+    font-size:42px;
+    color:#11998e;
+}
+
+.card p{
+    margin-top:10px;
+    color:#666;
+}
+
+.table-box{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#183153;
+    color:white;
+    padding:18px;
+}
+
+td{
+    padding:18px;
+    text-align:center;
+    border-bottom:1px solid #eee;
+}
+
+.status{
+    padding:8px 15px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+.done{
+    background:#dff7e8;
+    color:#198754;
+}
+
+.review{
+    background:#fff3cd;
+    color:#c27b00;
+}
+
+.send-btn{
+    margin-top:30px;
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:15px;
+    background:linear-gradient(135deg,#11998e,#27ae60);
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.send-btn:hover{
+    opacity:.9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="top-header">
+
+    <div class="header-content">
+
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
+        </div>
+
+        <div>
+            <h1>سجلات الشهر</h1>
+            <p>Bayan OCR System</p>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h2>47</h2>
+<p>إجمالي السجلات</p>
+</div>
+
+<div class="card">
+<h2>43</h2>
+<p>مكتملة</p>
+</div>
+
+<div class="card">
+<h2>4</h2>
+<p>قيد المراجعة</p>
+</div>
+
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+<th>الاسم</th>
+<th>رقم الهوية</th>
+<th>الخدمة</th>
+<th>الحالة</th>
+<th>التاريخ</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+    <tr>
+        <td>محمد أحمد العمري</td>
+        <td>1023456789</td>
+        <td>دعم اجتماعي</td>
+        <td><span class="status done">مكتمل</span></td>
+        <td>15 / 06 / 2025</td>
+        </tr>
+        
+        <tr>
+        <td>سارة عبدالله المطيري</td>
+        <td>1012345678</td>
+        <td>استشارة أسرية</td>
+        <td><span class="status done">مكتمل</span></td>
+        <td>14 / 06 / 2025</td>
+        </tr>
+        
+        <tr>
+        <td>خالد سعد الحربي</td>
+        <td>1098765432</td>
+        <td>تمكين اقتصادي</td>
+        <td><span class="status review">مراجعة</span></td>
+        <td>13 / 06 / 2025</td>
+        </tr>
+        
+        <tr>
+        <td>نورة فهد القحطاني</td>
+        <td>1045678912</td>
+        <td>برنامج تدريبي</td>
+        <td><span class="status done">مكتمل</span></td>
+        <td>12 / 06 / 2025</td>
+        </tr>
+        
+        </tbody>
+        
+        </table>
+        
+        </div>
+        
+        <button class="send-btn">
+        📤 إرسال سجلات الشهر للوزارة
+        </button>
+        
+        </div>
+        
+        </body>
+        
+        </html>
+
+        

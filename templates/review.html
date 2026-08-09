@@ -1,136 +1,270 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مراجعة البيانات - Bayan OCR</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        body { background: #f6f8f5; padding: 40px 20px; }
-        
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            border: 1px solid rgba(230, 235, 232, 0.8);
-        }
 
-        h1 { color: var(--navy-dark); margin-bottom: 25px; font-size: 24px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .warning {
-            background: #e3f7f0;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            color: #0f786d;
-            font-size: 14px;
-            text-align: center;
-            font-weight: 600;
-        }
+<title>تأكيد البيانات | Bayan OCR</title>
 
-        .form-group { margin-bottom: 20px; text-align: right; }
-        
-        label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--navy-dark); font-size: 14px; }
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-        input, select, textarea {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #e0e5e2;
-            border-radius: 12px;
-            font-size: 15px;
-            background: #fafcfb;
-            transition: 0.3s;
-        }
+<style>
 
-        input:focus { border-color: var(--primary-green); outline: none; background: white; }
+body{
+    margin:0;
+    background:#f5f7f6;
+    font-family:Tajawal,sans-serif;
+}
 
-        .actions { display: flex; gap: 15px; margin-top: 35px; }
+.top-header{
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+    color:white;
+    padding:25px 40px;
+}
 
-        .btn {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+.header-content{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
 
-        .save {
-            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
-            color: white;
-            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.2);
-        }
+.logo{
+    width:90px;
+    height:90px;
+    background:white;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-        .back {
-            background: #eef2f0;
-            color: var(--navy-dark);
-        }
+.logo img{
+    width:70px;
+}
 
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-    </style>
+.top-header h1{
+    margin:0;
+    font-size:36px;
+}
+
+.top-header p{
+    margin-top:8px;
+    font-size:18px;
+}
+
+.container{
+    width:90%;
+    max-width:850px;
+    margin:40px auto;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.title{
+    text-align:center;
+    font-size:32px;
+    margin-bottom:10px;
+    color:#183153;
+}
+
+.subtitle{
+    text-align:center;
+    color:#777;
+    margin-bottom:30px;
+}
+
+.notice{
+    background:#fff8e8;
+    border-right:6px solid #f0b429;
+    padding:18px;
+    border-radius:15px;
+    margin-bottom:30px;
+}
+
+.notice p{
+    margin-top:10px;
+    color:#555;
+}
+
+.info-box{
+    background:#f9fbfa;
+    border:1px solid #e5ece8;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.info-box label{
+    display:block;
+    font-weight:bold;
+    color:#11998e;
+    margin-bottom:8px;
+}
+
+.info-box input,
+.info-box select,
+.info-box textarea{
+    width:100%;
+    border:none;
+    background:transparent;
+    font-size:18px;
+    color:#333;
+    outline:none;
+}
+
+.info-box textarea{
+    resize:none;
+    min-height:90px;
+}
+
+.actions{
+    display:flex;
+    gap:15px;
+    margin-top:35px;
+}
+
+.btn-save{
+    flex:1;
+    background:linear-gradient(135deg,#11998e,#27ae60);
+    color:white;
+    border:none;
+    border-radius:15px;
+    padding:18px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.btn-edit{
+    flex:1;
+    background:#ececec;
+    color:#333;
+    border:none;
+    border-radius:15px;
+    padding:18px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.95;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="container animate-card">
-    <h1>مراجعة البيانات المستخرجة</h1>
+<div class="top-header">
 
-    <div class="warning">
-        ✓ يرجى مراجعة البيانات بدقة قبل الحفظ النهائي في السجلات.
-    </div>
+<div class="header-content">
 
-    <form action="/save" method="POST">
-        <div class="form-group">
-            <label>الاسم الكامل</label>
-            <input type="text" name="full_name" value="{{data.full_name}}">
-        </div>
-
-        <div class="form-group">
-            <label>رقم الهوية</label>
-            <input type="text" name="national_id" maxlength="10" value="{{data.national_id}}">
-        </div>
-
-        <div class="form-group">
-            <label>رقم الجوال</label>
-            <input type="text" name="phone" value="{{data.phone}}">
-        </div>
-
-        <div class="form-group">
-            <label>الجنس</label>
-            <select name="gender">
-                <option value="ذكر" {% if data.gender == 'ذكر' %}selected{% endif %}>ذكر</option>
-                <option value="أنثى" {% if data.gender == 'أنثى' %}selected{% endif %}>أنثى</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>نوع الخدمة</label>
-            <select name="service_type">
-                <option>دعم اجتماعي</option>
-                <option>استشارة أسرية</option>
-                <option>برنامج تدريبي</option>
-                <option>تمكين اقتصادي</option>
-                <option>أخرى</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>وصف الطلب</label>
-            <textarea name="request_description">{{data.request_description}}</textarea>
-        </div>
-
-        <div class="actions">
-            <button type="button" class="btn back" onclick="history.back()">رجوع</button>
-            <button type="submit" class="btn save">حفظ البيانات ←</button>
-        </div>
-    </form>
+<div class="logo">
+<img src="{{ url_for('static', filename='images/logo.png') }}">
 </div>
 
-</body>
-</html>
+<div>
+<h1>تأكيد البيانات</h1>
+<p>Bayan OCR System</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2 class="title">📋 البيانات المستخرجة</h2>
+
+<p class="subtitle">
+تم استخراج البيانات باستخدام تقنية OCR، يرجى مراجعتها قبل الحفظ النهائي.
+</p>
+
+<div class="notice">
+
+<strong>💡 تنبيه</strong>
+
+<p>
+يمكنك تعديل أي حقل قبل حفظ البيانات داخل النظام.
+</p>
+
+</div>
+
+<form action="/save" method="POST">
+
+    <div class="info-box">
+        <label>👤 الاسم الكامل</label>
+        <input type="text" name="full_name" value="{{ data.full_name }}">
+    </div>
+    
+    <div class="info-box">
+        <label>🪪 رقم الهوية</label>
+        <input type="text" name="national_id" maxlength="10" value="{{ data.national_id }}">
+    </div>
+    
+    <div class="info-box">
+        <label>📱 رقم الجوال</label>
+        <input type="text" name="phone" value="{{ data.phone }}">
+    </div>
+    
+    <div class="info-box">
+        <label>⚧ الجنس</label>
+        <select name="gender">
+            <option value="ذكر" {% if data.gender=='ذكر' %}selected{% endif %}>ذكر</option>
+            <option value="أنثى" {% if data.gender=='أنثى' %}selected{% endif %}>أنثى</option>
+        </select>
+    </div>
+    
+    <div class="info-box">
+        <label>🤝 نوع الخدمة</label>
+        <select name="service_type">
+            <option value="دعم اجتماعي" {% if data.service_type=='دعم اجتماعي' %}selected{% endif %}>دعم اجتماعي</option>
+            <option value="استشارة أسرية" {% if data.service_type=='استشارة أسرية' %}selected{% endif %}>استشارة أسرية</option>
+            <option value="برنامج تدريبي" {% if data.service_type=='برنامج تدريبي' %}selected{% endif %}>برنامج تدريبي</option>
+            <option value="تمكين اقتصادي" {% if data.service_type=='تمكين اقتصادي' %}selected{% endif %}>تمكين اقتصادي</option>
+            <option value="أخرى" {% if data.service_type=='أخرى' %}selected{% endif %}>أخرى</option>
+        </select>
+    </div>
+    
+    <div class="info-box">
+        <label>📝 وصف الطلب</label>
+        <textarea name="request_description">{{ data.request_description }}</textarea>
+    </div>
+    
+    <div class="actions">
+    
+        <button type="button"
+                class="btn-edit"
+                onclick="history.back()">
+    
+            ✏️ تعديل البيانات
+    
+        </button>
+    
+        <button type="submit"
+                class="btn-save">
+    
+            💾 تأكيد الحفظ
+    
+        </button>
+    
+    </div>
+    
+    </form>
+    
+    </div>
+    
+    </div>
+    
+    </body>
+    
+    </html>

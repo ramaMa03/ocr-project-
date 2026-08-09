@@ -1,83 +1,265 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رفع الاستمارة - Bayan OCR</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .drop-zone {
-            border: 2px dashed #11998e;
-            background: #fbfdfc;
-            padding: 30px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .drop-zone:hover { background: #e3f7f0; }
-        
-        /* إخفاء الـ input الحقيقي وتنسيق الزر */
-        #file-input { display: none; }
-        
-        #image-preview {
-            max-width: 100%;
-            max-height: 150px;
-            margin-top: 15px;
-            border-radius: 12px;
-            display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        #loading-overlay { display: none; text-align: center; color: #11998e; font-weight: bold; margin-top: 20px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>رفع الاستمارة | Bayan OCR</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+
+body{
+    margin:0;
+    background:#f5f7f6;
+}
+
+.top-header{
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+    color:white;
+    padding:25px 40px;
+}
+
+.header-content{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    background:white;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.logo img{
+    width:70px;
+}
+
+.top-header h1{
+    margin:0;
+    font-size:38px;
+}
+
+.top-header p{
+    margin-top:8px;
+    font-size:18px;
+}
+
+.upload-container{
+    max-width:700px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.upload-card{
+    background:white;
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+    text-align:center;
+}
+
+.drop-zone{
+    border:3px dashed #11998e;
+    border-radius:25px;
+    padding:40px 20px;
+    background:#fbfdfc;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.drop-zone:hover{
+    background:#eaf8f4;
+}
+
+#file-input{
+    display:none;
+}
+
+#image-preview{
+    max-width:100%;
+    max-height:220px;
+    margin-top:20px;
+    border-radius:15px;
+    display:none;
+}
+
+.notice{
+    background:#fff8e8;
+    border-right:6px solid #f0b429;
+    padding:18px;
+    border-radius:15px;
+    margin:25px 0;
+    text-align:right;
+}
+
+.notice p{
+    margin-top:10px;
+    color:#555;
+}
+
+.submit-btn{
+    width:100%;
+    border:none;
+    background:linear-gradient(135deg,#11998e,#27ae60);
+    color:white;
+    padding:18px;
+    border-radius:18px;
+    font-size:22px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.submit-btn:hover{
+    opacity:.95;
+}
+
+#loading-overlay{
+    display:none;
+    margin-top:20px;
+    color:#11998e;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.back-link{
+    display:block;
+    margin-top:20px;
+    text-decoration:none;
+    color:#888;
+}
+
+</style>
+
 </head>
+
 <body>
 
-    <div class="screen active" style="justify-content: center; background: #f6f8f5;">
-        <div class="main-card animate-card" style="max-width: 500px; padding: 40px; text-align: center;">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bayan OCR" style="width: 100px; margin-bottom: 20px;">
-            <h1 class="dashboard-title">رفع استمارة المستفيد</h1>
-            <p class="dashboard-desc">اضغط هنا لالتقاط صورة أو اختيار ملف من جهازك.</p>
+<div class="top-header">
 
-            <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
-                <div class="drop-zone" onclick="document.getElementById('file-input').click()">
-                    <span>📁 اضغط لرفع الصورة</span>
-                    <input type="file" name="file" id="file-input" accept="image/*" required onchange="previewImage(event)">
-                    <img id="image-preview" src="#" alt="معاينة">
-                </div>
-                
-                <button type="submit" class="start-btn" id="submit-btn" style="border:none; cursor:pointer; width: 100%;">بدء تحليل البيانات ←</button>
-            </form>
-            
-            <div id="loading-overlay">
-                <p>⚙️ جاري تحليل الصورة... يرجى الانتظار</p>
-            </div>
+    <div class="header-content">
 
-            <a href="/" style="display:block; margin-top:20px; color:#8fa196; text-decoration:none; font-size:14px;">إلغاء والعودة للرئيسية</a>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
         </div>
+
+        <div>
+            <h1>رفع الاستمارة</h1>
+            <p>Bayan OCR System</p>
+        </div>
+
     </div>
 
-    <script>
-        function previewImage(event) {
-            const preview = document.getElementById('image-preview');
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    preview.src = reader.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
+</div>
+
+<div class="upload-container">
+
+    <div class="upload-card">
+
+        <h2 style="margin-bottom:15px;">📄 رفع استمارة مستفيد</h2>
+
+        <p style="color:#777;margin-bottom:30px;">
+            قم برفع صورة الاستمارة ليتم استخراج البيانات باستخدام تقنية OCR
+        </p>
+
+        <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
+
+            <div class="drop-zone" onclick="document.getElementById('file-input').click()">
+
+                <div style="font-size:70px;">📄</div>
+
+                <h2 style="margin-top:15px;">اختر الاستمارة</h2>
+
+                <p style="color:#888;">
+                    PNG • JPG • JPEG
+                </p>
+
+                <input
+                    type="file"
+                    name="file"
+                    id="file-input"
+                    accept="image/*"
+                    required
+                    onchange="previewImage(event)"
+                >
+
+                <img id="image-preview" src="#" alt="معاينة">
+
+            </div>
+
+            <div class="notice">
+
+                <strong>💡 تنبيه</strong>
+
+                <p>
+                    تأكد أن الاستمارة واضحة وغير مقطوعة للحصول على أفضل نتائج التحليل.
+                </p>
+
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+
+                🔍 بدء التحليل
+
+            </button>
+
+        </form>
+
+        <div id="loading-overlay">
+
+            ⚙️ جاري تحليل الصورة... يرجى الانتظار
+
+        </div>
+
+        <a href="/dashboard" class="back-link">
+
+            العودة إلى لوحة التحكم
+
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+function previewImage(event){
+    const preview=document.getElementById('image-preview');
+    const file=event.target.files[0];
+
+    if(file){
+
+        const reader=new FileReader();
+
+        reader.onload=function(){
+
+            preview.src=reader.result;
+            preview.style.display='block';
+
         }
 
-        document.getElementById('upload-form').onsubmit = function() {
-            document.getElementById('submit-btn').style.display = 'none';
-            document.getElementById('loading-overlay').style.display = 'block';
-        };
-    </script>
+        reader.readAsDataURL(file);
+
+    }
+
+}
+
+document.getElementById('upload-form').onsubmit=function(){
+
+    document.getElementById('submit-btn').style.display='none';
+    document.getElementById('loading-overlay').style.display='block';
+
+};
+
+</script>
+
 </body>
+
 </html>

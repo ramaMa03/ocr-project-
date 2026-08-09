@@ -1,113 +1,528 @@
-
-:root {
-    --primary-green: #11998e;
-    --accent-green: #27ae60;
-    --navy-dark: #152944;
-    --bg-cream: #f6f8f5;
-    --white: #ffffff;
+:root{
+    --primary:#11998e;
+    --secondary:#27ae60;
+    --dark:#183153;
+    --text:#5f6b7a;
+    --bg:#f6f8f6;
+    --white:#ffffff;
+    --shadow:0 18px 40px rgba(0,0,0,.08);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-
-body { 
-    background: var(--bg-cream); 
-    color: var(--navy-dark); 
-    height: 100vh; 
-    display: flex;
-    flex-direction: column;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Tajawal',sans-serif;
 }
 
-.screen { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    display: none; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    opacity: 1; 
-    transition: opacity 0.5s ease; 
-}
-.screen.active { display: flex; }
-
-/* 1. تصميم شاشة التحميل */
-#splash-screen { background: var(--white); z-index: 1000; }
-.splash-logo { width: 200px; margin-bottom: 40px; animation: pulse 2s infinite; }
-.loader-bar { width: 180px; height: 6px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
-.loader-progress { width: 40%; height: 100%; background: var(--primary-green); animation: loadMove 1.5s infinite ease-in-out; }
-
-/* 2. تصميم البطاقة الرئيسية (الجمالية والاحترافية) */
-.main-card { 
-    background: var(--white); 
-    padding: 45px 35px; 
-    border-radius: 35px; 
-    text-align: center; 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.06); 
-    max-width: 450px; 
-    border: 1px solid rgba(230, 235, 232, 0.8);
-    margin-bottom: 30px;
+html{
+    scroll-behavior:smooth;
 }
 
-.dashboard-title { 
-    font-size: 28px; 
-    margin-bottom: 15px; 
-    color: var(--navy-dark); 
-    font-weight: 800; 
-    line-height: 1.3;
+body{
+    background:var(--bg);
+    color:var(--dark);
+    overflow-x:hidden;
 }
 
-.dashboard-desc { 
-    color: #6a7c74; 
-    font-size: 16px; 
-    line-height: 1.7; 
-    margin-bottom: 25px; 
+.screen{
+    display:none;
+    width:100%;
+    min-height:100vh;
 }
 
-/* 3. تصميم الزر (أنيق وبارز) */
-.start-btn { 
-    width: 100%; 
-    max-width: 400px; 
-    background: linear-gradient(135deg, var(--primary-green), var(--accent-green)); 
-    color: var(--white); 
-    padding: 18px; 
-    border-radius: 20px; 
-    text-decoration: none; 
-    font-weight: 700; 
-    font-size: 18px;
-    display: block; 
-    box-shadow: 0 10px 25px rgba(17, 153, 142, 0.25); 
-    transition: all 0.3s ease;
+.screen.active{
+    display:block;
 }
 
-.start-btn:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 15px 30px rgba(17, 153, 142, 0.35); 
+/* شاشة البداية */
+
+#splash-screen{
+    position:fixed;
+    inset:0;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:9999;
+}
+
+.splash-logo{
+    width:210px;
+    animation:pulse 2s infinite;
+}
+
+.loader-bar{
+    width:220px;
+    height:6px;
+    background:#e9ecef;
+    border-radius:50px;
+    margin-top:25px;
+    overflow:hidden;
+}
+
+.loader-progress{
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    animation:loading 2.5s linear forwards;
+}
+
+.contact-info{
+    position:absolute;
+    bottom:40px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.contact-item{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    color:#6b7280;
+    font-size:18px;
+}
+
+.contact-item i{
+    color:var(--primary);
+}
+
+/* الصفحة الثانية */
+
+#dashboard-screen{
+    padding:70px 20px;
+}
+
+.hero-section{
+
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    border-radius:30px;
+    padding:55px;
+    text-align:center;
+    box-shadow:var(--shadow);
+
+}
+
+.powered{
+
+    display:inline-block;
+    background:#eaf8f4;
+    color:var(--primary);
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:22px;
+
+}
+
+.hero-section h1{
+
+    font-size:40px;
+    color:var(--dark);
+    margin-bottom:25px;
+    line-height:1.5;
+
+}
+
+.hero-section p{
+
+    color:var(--text);
+    line-height:2;
+    font-size:18px;
+    margin-bottom:35px;
+
+}
+
+.start-btn{
+
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#fff;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    padding:18px 38px;
+    border-radius:15px;
+    font-size:18px;
+    font-weight:700;
+    transition:.3s;
+
+}
+
+.start-btn:hover{
+
+    transform:translateY(-4px);
+
+}
+
+/* لماذا مشروع بيان */
+
+.why-project{
+
+    max-width:1100px;
+    margin:80px auto;
+
+}
+
+.why-project h2{
+
+    text-align:center;
+    font-size:34px;
+    color:var(--dark);
+    margin-bottom:20px;
+
+}
+
+.why-project>p{
+
+    text-align:center;
+    max-width:850px;
+    margin:0 auto 50px;
+    color:var(--text);
+    line-height:2;
+    font-size:17px;
+
+}
+
+.features-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:25px;
+
+}
+
+.feature-card{
+
+    background:#fff;
+    border-radius:22px;
+    padding:35px 25px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    transition:.35s;
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-10px);
+
+}
+
+.feature-card .icon{
+
+    font-size:50px;
+    margin-bottom:18px;
+
+}
+
+.feature-card h3{
+
+    color:var(--dark);
+    margin-bottom:15px;
+    font-size:22px;
+
+}
+
+.feature-card p{
+
+    color:var(--text);
+    line-height:1.9;
+
+}
+
+/* من نحن */
+
+.about-section{
+
+    max-width:1000px;
+    margin:90px auto;
+    background:#fff;
+    padding:50px;
+    border-radius:28px;
+    box-shadow:var(--shadow);
+
+}
+
+.about-section h2{
+
+    text-align:center;
+    margin-bottom:30px;
+    color:var(--dark);
+    font-size:34px;
+
+}
+
+.about-section p{
+
+    line-height:2.2;
+    color:var(--text);
+    text-align:center;
+    font-size:17px;
+
+}
+
+/* كيف يعمل النظام */
+
+.workflow-section{
+
+    max-width:1100px;
+    margin:90px auto;
+    text-align:center;
+
+}
+
+.workflow-section h2{
+
+    font-size:34px;
+    color:var(--dark);
+    margin-bottom:15px;
+
+}
+
+.workflow-desc{
+
+    color:var(--text);
+    margin-bottom:45px;
+    font-size:17px;
+
+}
+
+.workflow{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+
+}
+
+.step{
+
+    background:#fff;
+    width:180px;
+    padding:30px 20px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    transition:.3s;
+
+}
+
+.step:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.step-icon{
+
+    font-size:45px;
+    margin-bottom:18px;
+
+}
+
+.step h3{
+
+    color:var(--dark);
+    margin-bottom:12px;
+
+}
+
+.step p{
+
+    color:var(--text);
+    line-height:1.8;
+    font-size:15px;
+
+}
+
+.arrow{
+
+    font-size:35px;
+    color:var(--primary);
+
+}
+
+/* تواصل معنا */
+
+.contact-section{
+
+    max-width:1100px;
+    margin:90px auto;
+
+}
+
+.contact-section h2{
+
+    text-align:center;
+    font-size:34px;
+    color:var(--dark);
+    margin-bottom:45px;
+
+}
+
+.contact-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+
+}
+
+.contact-card{
+
+    background:#fff;
+    text-align:center;
+    padding:35px;
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    transition:.3s;
+
+}
+
+.contact-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.contact-card i{
+
+    font-size:45px;
+    color:var(--primary);
+    margin-bottom:20px;
+
+}
+
+.contact-card h3{
+
+    margin-bottom:12px;
+    color:var(--dark);
+
+}
+
+.contact-card p{
+
+    color:var(--text);
+
+}
+
+/* الفوتر */
+
+.footer{
+
+    margin-top:80px;
+    background:#183153;
+    color:#fff;
+    text-align:center;
+    padding:35px 20px;
+
+}
+
+.footer p{
+
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:8px;
+
+}
+
+.footer span{
+
+    color:#d9e5df;
+    font-size:15px;
+
 }
 
 /* الحركات */
-.animate-card { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
-/* شريط تحميل احترافي */
-.loader-bar { 
-    width: 200px; 
-    height: 4px; 
-    background: #eef2f0; 
-    border-radius: 2px; 
-    overflow: hidden; 
-    margin-top: 20px;
+@keyframes loading{
+
+    from{
+
+        transform:translateX(-100%);
+
+    }
+
+    to{
+
+        transform:translateX(0);
+
+    }
+
 }
 
-.loader-progress { 
-    width: 100%; 
-    height: 100%; 
-    background: var(--primary-green); 
-    /* نستخدم ease-out ليكون التحميل طبيعياً ويصل للنهاية */
-    animation: loadMove 2.5s ease-out forwards; 
+@keyframes pulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.05);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
 }
 
-@keyframes loadMove { 
-    0% { transform: translateX(-100%); } 
-    100% { transform: translateX(0); } /* التوقف عند النهاية */
+/* الجوال */
+
+@media(max-width:768px){
+
+.hero-section{
+
+padding:35px 25px;
+
 }
+
+.hero-section h1{
+
+font-size:28px;
+
+}
+
+.hero-section p{
+
+font-size:16px;
+
+}
+
+.start-btn{
+
+width:100%;
+justify-content:center;
+
+}
+
+.about-section{
+
+padding:35px 25px;
+
+}
+
+.workflow{
+
+flex-direction:column;
+
+}
+
+.arrow{
+
+transform:rotate(90deg);
+

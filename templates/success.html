@@ -1,67 +1,137 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تم الحفظ بنجاح - Bayan OCR</title>
+    <title>تم حفظ البيانات - Bayan OCR</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <style>
-        body { 
-            background: #f6f8f5; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        
-        .card {
-            background: white;
-            padding: 50px;
-            border-radius: 30px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
-            border: 1px solid rgba(230, 235, 232, 0.8);
+
+        body{
+            margin:0;
+            font-family:Tahoma, sans-serif;
+            background:linear-gradient(135deg,#11998e,#38ef7d);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
         }
 
-        .icon { font-size: 80px; margin-bottom: 20px; }
-
-        h1 { color: var(--primary-green); margin-bottom: 15px; font-size: 28px; }
-
-        p { color: #788880; line-height: 1.8; margin-bottom: 35px; font-size: 16px; }
-
-        .btns { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-
-        .btn {
-            padding: 15px 25px;
-            border-radius: 15px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: 0.3s;
-            flex: 1;
+        .card{
+            width:90%;
+            max-width:700px;
+            background:white;
+            border-radius:30px;
+            padding:50px;
+            text-align:center;
+            box-shadow:0 20px 45px rgba(0,0,0,.12);
         }
 
-        .home { background: #eef2f0; color: var(--navy-dark); }
-        .new { background: linear-gradient(135deg, var(--primary-green), var(--accent-green)); color: white; box-shadow: 0 8px 20px rgba(17, 153, 142, 0.2); }
+        .logo{
+            margin-bottom:35px;
+        }
 
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .logo img{
+            width:170px;
+            display:block;
+            margin:auto;
+        }
+
+        h1{
+            color:#183153;
+            font-size:38px;
+            margin-bottom:18px;
+        }
+
+        .text{
+            color:#666;
+            font-size:19px;
+            line-height:2;
+            margin-bottom:40px;
+        }
+
+        .buttons{
+            display:flex;
+            gap:15px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            text-decoration:none;
+            padding:16px 28px;
+            border-radius:15px;
+            font-size:18px;
+            font-weight:bold;
+            transition:.3s;
+        }
+
+        .reports{
+            background:linear-gradient(135deg,#11998e,#27ae60);
+            color:white;
+        }
+
+        .upload{
+            background:#183153;
+            color:white;
+        }
+
+        .dashboard{
+            background:#eceff1;
+            color:#183153;
+        }
+
+        .btn:hover{
+            transform:translateY(-3px);
+        }
+
+        .note{
+            margin-top:35px;
+            color:#999;
+            font-size:15px;
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<div class="card animate-card">
-    <div class="icon">✅</div>
-    <h1>تم حفظ البيانات بنجاح</h1>
-    <p>تمت إضافة بيانات المستفيد إلى النظام بنجاح، وأصبحت الآن متاحة في قاعدة البيانات.</p>
+<div class="card">
 
-    <div class="btns">
-        <a href="/" class="btn home">الرئيسية</a>
-        <a href="/upload" class="btn new">إضافة مستفيد جديد</a>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bayan OCR">
     </div>
+
+    <h1>تم حفظ البيانات بنجاح</h1>
+
+    <div class="text">
+        تمت أرشفة بيانات المستفيد داخل نظام <b>Bayan OCR</b> بنجاح.<br>
+        يمكنك الآن استعراض سجلات الشهر أو إضافة مستفيد جديد.
+    </div>
+
+    <div class="buttons">
+
+        <a href="/reports" class="btn reports">
+            📋 سجلات الشهر
+        </a>
+
+        <a href="/upload" class="btn upload">
+            ➕ إضافة مستفيد جديد
+        </a>
+
+        <a href="/dashboard" class="btn dashboard">
+            🏠 لوحة التحكم
+        </a>
+
+    </div>
+
+    <div class="note">
+        نظام بيان الذكي لأتمتة وأرشفة المستندات
+    </div>
+
 </div>
 
 </body>

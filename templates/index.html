@@ -1,53 +1,284 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayan OCR - نظام الإدخال الذكي</title>
+    <title>بيان | Bayan OCR</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-    <div id="splash-screen" class="screen active">
-        <div class="splash-content">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bayan OCR" class="splash-logo">
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
+<!-- شاشة البداية -->
+<div id="splash-screen" class="screen active">
+
+    <div class="splash-content">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             class="splash-logo"
+             alt="Bayan OCR">
+
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+
+    </div>
+
+    <div class="contact-info">
+
+        <div class="contact-item">
+            <i class="fab fa-whatsapp"></i>
+            <span>0535038360</span>
+        </div>
+
+        <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>tnmyh555@hotmail.com</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- الصفحة الرئيسية -->
+<div id="dashboard-screen" class="screen">
+
+<div class="hero-section">
+
+<span class="powered">
+Powered by OCR & AI
+</span>
+
+<h1>
+نظام بيان الذكي لأتمتة وأرشفة المستندات
+</h1>
+
+<p>
+يعتمد نظام <strong>بيان (Bayan OCR)</strong> على تقنيات التعرف الضوئي على النصوص (OCR)
+والذكاء الاصطناعي لاستخراج البيانات من المستندات والنماذج الورقية،
+ثم مراجعتها وأرشفتها إلكترونياً داخل قاعدة البيانات، مما يساهم في
+رفع كفاءة العمل وتقليل الوقت والجهد المبذول في عمليات الإدخال اليدوي.
+</p>
+
+<a href="/login" class="start-btn">
+<i class="fas fa-user"></i>
+تسجيل الدخول باستخدام اسم المستخدم
+</a>
+
+</div>
+
+<section class="why-project">
+
+<h2>
+لماذا مشروع بيان؟
+</h2>
+
+<p>
+تم تطوير مشروع <strong>بيان</strong> لمواكبة التحول الرقمي داخل مركز التنمية الاجتماعية،
+وذلك من خلال أتمتة إجراءات أرشفة المستندات واستخراج البيانات بشكل ذكي،
+مما يساهم في تقليل الأخطاء البشرية، وتسريع إجراءات العمل،
+وتسهيل الوصول إلى البيانات عند الحاجة.
+</p>
+
+<div class="features-grid">
+
+<div class="feature-card">
+
+<div class="icon">
+📄
+</div>
+
+<h3>
+استخراج البيانات
+</h3>
+
+<p>
+قراءة المستندات والنماذج الورقية تلقائياً باستخدام تقنية OCR.
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">
+🤖
+</div>
+
+<h3>
+الذكاء الاصطناعي
+</h3>
+
+<p>
+تحليل البيانات وتصنيفها داخل الحقول الصحيحة بدقة عالية.
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">
+📂
+</div>
+
+<h3>
+أرشفة إلكترونية
+</h3>
+
+<p>
+حفظ البيانات داخل قاعدة البيانات بطريقة منظمة وآمنة.
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">
+⚡
+</div>
+
+<h3>
+سرعة الإنجاز
+</h3>
+
+<p>
+تقليل الوقت والجهد وتحسين كفاءة سير العمل داخل المركز.
+</p>
+
+</div>
+
+</div>
+
+</section>
+<!-- من نحن -->
+<section class="about-section">
+
+    <h2>من نحن</h2>
+
+    <p>
+        نحن مجموعة من طالبات تخصص علوم الحاسب بجامعة أم القرى، وخلال فترة التدريب
+        التعاوني في مركز التنمية الاجتماعية بوادي فاطمة لاحظنا أن إجراءات
+        أرشفة الخطابات تتم يدوياً، مما يستغرق وقتاً طويلاً وقد يؤدي إلى حدوث
+        أخطاء أثناء إدخال البيانات أو الرجوع إليها.ومن هنا جاءت فكرة تطوير
+        مشروع <strong>بيان</strong> ليكون نظاماً ذكياً يعتمد على تقنيات
+        التعرف الضوئي على النصوص (OCR) والذكاء الاصطناعي لأتمتة عملية الأرشفة
+        وتحويل المستندات الورقية إلى بيانات رقمية منظمة، بما يساهم في رفع
+        كفاءة العمل ودعم التحول الرقمي داخل المركز.
+    </p>
+
+</section>
+
+<!-- كيف يعمل النظام -->
+<section class="workflow-section">
+
+    <h2>كيف يعمل النظام؟</h2>
+
+    <p class="workflow-desc">
+        تمر عملية الأرشفة بعدة خطوات بسيطة وسريعة.
+    </p>
+
+    <div class="workflow">
+
+        <div class="step">
+            <div class="step-icon">📷</div>
+            <h3>رفع المستند</h3>
+            <p>اختيار صورة أو ملف PDF للخطاب.</p>
+        </div>
+
+        <div class="arrow">←</div>
+
+        <div class="step">
+            <div class="step-icon">👁️</div>
+            <h3>OCR</h3>
+            <p>استخراج النصوص من المستند.</p>
+        </div>
+
+        <div class="arrow">←</div>
+
+        <div class="step">
+            <div class="step-icon">🤖</div>
+            <h3>الذكاء الاصطناعي</h3>
+            <p>تحليل البيانات وتصنيفها تلقائياً.</p>
+        </div>
+
+        <div class="arrow">←</div>
+
+        <div class="step">
+            <div class="step-icon">💾</div>
+            <h3>الأرشفة</h3>
+            <p>حفظ البيانات داخل قاعدة البيانات.</p>
+        </div>
+        <div class="arrow">←</div>
+
+        <div class="step">
+            <div class="step-icon">📄</div>
+            <h3>سجل Word</h3>
+            <p>تحديث سجل الأرشفة الرسمي.</p>
         </div>
     </div>
 
-    <div id="dashboard-screen" class="screen">
-        
-     
+</section>
 
-        <div class="main-card animate-card">
-            <h1 class="dashboard-title">نظام الإدخال الذكي للبيانات</h1>
-            <p class="dashboard-desc">
-                قم برفع استمارة المستفيد الورقية ليقوم نظام <strong>Bayan OCR</strong> بقراءة واستخراج البيانات تلقائياً وبثوانٍ معدودة وبدقة عالية.
-            </p>
+<!-- تواصل معنا -->
+<section class="contact-section">
+
+    <h2>تواصل معنا</h2>
+
+    <div class="contact-grid">
+
+        <div class="contact-card">
+            <i class="fas fa-users"></i>
+            <h3>فريق المشروع</h3>
+            <p>طالبات علوم الحاسب</p>
         </div>
 
-        <a href="/upload" class="start-btn">ابدأ عملية القراءة والرفع ←</a>
+        <div class="contact-card">
+            <i class="fas fa-university"></i>
+            <h3>الجهة التعليمية</h3>
+            <p>جامعة أم القرى</p>
+        </div>
+
+        <div class="contact-card">
+            <i class="fas fa-handshake"></i>
+            <h3>الجهة المستفيدة</h3>
+            <p>مركز التنمية الاجتماعية بوادي فاطمة</p>
+        </div>
+
     </div>
 
-   <script>
-    // ننتظر 2.5 ثانية (نفس مدة الـ animation)
-    setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        const dashboard = document.getElementById('dashboard-screen');
-        
-        // تلاشي الشاشة الأولى
-        splash.style.transition = "opacity 0.5s ease";
-        splash.style.opacity = '0';
-        
-        // إزالتها تماماً من مسار الصفحة
-        setTimeout(() => {
-            splash.style.display = 'none';
-            dashboard.classList.add('active');
-        }, 500);
-    }, 2500);
+</section>
+
+<footer class="footer">
+
+    <p>© 2026 Bayan OCR</p>
+
+    <span>
+        Developed with ❤️ by Computer Science Students
+    </span>
+
+</footer>
+
+</div>
+
+<script>
+
+
+window.onload = function(){
+
+    setTimeout(function(){
+
+        document.getElementById("splash-screen").style.display = "none";
+        document.getElementById("dashboard-screen").style.display = "block";
+
+    },2500);
+
+}
+
 </script>
+
+
 </body>
 </html>
+
