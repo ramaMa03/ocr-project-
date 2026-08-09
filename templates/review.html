@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -6,154 +7,130 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>تأكيد البيانات | Bayan OCR</title>
+<title>مراجعة البيانات | Smart Archive AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <style>
 
 body{
-    margin:0;
-    background:#f5f7f6;
-    font-family:Tajawal,sans-serif;
+background:#f6f8f5;
+font-family:'Tajawal',sans-serif;
 }
 
-.top-header{
-    background:linear-gradient(135deg,#11998e,#38ef7d);
-    color:white;
-    padding:25px 40px;
+.review-container{
+max-width:900px;
+margin:40px auto;
+background:white;
+padding:40px;
+border-radius:30px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
 }
 
-.header-content{
-    display:flex;
-    align-items:center;
-    gap:20px;
+.review-title{
+text-align:center;
+font-size:34px;
+font-weight:800;
+color:#152944;
+margin-bottom:10px;
 }
 
-.logo{
-    width:90px;
-    height:90px;
-    background:white;
-    border-radius:20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.review-desc{
+text-align:center;
+color:#666;
+margin-bottom:35px;
+line-height:2;
 }
 
-.logo img{
-    width:70px;
+.form-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
 }
 
-.top-header h1{
-    margin:0;
-    font-size:36px;
+.input-group{
+display:flex;
+flex-direction:column;
 }
 
-.top-header p{
-    margin-top:8px;
-    font-size:18px;
+.input-group label{
+margin-bottom:8px;
+font-weight:700;
+color:#152944;
 }
 
-.container{
-    width:90%;
-    max-width:850px;
-    margin:40px auto;
+.input-group input,
+.input-group textarea{
+padding:14px;
+border:1px solid #d8e4df;
+border-radius:12px;
+font-size:15px;
+outline:none;
 }
 
-.card{
-    background:white;
-    border-radius:25px;
-    padding:40px;
-    box-shadow:0 10px 25px rgba(0,0,0,.05);
+.input-group input:focus,
+.input-group textarea:focus{
+border-color:#11998e;
+box-shadow:0 0 0 3px rgba(17,153,142,.15);
 }
 
-.title{
-    text-align:center;
-    font-size:32px;
-    margin-bottom:10px;
-    color:#183153;
+.full{
+grid-column:1 / span 2;
 }
 
-.subtitle{
-    text-align:center;
-    color:#777;
-    margin-bottom:30px;
+textarea{
+resize:vertical;
+min-height:150px;
 }
 
-.notice{
-    background:#fff8e8;
-    border-right:6px solid #f0b429;
-    padding:18px;
-    border-radius:15px;
-    margin-bottom:30px;
+.buttons{
+display:flex;
+gap:15px;
+margin-top:30px;
 }
 
-.notice p{
-    margin-top:10px;
-    color:#555;
+.save-btn{
+flex:1;
+background:#11998e;
+color:white;
+border:none;
+padding:18px;
+border-radius:15px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.info-box{
-    background:#f9fbfa;
-    border:1px solid #e5ece8;
-    border-radius:15px;
-    padding:18px;
-    margin-bottom:18px;
+.cancel-btn{
+flex:1;
+background:#ececec;
+text-decoration:none;
+text-align:center;
+padding:18px;
+border-radius:15px;
+font-weight:bold;
+color:#152944;
 }
 
-.info-box label{
-    display:block;
-    font-weight:bold;
-    color:#11998e;
-    margin-bottom:8px;
+@media(max-width:768px){
+
+.form-grid{
+grid-template-columns:1fr;
 }
 
-.info-box input,
-.info-box select,
-.info-box textarea{
-    width:100%;
-    border:none;
-    background:transparent;
-    font-size:18px;
-    color:#333;
-    outline:none;
+.full{
+grid-column:auto;
 }
 
-.info-box textarea{
-    resize:none;
-    min-height:90px;
+.buttons{
+flex-direction:column;
 }
 
-.actions{
-    display:flex;
-    gap:15px;
-    margin-top:35px;
-}
-
-.btn-save{
-    flex:1;
-    background:linear-gradient(135deg,#11998e,#27ae60);
-    color:white;
-    border:none;
-    border-radius:15px;
-    padding:18px;
-    font-size:20px;
-    cursor:pointer;
-}
-
-.btn-edit{
-    flex:1;
-    background:#ececec;
-    color:#333;
-    border:none;
-    border-radius:15px;
-    padding:18px;
-    font-size:20px;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:.95;
 }
 
 </style>
@@ -162,109 +139,99 @@ button:hover{
 
 <body>
 
-<div class="top-header">
+<div class="review-container">
 
-<div class="header-content">
+<h1 class="review-title">
+مراجعة بيانات الأرشفة
+</h1>
 
-<div class="logo">
-<img src="{{ url_for('static', filename='images/logo.png') }}">
-</div>
-
-<div>
-<h1>تأكيد البيانات</h1>
-<p>Bayan OCR System</p>
-</div>
-
-</div>
-
-</div>
-
-<div class="container">
-
-<div class="card">
-
-<h2 class="title">📋 البيانات المستخرجة</h2>
-
-<p class="subtitle">
-تم استخراج البيانات باستخدام تقنية OCR، يرجى مراجعتها قبل الحفظ النهائي.
+<p class="review-desc">
+راجع البيانات المستخرجة ثم اضغط حفظ لإضافتها إلى سجل الأرشفة.
 </p>
-
-<div class="notice">
-
-<strong>💡 تنبيه</strong>
-
-<p>
-يمكنك تعديل أي حقل قبل حفظ البيانات داخل النظام.
-</p>
-
-</div>
 
 <form action="/save" method="POST">
 
-    <div class="info-box">
-        <label>👤 الاسم الكامل</label>
-        <input type="text" name="full_name" value="{{ data.full_name }}">
-    </div>
-    
-    <div class="info-box">
-        <label>🪪 رقم الهوية</label>
-        <input type="text" name="national_id" maxlength="10" value="{{ data.national_id }}">
-    </div>
-    
-    <div class="info-box">
-        <label>📱 رقم الجوال</label>
-        <input type="text" name="phone" value="{{ data.phone }}">
-    </div>
-    
-    <div class="info-box">
-        <label>⚧ الجنس</label>
-        <select name="gender">
-            <option value="ذكر" {% if data.gender=='ذكر' %}selected{% endif %}>ذكر</option>
-            <option value="أنثى" {% if data.gender=='أنثى' %}selected{% endif %}>أنثى</option>
-        </select>
-    </div>
-    
-    <div class="info-box">
-        <label>🤝 نوع الخدمة</label>
-        <select name="service_type">
-            <option value="دعم اجتماعي" {% if data.service_type=='دعم اجتماعي' %}selected{% endif %}>دعم اجتماعي</option>
-            <option value="استشارة أسرية" {% if data.service_type=='استشارة أسرية' %}selected{% endif %}>استشارة أسرية</option>
-            <option value="برنامج تدريبي" {% if data.service_type=='برنامج تدريبي' %}selected{% endif %}>برنامج تدريبي</option>
-            <option value="تمكين اقتصادي" {% if data.service_type=='تمكين اقتصادي' %}selected{% endif %}>تمكين اقتصادي</option>
-            <option value="أخرى" {% if data.service_type=='أخرى' %}selected{% endif %}>أخرى</option>
-        </select>
-    </div>
-    
-    <div class="info-box">
-        <label>📝 وصف الطلب</label>
-        <textarea name="request_description">{{ data.request_description }}</textarea>
-    </div>
-    
-    <div class="actions">
-    
-        <button type="button"
-                class="btn-edit"
-                onclick="history.back()">
-    
-            ✏️ تعديل البيانات
-    
-        </button>
-    
-        <button type="submit"
-                class="btn-save">
-    
-            💾 تأكيد الحفظ
-    
-        </button>
-    
-    </div>
-    
-    </form>
-    
-    </div>
-    
-    </div>
-    
-    </body>
-    
-    </html>
+<div class="form-grid">
+
+<div class="input-group">
+
+<label>اسم المستفيد</label>
+
+<input
+type="text"
+name="full_name"
+value="{{ data.full_name }}">
+
+</div>
+
+<div class="input-group">
+
+<label>الجهة</label>
+
+<input
+type="text"
+name="organization"
+value="{{ data.organization }}">
+
+</div>
+
+<div class="input-group">
+
+<label>رقم الخطاب</label>
+
+<input
+type="text"
+name="letter_number"
+value="{{ data.letter_number }}">
+
+</div>
+
+<div class="input-group">
+
+<label>تاريخ الخطاب</label>
+
+<input
+type="date"
+name="letter_date"
+value="{{ data.letter_date }}">
+
+</div>
+
+<div class="input-group full">
+
+<label>وصف الطلب</label>
+
+<textarea
+name="request_description">{{ data.request_description }}</textarea>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button
+type="submit"
+class="save-btn">
+
+💾 حفظ البيانات
+
+</button>
+
+<a
+href="/upload"
+class="cancel-btn">
+
+↩ العودة
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

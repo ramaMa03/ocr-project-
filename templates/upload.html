@@ -2,261 +2,555 @@
 <html lang="ar" dir="rtl">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>رفع الاستمارة | Bayan OCR</title>
+    <meta charset="UTF-8">
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+    <title>رفع الاستمارة | Smart Archive AI</title>
 
-body{
-    margin:0;
-    background:#f5f7f6;
-}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-.top-header{
-    background:linear-gradient(135deg,#11998e,#38ef7d);
-    color:white;
-    padding:25px 40px;
-}
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-.header-content{
-    display:flex;
-    align-items:center;
-    gap:20px;
-}
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
 
-.logo{
-    width:90px;
-    height:90px;
-    background:white;
-    border-radius:20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
 
-.logo img{
-    width:70px;
-}
+    <style>
 
-.top-header h1{
-    margin:0;
-    font-size:38px;
-}
+        body{
 
-.top-header p{
-    margin-top:8px;
-    font-size:18px;
-}
+            background:linear-gradient(180deg,#f8fbfa,#eef6f2);
 
-.upload-container{
-    max-width:700px;
-    margin:40px auto;
-    padding:20px;
-}
+        }
 
-.upload-card{
-    background:white;
-    border-radius:25px;
-    padding:40px;
-    box-shadow:0 10px 25px rgba(0,0,0,.05);
-    text-align:center;
-}
+        .upload-wrapper{
 
-.drop-zone{
-    border:3px dashed #11998e;
-    border-radius:25px;
-    padding:40px 20px;
-    background:#fbfdfc;
-    cursor:pointer;
-    transition:.3s;
-}
+            width:100%;
 
-.drop-zone:hover{
-    background:#eaf8f4;
-}
+            min-height:100vh;
 
-#file-input{
-    display:none;
-}
+            display:flex;
 
-#image-preview{
-    max-width:100%;
-    max-height:220px;
-    margin-top:20px;
-    border-radius:15px;
-    display:none;
-}
+            justify-content:center;
 
-.notice{
-    background:#fff8e8;
-    border-right:6px solid #f0b429;
-    padding:18px;
-    border-radius:15px;
-    margin:25px 0;
-    text-align:right;
-}
+            align-items:center;
 
-.notice p{
-    margin-top:10px;
-    color:#555;
-}
+            padding:40px 20px;
 
-.submit-btn{
-    width:100%;
-    border:none;
-    background:linear-gradient(135deg,#11998e,#27ae60);
-    color:white;
-    padding:18px;
-    border-radius:18px;
-    font-size:22px;
-    cursor:pointer;
-    font-weight:bold;
-}
+        }
 
-.submit-btn:hover{
-    opacity:.95;
-}
+        .upload-card{
 
-#loading-overlay{
-    display:none;
-    margin-top:20px;
-    color:#11998e;
-    font-size:18px;
-    font-weight:bold;
-}
+            width:100%;
 
-.back-link{
-    display:block;
-    margin-top:20px;
-    text-decoration:none;
-    color:#888;
-}
+            max-width:700px;
 
-</style>
+            background:#fff;
+
+            border-radius:35px;
+
+            padding:45px;
+
+            box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+            text-align:center;
+
+        }
+
+        .upload-logo{
+
+            width:95px;
+
+            margin-bottom:20px;
+
+        }
+
+        .upload-title{
+
+            font-size:34px;
+
+            color:#152944;
+
+            margin-bottom:10px;
+
+            font-weight:800;
+
+        }
+
+        .upload-desc{
+
+            color:#6d7975;
+
+            line-height:2;
+
+            margin-bottom:35px;
+
+        }
+
+        .drop-zone{
+
+            border:3px dashed #11998e;
+
+            border-radius:25px;
+
+            background:#fbfdfc;
+
+            padding:45px 25px;
+
+            cursor:pointer;
+
+            transition:.35s;
+
+        }
+
+        .drop-zone:hover{
+
+            background:#e9faf3;
+
+            transform:translateY(-3px);
+
+        }
+
+        .drop-zone.dragover{
+
+            background:#dff8ed;
+
+            border-color:#27ae60;
+
+        }
+
+        #file-input{
+
+            display:none;
+
+        }
+
+        .upload-icon{
+
+            font-size:70px;
+
+            margin-bottom:15px;
+
+        }
+
+        .upload-text{
+
+            font-size:20px;
+
+            color:#152944;
+
+            font-weight:700;
+
+            margin-bottom:10px;
+
+        }
+
+        .upload-sub{
+
+            color:#777;
+
+            font-size:15px;
+
+        }
+
+        #preview-container{
+
+            display:none;
+
+            margin-top:30px;
+
+        }
+
+        #image-preview{
+
+            max-width:100%;
+
+            max-height:240px;
+
+            border-radius:20px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.1);
+
+        }
+
+        .file-name{
+
+            margin-top:15px;
+
+            color:#11998e;
+
+            font-weight:700;
+
+        }
+
+        .button-group{
+
+            display:flex;
+
+            gap:15px;
+
+            margin-top:35px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .start-btn{
+
+            flex:1;
+
+            border:none;
+
+            cursor:pointer;
+
+        }
+
+        .secondary-btn{
+
+            flex:1;
+
+            text-decoration:none;
+
+            background:#eef5f3;
+
+            color:#152944;
+
+            padding:18px;
+
+            border-radius:18px;
+
+            font-weight:700;
+
+            transition:.3s;
+
+        }
+
+        .secondary-btn:hover{
+
+            background:#dcebe5;
+
+        }
+
+        #loading-overlay{
+
+            display:none;
+
+            margin-top:35px;
+
+        }
+
+        .loading-card{
+
+            background:#f8fbfa;
+
+            border-radius:20px;
+
+            padding:25px;
+
+        }
+
+        .progress{
+
+            width:100%;
+
+            height:10px;
+
+            background:#dde9e4;
+
+            border-radius:50px;
+
+            overflow:hidden;
+
+            margin-top:20px;
+
+        }
+
+        .progress span{
+
+            display:block;
+
+            width:100%;
+
+            height:100%;
+
+            background:linear-gradient(90deg,#11998e,#27ae60);
+
+            animation:loadingBar 2s infinite;
+
+        }
+
+        @keyframes loadingBar{
+
+            from{
+
+                transform:translateX(-100%);
+
+            }
+
+            to{
+
+                transform:translateX(100%);
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<div class="top-header">
+<div class="upload-wrapper">
 
-    <div class="header-content">
+<div class="upload-card">
 
-        <div class="logo">
-            <img src="{{ url_for('static', filename='images/logo.png') }}">
+<img src="{{ url_for('static', filename='images/logo.png') }}"
+
+class="upload-logo">
+
+<h1 class="upload-title">
+
+رفع استمارة المستفيد
+
+</h1>
+
+<p class="upload-desc">
+
+ارفع صورة أو ملف PDF وسيقوم النظام بقراءة البيانات باستخدام
+
+<strong>OCR</strong>
+
+والذكاء الاصطناعي ثم تجهيزها للمراجعة قبل الحفظ.
+
+</p>
+
+<form
+
+action="/upload"
+
+method="POST"
+
+enctype="multipart/form-data"
+
+id="upload-form">
+
+<div
+
+class="drop-zone"
+
+id="drop-zone">
+
+<div class="upload-icon">
+
+📄
+
+</div>
+
+<div class="upload-text">
+
+اسحب الملف هنا أو اضغط للاختيار
+
+</div>
+
+<div class="upload-sub">
+
+يدعم الصور والكاميرا وملفات PDF
+
+</div>
+
+<input
+
+type="file"
+
+name="file"
+
+id="file-input"
+
+accept="image/*,.pdf"
+
+capture="environment"
+
+required>
+
+<div id="preview-container">
+
+<img id="image-preview">
+
+<div
+
+class="file-name"
+
+id="file-name">
+
+</div>
+
+</div>
+
+</div>
+        <div class="button-group">
+
+            <button
+                type="submit"
+                class="start-btn"
+                id="submit-btn">
+
+                🚀 بدء تحليل البيانات
+
+            </button>
+
+            <a href="/"
+               class="secondary-btn">
+
+                ⬅ العودة للرئيسية
+
+            </a>
+
         </div>
 
-        <div>
-            <h1>رفع الاستمارة</h1>
-            <p>Bayan OCR System</p>
+</form>
+
+<div id="loading-overlay">
+
+    <div class="loading-card">
+
+        <h3 style="color:#11998e;margin-bottom:15px;">
+
+            🤖 جاري تحليل الاستمارة...
+
+        </h3>
+
+        <p style="line-height:2;color:#666;">
+
+            استخراج النصوص باستخدام OCR<br>
+            التحقق بواسطة الذكاء الاصطناعي<br>
+            تجهيز البيانات للمراجعة...
+
+        </p>
+
+        <div class="progress">
+
+            <span></span>
+
         </div>
 
     </div>
 
 </div>
 
-<div class="upload-container">
-
-    <div class="upload-card">
-
-        <h2 style="margin-bottom:15px;">📄 رفع استمارة مستفيد</h2>
-
-        <p style="color:#777;margin-bottom:30px;">
-            قم برفع صورة الاستمارة ليتم استخراج البيانات باستخدام تقنية OCR
-        </p>
-
-        <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
-
-            <div class="drop-zone" onclick="document.getElementById('file-input').click()">
-
-                <div style="font-size:70px;">📄</div>
-
-                <h2 style="margin-top:15px;">اختر الاستمارة</h2>
-
-                <p style="color:#888;">
-                    PNG • JPG • JPEG
-                </p>
-
-                <input
-                    type="file"
-                    name="file"
-                    id="file-input"
-                    accept="image/*"
-                    required
-                    onchange="previewImage(event)"
-                >
-
-                <img id="image-preview" src="#" alt="معاينة">
-
-            </div>
-
-            <div class="notice">
-
-                <strong>💡 تنبيه</strong>
-
-                <p>
-                    تأكد أن الاستمارة واضحة وغير مقطوعة للحصول على أفضل نتائج التحليل.
-                </p>
-
-            </div>
-
-            <button type="submit" class="submit-btn" id="submit-btn">
-
-                🔍 بدء التحليل
-
-            </button>
-
-        </form>
-
-        <div id="loading-overlay">
-
-            ⚙️ جاري تحليل الصورة... يرجى الانتظار
-
-        </div>
-
-        <a href="/dashboard" class="back-link">
-
-            العودة إلى لوحة التحكم
-
-        </a>
-
-    </div>
+</div>
 
 </div>
 
 <script>
 
-function previewImage(event){
-    const preview=document.getElementById('image-preview');
-    const file=event.target.files[0];
+const dropZone=document.getElementById("drop-zone");
 
-    if(file){
+const fileInput=document.getElementById("file-input");
+
+const preview=document.getElementById("image-preview");
+
+const previewContainer=document.getElementById("preview-container");
+
+const fileName=document.getElementById("file-name");
+
+dropZone.addEventListener("click",()=>{
+
+    fileInput.click();
+
+});
+
+dropZone.addEventListener("dragover",(e)=>{
+
+    e.preventDefault();
+
+    dropZone.classList.add("dragover");
+
+});
+
+dropZone.addEventListener("dragleave",()=>{
+
+    dropZone.classList.remove("dragover");
+
+});
+
+dropZone.addEventListener("drop",(e)=>{
+
+    e.preventDefault();
+
+    dropZone.classList.remove("dragover");
+
+    if(e.dataTransfer.files.length){
+
+        fileInput.files=e.dataTransfer.files;
+
+        previewFile(e.dataTransfer.files[0]);
+
+    }
+
+});
+
+fileInput.addEventListener("change",(e)=>{
+
+    if(e.target.files.length){
+
+        previewFile(e.target.files[0]);
+
+    }
+
+});
+
+function previewFile(file){
+
+    fileName.innerHTML="📄 "+file.name;
+
+    previewContainer.style.display="block";
+
+    if(file.type.startsWith("image")){
 
         const reader=new FileReader();
 
-        reader.onload=function(){
+        reader.onload=function(ev){
 
-            preview.src=reader.result;
-            preview.style.display='block';
+            preview.src=ev.target.result;
 
-        }
+            preview.style.display="block";
+
+        };
 
         reader.readAsDataURL(file);
 
     }
 
+    else{
+
+        preview.style.display="none";
+
+    }
+
 }
 
-document.getElementById('upload-form').onsubmit=function(){
+document.getElementById("upload-form").addEventListener("submit",function(e){
 
-    document.getElementById('submit-btn').style.display='none';
-    document.getElementById('loading-overlay').style.display='block';
+    if(fileInput.files.length===0){
 
-};
+        e.preventDefault();
+
+        alert("يرجى اختيار صورة أو ملف PDF أولاً.");
+
+        return;
+
+    }
+
+    document.getElementById("submit-btn").style.display="none";
+
+    document.getElementById("loading-overlay").style.display="block";
+
+});
 
 </script>
 

@@ -1,282 +1,412 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بيان | Bayan OCR</title>
+
+    <title>Smart Archive AI | نظام الأرشفة الذكي</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<!-- شاشة البداية -->
-<div id="splash-screen" class="screen active">
+    <!-- شاشة البداية -->
+    <div id="splash-screen" class="screen active">
 
-    <div class="splash-content">
+        <div class="splash-content">
 
-        <img src="{{ url_for('static', filename='images/logo.png') }}"
-             class="splash-logo"
-             alt="Bayan OCR">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                class="splash-logo"
+                alt="Smart Archive AI">
 
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+
         </div>
 
     </div>
 
-    <div class="contact-info">
+    <!-- الصفحة الرئيسية -->
 
-        <div class="contact-item">
-            <i class="fab fa-whatsapp"></i>
-        </div>
+    <div id="dashboard-screen" class="screen">
 
-        <div class="contact-item">
-            <i class="fas fa-envelope"></i>
-        </div>
+        <section class="hero-section">
+
+            <div class="main-card animate-card">
+
+                <span class="badge">
+                    Powered by OCR & AI
+                </span>
+
+                <h1 class="dashboard-title">
+
+                    Smart Archive AI
+
+                </h1>
+
+                <h2 class="sub-title">
+
+                    نظام ذكي لأتمتة أرشفة بيانات المستفيدين
+
+                </h2>
+
+                <p class="dashboard-desc">
+
+                    يعتمد النظام على تقنيات
+                    <strong>OCR</strong>
+                    والذكاء الاصطناعي لاستخراج البيانات من النماذج الورقية
+                    وتنظيمها تلقائياً،
+                    ثم مراجعتها قبل حفظها داخل قاعدة البيانات
+                    مع إمكانية تحديث سجل الأرشفة الرسمي لمركز التنمية الاجتماعية.
+
+                </p>
+
+            </div>
+
+            <a href="/upload" class="start-btn">
+
+                🚀 ابدأ عملية القراءة
+
+            </a>
+
+        </section>
+
+        <!-- لماذا مشروعنا -->
+
+        <section class="section">
+
+            <h2 class="section-title">
+
+                لماذا مشروعنا؟
+
+            </h2>
+
+            <p class="section-desc">
+
+                صمم هذا النظام لتقليل الوقت والجهد المبذول في إدخال البيانات
+                وأرشفتها داخل مراكز التنمية الاجتماعية.
+
+            </p>
+
+            <div class="features">
+
+                <div class="feature-card">
+
+                    <div class="icon">
+
+                        📄
+
+                    </div>
+
+                    <h3>
+
+                        استخراج البيانات
+
+                    </h3>
+
+                    <p>
+
+                        قراءة النماذج الورقية تلقائياً باستخدام OCR.
+
+                    </p>
+
+                </div>
+
+                <div class="feature-card">
+
+                    <div class="icon">
+
+                        🤖
+
+                    </div>
+
+                    <h3>
+
+                        الذكاء الاصطناعي
+
+                    </h3>
+
+                    <p>
+
+                        تنظيم البيانات داخل الحقول الصحيحة وتقليل الأخطاء.
+
+                    </p>
+
+                </div>
+
+                <div class="feature-card">
+
+                    <div class="icon">
+
+                        📂
+
+                    </div>
+
+                    <h3>
+
+                        أرشفة إلكترونية
+
+                    </h3>
+
+                    <p>
+
+                        حفظ البيانات مباشرة في قاعدة البيانات.
+
+                    </p>
+
+                </div>
+
+                <div class="feature-card">
+
+                    <div class="icon">
+
+                        📄
+
+                    </div>
+
+                    <h3>
+
+                        سجل Word
+
+                    </h3>
+
+                    <p>
+
+                        تحديث نموذج الأرشفة الرسمي المستخدم في المركز.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- من نحن -->
+
+        <section class="section about-section">
+
+            <h2 class="section-title">
+
+                من نحن
+
+            </h2>
+
+            <div class="about-card">
+
+                <p>
+
+                    نحن مجموعة من طالبات تخصص علوم الحاسب،
+                    وخلال فترة التدريب التعاوني في
+                    <strong>مركز التنمية الاجتماعية بوادي فاطمة</strong>
+                    لاحظنا أن الموظفين يواجهون صعوبة في أرشفة البيانات يدوياً،
+                    حيث تستغرق العملية وقتاً طويلاً
+                    وقد ينتج عنها أخطاء في إدخال الأسماء
+                    أو أرقام الخطابات أو البيانات الأخرى،
+                    خاصة عند زيادة عدد المستفيدين.
+
+                </p>
+
+                <br>
+
+                <p>
+
+                    لذلك قمنا بتطوير
+                    <strong>Smart Archive AI</strong>
+                    ليكون نظاماً يعتمد على OCR والذكاء الاصطناعي
+                    لاستخراج البيانات وتنظيمها ومراجعتها
+                    ثم حفظها إلكترونياً،
+                    مع إمكانية تحديث سجل الأرشفة الرسمي
+                    بصورة آلية.
+
+                </p>
+
+            </div>
+
+        </section>
+                <!-- كيف يعمل النظام -->
+
+        <section class="section">
+
+            <h2 class="section-title">
+
+                كيف يعمل النظام؟
+
+            </h2>
+
+            <p class="section-desc">
+
+                تمر عملية الأرشفة بخطوات بسيطة وسريعة.
+
+            </p>
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <div class="step-icon">📷</div>
+
+                    <h3>رفع الصورة</h3>
+
+                    <p>اختيار صورة أو ملف PDF للنموذج.</p>
+
+                </div>
+
+                <div class="step-arrow">➜</div>
+
+                <div class="step">
+
+                    <div class="step-icon">👁️</div>
+
+                    <h3>OCR</h3>
+
+                    <p>استخراج النصوص من النموذج.</p>
+
+                </div>
+
+                <div class="step-arrow">➜</div>
+
+                <div class="step">
+
+                    <div class="step-icon">🤖</div>
+
+                    <h3>AI</h3>
+
+                    <p>ترتيب البيانات والتحقق منها.</p>
+
+                </div>
+
+                <div class="step-arrow">➜</div>
+
+                <div class="step">
+
+                    <div class="step-icon">💾</div>
+
+                    <h3>الحفظ</h3>
+
+                    <p>تخزين البيانات في قاعدة البيانات.</p>
+
+                </div>
+
+                <div class="step-arrow">➜</div>
+
+                <div class="step">
+
+                    <div class="step-icon">📄</div>
+
+                    <h3>Word</h3>
+
+                    <p>تحديث سجل الأرشفة الرسمي.</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- تواصل معنا -->
+
+        <section class="section contact-section">
+
+            <h2 class="section-title">
+
+                تواصل معنا
+
+            </h2>
+
+            <div class="contact-card">
+
+                <div class="contact-item">
+
+                    👩‍💻
+
+                    <h3>فريق المشروع</h3>
+
+                    <p>طالبات علوم الحاسب</p>
+
+                </div>
+
+                <div class="contact-item">
+
+                    🏫
+
+                    <h3>الجهة</h3>
+
+                    <p>جامعة أم القرى</p>
+
+                </div>
+
+                <div class="contact-item">
+
+                    🤝
+
+                    <h3>الجهة المستفيدة</h3>
+
+                    <p>مركز التنمية الاجتماعية بوادي فاطمة</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Footer -->
+
+        <footer>
+
+            <p>
+
+                © 2026 Smart Archive AI
+
+            </p>
+
+            <p>
+
+                Developed with ❤️ by Computer Science Students
+
+            </p>
+
+        </footer>
 
     </div>
 
-</div>
+    <script>
 
-<!-- الصفحة الرئيسية -->
-<div id="dashboard-screen" class="screen">
+        setTimeout(() => {
 
-<div class="hero-section">
+            const splash = document.getElementById('splash-screen');
 
-<span class="powered">
-Powered by OCR & AI
-</span>
+            const dashboard = document.getElementById('dashboard-screen');
 
-<h1>
-نظام بيان الذكي لأتمتة وأرشفة المستندات
-</h1>
+            splash.style.transition = "opacity .6s";
 
-<p>
-يعتمد نظام <strong>بيان (Bayan OCR)</strong> على تقنيات التعرف الضوئي على النصوص (OCR)
-والذكاء الاصطناعي لاستخراج البيانات من المستندات والنماذج الورقية،
-ثم مراجعتها وأرشفتها إلكترونياً داخل قاعدة البيانات، مما يساهم في
-رفع كفاءة العمل وتقليل الوقت والجهد المبذول في عمليات الإدخال اليدوي.
-</p>
+            splash.style.opacity = "0";
 
-<a href="/login" class="start-btn">
-<i class="fas fa-user"></i>
-تسجيل الدخول باستخدام اسم المستخدم
-</a>
+            setTimeout(() => {
 
-</div>
+                splash.style.display = "none";
 
-<section class="why-project">
+                dashboard.classList.add("active");
 
-<h2>
-لماذا مشروع بيان؟
-</h2>
+            },600);
 
-<p>
-تم تطوير مشروع <strong>بيان</strong> لمواكبة التحول الرقمي داخل مركز التنمية الاجتماعية،
-وذلك من خلال أتمتة إجراءات أرشفة المستندات واستخراج البيانات بشكل ذكي،
-مما يساهم في تقليل الأخطاء البشرية، وتسريع إجراءات العمل،
-وتسهيل الوصول إلى البيانات عند الحاجة.
-</p>
+        },2500);
 
-<div class="features-grid">
-
-<div class="feature-card">
-
-<div class="icon">
-📄
-</div>
-
-<h3>
-استخراج البيانات
-</h3>
-
-<p>
-قراءة المستندات والنماذج الورقية تلقائياً باستخدام تقنية OCR.
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<div class="icon">
-🤖
-</div>
-
-<h3>
-الذكاء الاصطناعي
-</h3>
-
-<p>
-تحليل البيانات وتصنيفها داخل الحقول الصحيحة بدقة عالية.
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<div class="icon">
-📂
-</div>
-
-<h3>
-أرشفة إلكترونية
-</h3>
-
-<p>
-حفظ البيانات داخل قاعدة البيانات بطريقة منظمة وآمنة.
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<div class="icon">
-⚡
-</div>
-
-<h3>
-سرعة الإنجاز
-</h3>
-
-<p>
-تقليل الوقت والجهد وتحسين كفاءة سير العمل داخل المركز.
-</p>
-
-</div>
-
-</div>
-
-</section>
-<!-- من نحن -->
-<section class="about-section">
-
-    <h2>من نحن</h2>
-
-    <p>
-        نحن مجموعة من طالبات تخصص علوم الحاسب بجامعة أم القرى، وخلال فترة التدريب
-        التعاوني في مركز التنمية الاجتماعية بوادي فاطمة لاحظنا أن إجراءات
-        أرشفة الخطابات تتم يدوياً، مما يستغرق وقتاً طويلاً وقد يؤدي إلى حدوث
-        أخطاء أثناء إدخال البيانات أو الرجوع إليها.ومن هنا جاءت فكرة تطوير
-        مشروع <strong>بيان</strong> ليكون نظاماً ذكياً يعتمد على تقنيات
-        التعرف الضوئي على النصوص (OCR) والذكاء الاصطناعي لأتمتة عملية الأرشفة
-        وتحويل المستندات الورقية إلى بيانات رقمية منظمة، بما يساهم في رفع
-        كفاءة العمل ودعم التحول الرقمي داخل المركز.
-    </p>
-
-</section>
-
-<!-- كيف يعمل النظام -->
-<section class="workflow-section">
-
-    <h2>كيف يعمل النظام؟</h2>
-
-    <p class="workflow-desc">
-        تمر عملية الأرشفة بعدة خطوات بسيطة وسريعة.
-    </p>
-
-    <div class="workflow">
-
-        <div class="step">
-            <div class="step-icon">📷</div>
-            <h3>رفع المستند</h3>
-            <p>اختيار صورة أو ملف PDF للخطاب.</p>
-        </div>
-
-        <div class="arrow">←</div>
-
-        <div class="step">
-            <div class="step-icon">👁️</div>
-            <h3>OCR</h3>
-            <p>استخراج النصوص من المستند.</p>
-        </div>
-
-        <div class="arrow">←</div>
-
-        <div class="step">
-            <div class="step-icon">🤖</div>
-            <h3>الذكاء الاصطناعي</h3>
-            <p>تحليل البيانات وتصنيفها تلقائياً.</p>
-        </div>
-
-        <div class="arrow">←</div>
-
-        <div class="step">
-            <div class="step-icon">💾</div>
-            <h3>الأرشفة</h3>
-            <p>حفظ البيانات داخل قاعدة البيانات.</p>
-        </div>
-        <div class="arrow">←</div>
-
-        <div class="step">
-            <div class="step-icon">📄</div>
-            <h3>سجل Word</h3>
-            <p>تحديث سجل الأرشفة الرسمي.</p>
-        </div>
-    </div>
-
-</section>
-
-<!-- تواصل معنا -->
-<section class="contact-section">
-
-    <h2>تواصل معنا</h2>
-
-    <div class="contact-grid">
-
-        <div class="contact-card">
-            <i class="fas fa-users"></i>
-            <h3>فريق المشروع</h3>
-            <p>طالبات علوم الحاسب</p>
-        </div>
-
-        <div class="contact-card">
-            <i class="fas fa-university"></i>
-            <h3>الجهة التعليمية</h3>
-            <p>جامعة أم القرى</p>
-        </div>
-
-        <div class="contact-card">
-            <i class="fas fa-handshake"></i>
-            <h3>الجهة المستفيدة</h3>
-            <p>مركز التنمية الاجتماعية بوادي فاطمة</p>
-        </div>
-
-    </div>
-
-</section>
-
-<footer class="footer">
-
-    <p>© 2026 Bayan OCR</p>
-
-    <span>
-        Developed with ❤️ by Computer Science Students
-    </span>
-
-</footer>
-
-</div>
-
-<script>
-
-
-window.onload = function(){
-
-    setTimeout(function(){
-
-        document.getElementById("splash-screen").style.display = "none";
-        document.getElementById("dashboard-screen").style.display = "block";
-
-    },2500);
-
-}
-
-</script>
-
+    </script>
 
 </body>
-</html>
 
+</html>

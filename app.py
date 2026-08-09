@@ -1,11 +1,19 @@
+
 import os
 import sqlite3
 from datetime import datetime
-from flask import Flask, render_template, request, redirect
+
+from flask import Flask, redirect, render_template, request
+
 from ocr.ai_classifier import classify_text
 from ocr.ocr_reader import extract_text
+from word_generator import generate_word
 
 app = Flask(__name__)
+
+# ==========================
+# إعدادات المشروع
+# ==========================
 
 UPLOAD_FOLDER = "uploads"
 DB_FOLDER = "database"
@@ -13,26 +21,22 @@ DB_PATH = os.path.join(DB_FOLDER, "database.db")
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(DB_FOLDER, exist_ok=True)
 
-if not os.path.exists(DB_FOLDER):
-    os.makedirs(DB_FOLDER)
-
-
+# ==========================
 # الصفحة الرئيسية
+# ==========================
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# تسجيل الدخول
-@app.route("/login")
-def login():
-    return render_template("login.html")
+# ==========================
+# رفع الملف
+# ==========================
 
-
-# رفع الاستمارة
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
 
@@ -43,18 +47,35 @@ def upload():
         if not file or file.filename == "":
             return "لم يتم اختيار ملف"
 
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+        filepath = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            file.filename
+        )
+
         file.save(filepath)
 
+        # قراءة النص
         extracted_text = extract_text(filepath)
+
+        print("\n========== OCR TEXT ==========")
+        print(extracted_text)
+        print("================================\n")
+
+        # استخراج البيانات
         data = classify_text(extracted_text)
 
-        return render_template("review.html", data=data)
+        return render_template(
+            "review.html",
+            data=data
+        )
 
     return render_template("upload.html")
 
 
+# ==========================
 # حفظ البيانات
+# ==========================
+
 @app.route("/save", methods=["POST"])
 def save():
 
@@ -64,33 +85,48 @@ def save():
     cursor.execute(
         """
         INSERT INTO beneficiaries
-        (full_name,national_id,phone,gender,service_type,request_description,created_at)
-        VALUES (?,?,?,?,?,?,?)
+        (
+            full_name,
+            organization,
+            letter_number,
+            letter_date,
+            request_description,
+            created_at
+        )
+
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
-            request.form["full_name"],
-            request.form["national_id"],
-            request.form["phone"],
-            request.form["gender"],
-            request.form["service_type"],
-            request.form["request_description"],
-            datetime.now().strftime("%Y-%m-%d"),
-        ),
+            request.form.get("full_name", ""),
+            request.form.get("organization", ""),
+            request.form.get("letter_number", ""),
+            request.form.get("letter_date", ""),
+            request.form.get("request_description", ""),
+            datetime.now().strftime("%Y-%m-%d")
+        )
     )
 
     conn.commit()
     conn.close()
 
+    # إنشاء سجل الأرشفة في الوورد
+
+    record = {
+        "full_name": request.form.get("full_name", ""),
+        "organization": request.form.get("organization", ""),
+        "letter_number": request.form.get("letter_number", ""),
+        "letter_date": request.form.get("letter_date", "")
+    }
+
+    generate_word(record)
+
     return redirect("/success")
 
 
-# صفحة نجاح الحفظ
-@app.route("/success")
-def success():
-    return render_template("success.html")
-
-
+# ==========================
 # لوحة التحكم
+# ==========================
+
 @app.route("/dashboard")
 def dashboard():
 
@@ -122,38 +158,18 @@ def dashboard():
     )
 
 
-# سجلات الشهر
-@app.route("/reports")
-def reports():
+# ==========================
+# صفحة النجاح
+# ==========================
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
-    cursor.execute("""
-        SELECT
-            full_name,
-            national_id,
-            phone,
-            gender,
-            service_type,
-            created_at
-        FROM beneficiaries
-        ORDER BY id DESC
-    """)
 
-    data = cursor.fetchall()
-
-    cursor.execute("SELECT COUNT(*) FROM beneficiaries")
-    total = cursor.fetchone()[0]
-
-    conn.close()
-
-    return render_template(
-        "reports.html",
-        data=data,
-        total=total
-    )
-
+# ==========================
+# تشغيل المشروع
+# ==========================
 
 if __name__ == "__main__":
     app.run(debug=True)
