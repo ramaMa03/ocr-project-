@@ -1,85 +1,55 @@
 
 import re
 
-
 def classify_text(text):
-
+    # الحقول البرمجية الداخلية المربوطة بالفورم الحالي (بدون أي تعديل في الواجهة)
     data = {
         "full_name": "",
-        "organization": "",
-        "letter_number": "",
-        "letter_date": "",
+        "national_id": "",
+        "phone": "",
+        "gender": "ذكر", 
+        "service_type": "دعم اجتماعي", 
         "request_description": ""
     }
 
-    # ==========================
-    # اسم المواطن / المستفيد
-    # ==========================
-
-    patterns = [
-        r"اسم المواطن\s*[:：]?\s*(.+)",
-        r"اسم المواطنة\s*[:：]?\s*(.+)",
-        r"اسم المستفيد\s*[:：]?\s*(.+)",
-        r"الاسم\s*[:：]?\s*(.+)"
-    ]
-
-    for pattern in patterns:
-        match = re.search(pattern, text)
-        if match:
-            data["full_name"] = match.group(1).strip()
-            break
-
-    # ==========================
-    # الجهة
-    # ==========================
-
-    match = re.search(r"الجهة\s*[:：]?\s*(.+)", text)
-
-    if match:
-        data["organization"] = match.group(1).strip()
-
-    # ==========================
-    # رقم الخطاب
-    # ==========================
-
-    match = re.search(r"رقم الخطاب\s*[:：]?\s*([^\n]+)", text)
-
-    if match:
-        data["letter_number"] = match.group(1).strip()
-
-    # ==========================
-    # التاريخ
-    # ==========================
-
-    match = re.search(r"التاريخ\s*[:：]?\s*([0-9/\-]+)", text)
-
-    if match:
-        data["letter_date"] = match.group(1).strip()
-
-    # ==========================
-    # وصف الطلب
-    # ==========================
-
     lines = text.split("\n")
 
-    description = []
-
-    start = False
-
     for line in lines:
-
         line = line.strip()
 
-        if not line:
-            continue
+        # 1. التعرف الذكي على الاسم (سواء كُتب: الاسم الكامل، الاسم، اسم المستفيد)
+        if "الاسم الكامل" in line or "الاسم" in line:
+            # يحذف الكلمة الدلالية والنقطتين أياً كانت ليأخذ الاسم الصافي فقط
+            clean_name = re.sub(r"(الاسم الكامل|الاسم|:)", "", line).strip()
+            data["full_name"] = clean_name
 
-        if "اسم المواطن" in line or "اسم المستفيد" in line:
-            start = True
-            continue
+        # 2. التعرف الذكي على الهوية (سواء كُتب: رقم السجل المدني، الهوية، السجل المدني، رقم الهوية)
+        elif "السجل المدني" in line or "الهوية" in line or "رقم السجل" in line:
+            # استخراج الأرقام فقط بمرونة عالية
+            id_match = re.search(r"\d+", line)
+            if id_match:
+                data["national_id"] = id_match.group()
 
-        if start:
-            description.append(line)
+        # 3. التعرف الذكي على رقم الهاتف (سواء كُتب: رقم الجوال المسجل، الجوال، الهاتف، رقم الجوال)
+        elif "الجوال" in line or "الهاتف" in line:
+            phone_match = re.search(r"\d+", line)
+            if phone_match:
+                data["phone"] = phone_match.group()
 
-    data["request_description"] = " ".join(description)
+        # 4. التعرف الذكي على نوع الخدمة (سواء كُتب: نوع البرنامج، الخدمة، نوع الخدمة)
+        elif "نوع البرنامج" in line or "البرنامج" in line or "نوع الخدمة" in line:
+            clean_service = re.sub(r"(نوع البرنامج|البرنامج|نوع الخدمة|:)", "", line).strip()
+            data["service_type"] = clean_service
+
+        # 5. التعرف الذكي على وصف الطلب (سواء كُتب: حالة الطلب، تفاصيل الطلب، وصف الطلب)
+        elif "حالة الطلب" in line or "وصف الطلب" in line:
+            clean_desc = re.sub(r"(حالة الطلب الحالي|حالة الطلب|وصف الطلب|:)", "", line).strip()
+            data["request_description"] = clean_desc
+
+        # 6. تحديد الجنس تلقائياً بناءً على محتوى السطر
+        if "ذكر" in line:
+            data["gender"] = "ذكر"
+        elif "أنثى" in line or "امراة" in line:
+            data["gender"] = "أنثى"
 
     return data

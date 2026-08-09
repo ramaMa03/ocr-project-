@@ -1,47 +1,28 @@
+import requests
 
-import os
-import fitz  # PyMuPDF
-import easyocr
-
-reader = easyocr.Reader(['ar', 'en'], gpu=False)
-
-
-def extract_text(file_path):
-
+def extract_text(image_path):
+    # ضعي مفتاحك هنا بين علامتي التنصيص
+    api_key = "K84489712688957" 
+    url = "https://api.ocr.space/parse/image"
+    
     try:
-
-        ext = os.path.splitext(file_path)[1].lower()
-
-        # ======================
-        # إذا كان الملف PDF
-        # ======================
-
-        if ext == ".pdf":
-
-            pdf = fitz.open(file_path)
-
-            page = pdf.load_page(0)
-
-            pix = page.get_pixmap(dpi=300)
-
-            image_path = file_path.replace(".pdf", ".png")
-
-            pix.save(image_path)
-
-            results = reader.readtext(image_path)
-
-        else:
-
-            results = reader.readtext(file_path)
-
-        text = "\n".join([r[1] for r in results])
-
-        print("\n========== OCR TEXT ==========")
-        print(text)
-        print("================================\n")
-
-        return text
-
+        with open(image_path, 'rb') as f:
+            payload = {
+                'apikey': api_key,
+                'language': 'ara',  # يقرأ العربية
+                'isOverlayRequired': False,
+            }
+            files = {'file': f}
+            response = requests.post(url, data=payload, files=files)
+            
+        result = response.json()
+        
+        # التأكد أن الـ API رد بنجاح
+        if result.get("IsErroredOnProcessing"):
+            return "حدث خطأ في الاتصال بالخدمة."
+        
+        # استخراج النص من النتيجة
+        return result["ParsedResults"][0]["ParsedText"]
+        
     except Exception as e:
-
-        return f"خطأ في OCR: {e}"
+        return f"خطأ برمجيا: {str(e)}"
