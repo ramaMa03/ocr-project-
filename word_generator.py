@@ -1,97 +1,186 @@
 
+from docx import Document
 import os
-from copy import deepcopy
 from datetime import datetime
 
-from docx import Document
+
+# ==================================
+# نموذج Word الجاهز
+# ==================================
+
+TEMPLATE_FILE = "word_template/archive_template.docx"
 
 
-TEMPLATE_PATH = "word_template/archive_template.docx"
-OUTPUT_FOLDER = "generated_files"
+# ==================================
+# مجلد ملفات Word الناتجة
+# ==================================
+
+OUTPUT_FOLDER = "static/word_files"
+
+os.makedirs(
+    OUTPUT_FOLDER,
+    exist_ok=True
+)
 
 
-def generate_word(data):
+# ==================================
+# إنشاء ملف Word من النموذج الجاهز
+# ==================================
 
-    # إنشاء مجلد الحفظ إذا لم يكن موجوداً
-    if not os.path.exists(OUTPUT_FOLDER):
-        os.makedirs(OUTPUT_FOLDER)
+def create_word(data):
 
-    # فتح النموذج
-    doc = Document(TEMPLATE_PATH)
+    # --------------------------------
+    # التأكد من وجود النموذج
+    # --------------------------------
 
-    # أول جدول في الملف
-    table = doc.tables[0]
+    if not os.path.exists(TEMPLATE_FILE):
 
-    # إنشاء صف جديد
-    new_row = table.add_row()
-
-    # نسخ تنسيق آخر صف
-    last_row = table.rows[-2]
-
-    for i in range(len(last_row.cells)):
-        new_row.cells[i]._tc.clear_content()
-        new_row.cells[i]._tc.get_or_add_tcPr()
-
-        new_row.cells[i]._tc.append(
-            deepcopy(last_row.cells[i]._tc.tcPr)
-            if last_row.cells[i]._tc.tcPr
-            else deepcopy(new_row.cells[i]._tc.get_or_add_tcPr())
+        raise FileNotFoundError(
+            f"لم يتم العثور على نموذج Word: {TEMPLATE_FILE}"
         )
 
-    # رقم السجل
-    row_number = len(table.rows) - 1
 
-    # تعبئة البيانات
-    new_row.cells[0].text = str(row_number)
+    # --------------------------------
+    # اسم الملف الجديد
+    # --------------------------------
 
-    new_row.cells[1].text = data.get(
+    now = datetime.now().strftime(
+        "%Y%m%d_%H%M%S_%f"
+    )
+
+    filename = f"archive_{now}.docx"
+
+    output_path = os.path.join(
+        OUTPUT_FOLDER,
+        filename
+    )
+
+
+    # --------------------------------
+    # فتح نموذج Word الجاهز
+    # --------------------------------
+
+    doc = Document(TEMPLATE_FILE)
+
+
+    # ==================================
+    # بيانات الأرشفة
+    # ==================================
+
+    client_name = data.get(
+        "client_name",
+        ""
+    )
+
+    letter_number = data.get(
         "letter_number",
         ""
     )
 
-    new_row.cells[2].text = data.get(
-        "letter_date",
-        datetime.now().strftime("%Y-%m-%d")
+    date = data.get(
+        "date",
+        ""
     )
 
-    new_row.cells[3].text = data.get(
+    organization = data.get(
         "organization",
         ""
     )
 
-    new_row.cells[4].text = data.get(
-        "full_name",
-        ""
+
+    # ==================================
+    # البحث عن جدول الأرشفة
+    # ==================================
+
+    if not doc.tables:
+
+        raise ValueError(
+            "نموذج Word لا يحتوي على جدول."
+        )
+
+
+    table = doc.tables[0]
+
+
+    # ==================================
+    # إضافة صف جديد
+    # ==================================
+
+    row = table.add_row()
+
+
+    # ==================================
+    # تعبئة الصف
+    #
+    # النموذج يحتوي على:
+    #
+    # العدد
+    # رقم الخطاب
+    # التاريخ
+    # الجهة
+    # اسم المواطن/ة
+    #
+    # ==================================
+
+    cells = row.cells
+
+
+    if len(cells) >= 5:
+
+        # --------------------------------
+        # العدد
+        # --------------------------------
+        # لا يتم إدخاله لأن المستخدم
+        # لا يحتاج إلى كتابة العدد.
+        cells[0].text = ""
+
+
+        # --------------------------------
+        # رقم الخطاب
+        # --------------------------------
+
+        cells[1].text = letter_number
+
+
+        # --------------------------------
+        # التاريخ
+        # --------------------------------
+
+        cells[2].text = date
+
+
+        # --------------------------------
+        # الجهة
+        # --------------------------------
+
+        cells[3].text = organization
+
+
+        # --------------------------------
+        # اسم المواطن/ة
+        # --------------------------------
+
+        cells[4].text = client_name
+
+
+    else:
+
+        raise ValueError(
+            "نموذج Word لا يحتوي على الأعمدة الخمسة المطلوبة."
+        )
+
+
+    # ==================================
+    # حفظ نسخة الأرشفة
+    # ==================================
+
+    doc.save(
+        output_path
     )
-        # اسم الملف الجديد
-    file_name = f"سجل_الأرشفة_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
-
-    output_path = os.path.join(
-        OUTPUT_FOLDER,
-        file_name
-    )
-
-    # حفظ الملف
-    doc.save(output_path)
-
-    print(f"تم إنشاء ملف Word: {output_path}")
-
-    return output_path
 
 
-if __name__ == "__main__":
+    # ==================================
+    # إرجاع مسار الملف
+    # ==================================
 
-    sample_data = {
-
-        "full_name": "محمد أحمد",
-
-        "organization": "مركز التنمية الاجتماعية",
-
-        "letter_number": "12345",
-
-        "letter_date": "2026-07-01"
-
-    }
-
-    generate_word(sample_data)
-    
+    return f"word_files/{filename}"

@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>بيانات الأرشفة | Bayan OCR</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/result.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+            HEADER
+    ========================== -->
+
+    <div class="top">
+
+        <div class="logo">
+
+            <img id="logo"
+                 src="{{ url_for('static', filename='images/logo.jpg') }}"
+                 alt="Bayan OCR"
+                 class="page-logo">
+
+            <div class="logo-text">
+
+                <h2>Bayan OCR</h2>
+
+                <small>
+                    Smart Data Entry & Archiving System
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <h1>
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            بيانات الأرشفة
+
+        </h1>
+
+
+        <div class="buttons">
+
+            <button id="dark"
+                    type="button">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+
+            <a href="/dashboard">
+
+                <i class="fa-solid fa-house"></i>
+
+                الرئيسية
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+            ARCHIVE CARD
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+
+            مراجعة بيانات الأرشفة
+
+        </h2>
+
+
+        <p class="description">
+
+            راجع البيانات المستخرجة من النموذج قبل حفظها في الأرشيف.
+
+        </p>
+
+
+        <form id="resultForm">
+
+
+            <div class="grid">
+
+
+                <!-- =========================
+                        اسم المواطن
+                ========================== -->
+
+                <div class="input">
+
+                    <label>
+
+                        اسم المواطن/ة
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="client_name"
+                        name="client_name"
+                        value="{{ data.client_name if data else '' }}"
+                        placeholder="اسم المواطن/ة"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                        رقم الخطاب
+                ========================== -->
+
+                <div class="input">
+
+                    <label>
+
+                        رقم الخطاب
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="letter_number"
+                        name="letter_number"
+                        value="{{ data.letter_number if data else '' }}"
+                        placeholder="رقم الخطاب"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                        التاريخ
+                ========================== -->
+
+                <div class="input">
+
+                    <label>
+
+                        التاريخ
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="date"
+                        name="date"
+                        value="{{ data.date if data else '' }}"
+                        placeholder="التاريخ"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                        الجهة
+                ========================== -->
+
+                <div class="input">
+
+                    <label>
+
+                        الجهة
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="organization"
+                        name="organization"
+                        value="{{ data.organization if data else '' }}"
+                        placeholder="الجهة"
+                        required>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                    الصورة المرفوعة
+            ========================== -->
+
+            {% if image %}
+
+            <div class="preview-image">
+
+                <h3>
+
+                    الصورة المرفوعة
+
+                </h3>
+
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + image) }}"
+                    alt="Uploaded Image">
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- =========================
+                    ACTIONS
+            ========================== -->
+
+            <div class="actions">
+
+
+                <!-- حفظ البيانات -->
+
+                <button
+                    type="submit"
+                    class="save"
+                    id="saveData">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    حفظ البيانات والأرشفة
+
+                </button>
+
+
+
+                <!-- فتح الأرشيف -->
+
+                <a
+                    href="/archive"
+                    class="word">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                    فتح الأرشيف
+
+                </a>
+
+
+
+                <!-- لوحة التحكم -->
+
+                <a
+                    href="/dashboard"
+                    class="dashboard-btn">
+
+                    <i class="fa-solid fa-table-columns"></i>
+
+                    لوحة التحكم
+
+                </a>
+
+
+
+                <!-- رفع نموذج جديد -->
+
+                <a
+                    href="/upload"
+                    class="back">
+
+                    <i class="fa-solid fa-camera"></i>
+
+                    رفع نموذج جديد
+
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+
+
+    <!-- =========================
+            معلومات الأرشفة
+    ========================== -->
+
+    <div class="archive-card">
+
+
+        <h2>
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            معلومات الأرشفة
+
+        </h2>
+
+
+        <p>
+
+            سيتم حفظ البيانات التالية داخل أرشيف النظام:
+
+        </p>
+
+
+        <ul>
+
+
+            <li>
+
+                <i class="fa-solid fa-user"></i>
+
+                اسم المواطن/ة
+
+            </li>
+
+
+            <li>
+
+                <i class="fa-solid fa-building"></i>
+
+                الجهة
+
+            </li>
+
+
+            <li>
+
+                <i class="fa-solid fa-calendar"></i>
+
+                التاريخ
+
+            </li>
+
+
+            <li>
+
+                <i class="fa-solid fa-file-lines"></i>
+
+                رقم الخطاب
+
+            </li>
+
+
+        </ul>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================
+        JAVASCRIPT
+========================== -->
+
+<script src="{{ url_for('static', filename='js/result.js') }}"></script>
+
+
+</body>
+
+</html>

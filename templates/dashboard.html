@@ -1,93 +1,352 @@
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - Bayan OCR</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        /* إضافة لمسات خاصة للداشبورد */
-        :root {
-            --primary-green: #11998e;
-            --navy-dark: #152944;
-        }
-        body { padding: 40px; background: #f6f8f5; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        
-        .add-btn {
-            background: linear-gradient(135deg, var(--primary-green), #27ae60);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 15px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.2);
-            transition: 0.3s;
-        }
-        
-        .add-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3); }
 
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        
-        .card { background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-        .card h2 { color: #788880; font-size: 14px; margin-bottom: 10px; }
-        .card p { font-size: 30px; font-weight: 800; color: var(--primary-green); }
+    <title>Dashboard | Bayan OCR</title>
 
-        .table-container { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); overflow-x: auto; }
-        
-        th { background: var(--navy-dark); color: white; padding: 15px; }
-        td { padding: 15px; border-bottom: 1px solid #f4f4f4; text-align: center; }
-        
-        .home-btn { display: inline-block; margin-top: 30px; background: #eef2f0; color: var(--navy-dark); padding: 12px 25px; border-radius: 15px; text-decoration: none; font-weight: bold; }
-    </style>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
 
 <body>
 
-<div class="header">
-    <h1 style="color: var(--navy-dark);">لوحة التحكم</h1>
-    <a href="/upload" class="add-btn">+ إضافة مستفيد جديد</a>
-</div>
+<div class="sidebar">
 
-<div class="stats">
-    <div class="card">
-        <h2>إجمالي المستفيدين</h2>
-        <p>{{ total }}</p>
+    <div class="logo">
+
+        <img id="logo"
+             class="project-logo"
+             src="{{ url_for('static', filename='images/logo.jpg') }}"
+             alt="Bayan OCR">
+
+        <div class="logo-text">
+
+            <h2>Bayan OCR</h2>
+
+            <span>Smart Data Entry & Archiving System</span>
+
+        </div>
+
     </div>
-    <div class="card">
-        <h2>طلبات اليوم</h2>
-        <p>{{ today }}</p>
+
+    <ul>
+
+        <li class="active">
+            <a href="/dashboard">
+                <i class="fa-solid fa-house"></i>
+                الرئيسية
+            </a>
+        </li>
+
+        <li>
+            <a href="/upload">
+                <i class="fa-solid fa-camera"></i>
+                رفع نموذج
+            </a>
+        </li>
+
+        <li>
+            <a href="/archive">
+                <i class="fa-solid fa-folder-open"></i>
+                الأرشيف
+            </a>
+        </li>
+
+        <li>
+            <a href="/settings">
+                <i class="fa-solid fa-gear"></i>
+                الإعدادات
+            </a>
+        </li>
+
+        <li>
+            <a href="/">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                تسجيل الخروج
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <h1>مرحباً 👋</h1>
+
+            <p class="welcome-text">
+
+                مرحبًا بك في نظام Bayan OCR
+
+            </p>
+
+        </div>
+
+        <div class="icons">
+
+            <button id="dark">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+            
+
+        </div>
+
     </div>
+
+    <!-- =======================
+            الإحصائيات
+    ======================== -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h2>{{ total_clients|default(0) }}</h2>
+
+            <p>إجمالي العملاء</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h2>{{ archived|default(0) }}</h2>
+
+            <p>النماذج المؤرشفة</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-calendar-day"></i>
+
+            <h2>{{ today|default(0) }}</h2>
+
+            <p>عمليات اليوم</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-check"></i>
+
+            <h2>{{ accuracy|default('100%') }}</h2>
+
+            <p>دقة النظام</p>
+
+        </div>
+
+    </div>
+        <!-- =======================
+            آخر العمليات
+    ======================== -->
+
+    <div class="content">
+
+        <div class="recent">
+
+            <div class="title">
+
+                <h2>آخر العمليات</h2>
+
+                <a href="/archive" class="view">
+
+                    عرض الكل
+
+                </a>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+    <tr>
+
+        <th>اسم العميل</th>
+        <th>رقم الخطاب</th>
+        <th>التاريخ</th>
+        <th>الحالة</th>
+
+    </tr>
+
+</thead>
+
+<tbody>
+
+{% if records %}
+
+    {% for record in records %}
+
+    <tr>
+
+        <td>{{ record.client_name }}</td>
+
+        <td>{{ record.letter_number }}</td>
+
+        <td>{{ record.date }}</td>
+
+        <td>
+
+            <span class="success">
+
+                تمت الأرشفة
+
+            </span>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="4"
+                            style="text-align:center;padding:35px;">
+
+                            لا توجد أي عمليات حتى الآن
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- =======================
+                الوصول السريع
+        ======================== -->
+
+        <div class="quick">
+
+            <h2>الوصول السريع</h2>
+
+            <div class="quick-card">
+
+                <i class="fa-solid fa-camera"></i>
+
+                <h3>رفع نموذج</h3>
+
+                <p>
+
+                    ابدأ برفع نموذج جديد وتحويله إلى بيانات رقمية.
+
+                </p>
+
+                <a href="/upload">
+
+                    ابدأ الآن
+
+                </a>
+
+            </div>
+
+            <div class="quick-card">
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                <h3>الأرشيف</h3>
+
+                <p>
+
+                    استعرض جميع النماذج المحفوظة داخل النظام.
+
+                </p>
+
+                <a href="/archive">
+
+                    فتح
+
+                </a>
+
+            </div>
+
+            <div class="quick-card">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <h3>الإعدادات</h3>
+
+                <p>
+
+                    إدارة إعدادات النظام والوضع الليلي.
+
+                </p>
+
+                <a href="/settings">
+
+                    دخول
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- =======================
+            الرسم البياني
+    ======================== -->
+
+    <div class="chart-box">
+
+        <div class="title">
+
+            <h2>
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                إحصائيات النظام
+
+            </h2>
+
+        </div>
+
+        <canvas id="myChart"></canvas>
+
+    </div>
+
 </div>
 
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>رقم الهوية</th>
-                <th>رقم الجوال</th>
-                <th>الجنس</th>
-                <th>نوع الخدمة</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for person in data %}
-            <tr>
-                <td>{{ person[1] }}</td>
-                <td>{{ person[2] }}</td>
-                <td>{{ person[3] }}</td>
-                <td>{{ person[4] }}</td>
-                <td>{{ person[5] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<!-- =======================
+        Chart.js
+======================= -->
 
-<a href="/" class="home-btn">← العودة للرئيسية</a>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- Dashboard JS -->
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
+
 </html>

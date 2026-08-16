@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>الأرشيف | Bayan OCR</title>
+
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/archive.css') }}">
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+            HEADER
+    ========================== -->
+
+    <div class="top">
+
+
+        <div class="logo">
+
+
+            <img id="logo"
+                 src="{{ url_for('static', filename='images/logo.jpg') }}"
+                 alt="Bayan OCR"
+                 class="page-logo">
+
+
+            <div class="logo-text">
+
+                <h2>Bayan OCR</h2>
+
+                <small>
+                    Smart Data Entry & Archiving System
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+        <h1>
+
+            الأرشيف 
+
+        </h1>
+
+
+        <div class="actions">
+
+
+            <button
+                id="dark"
+                type="button">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+
+            <a href="/dashboard">
+
+                <i class="fa-solid fa-house"></i>
+
+                الرئيسية
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+            البحث
+    ========================== -->
+
+    <div class="search-card">
+
+
+        <h2>
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            البحث في الأرشيف
+
+        </h2>
+
+
+        <div class="search-grid">
+
+
+            <!-- اسم المواطن -->
+
+            <div>
+
+                <label>
+
+                    اسم المواطن/ة
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="searchName"
+                    placeholder="ابحث بالاسم">
+
+
+            </div>
+
+
+
+            <!-- رقم الخطاب -->
+
+            <div>
+
+                <label>
+
+                    رقم الخطاب
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="searchLetter"
+                    placeholder="رقم الخطاب">
+
+
+            </div>
+
+
+
+            <!-- التاريخ -->
+
+            <div>
+
+                <label>
+
+                    التاريخ
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="searchDate">
+
+
+            </div>
+
+
+
+            <!-- الجهة -->
+
+            <div>
+
+                <label>
+
+                    الجهة
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="searchDepartment"
+                    placeholder="الجهة">
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="search-buttons">
+
+
+            <button
+                id="searchBtn"
+                type="button">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                بحث
+
+            </button>
+
+
+            <button
+                id="resetBtn"
+                type="button">
+
+                <i class="fa-solid fa-rotate-left"></i>
+
+                إعادة تعيين
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+            جدول الأرشيف
+    ========================== -->
+
+    <div class="table-card">
+
+
+        <div class="table-header">
+
+
+            <h2>
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                السجلات المؤرشفة
+
+            </h2>
+
+
+            <span id="recordCount">
+
+                0 سجل
+
+            </span>
+
+
+        </div>
+
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+
+                            العدد
+
+                        </th>
+
+
+                        <th>
+
+                            رقم الخطاب
+
+                        </th>
+
+
+                        <th>
+
+                            التاريخ
+
+                        </th>
+
+
+                        <th>
+
+                            الجهة
+
+                        </th>
+
+
+                        <th>
+
+                            اسم المواطن/ة
+
+                        </th>
+
+
+                        <th>
+
+                            الإجراءات
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="archiveTable">
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+        <!-- حالة عدم وجود سجلات -->
+
+        <div
+            id="emptyMessage"
+            class="empty-message"
+            style="display:none;">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h3>
+
+                لا توجد سجلات
+
+            </h3>
+
+            <p>
+
+                لم يتم العثور على أي سجلات مطابقة.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+            الأزرار السفلية
+    ========================== -->
+
+    <div class="bottom-actions">
+
+
+        <button
+            id="refreshTable"
+            type="button">
+
+            <i class="fa-solid fa-arrows-rotate"></i>
+
+            تحديث السجلات
+
+        </button>
+
+
+        <a href="/upload">
+
+            <i class="fa-solid fa-file-circle-plus"></i>
+
+            إضافة سجل جديد
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- =========================
+            نافذة عرض البيانات
+    ========================== -->
+
+    <div
+        class="modal"
+        id="viewModal">
+
+
+        <div class="modal-content">
+
+
+            <span
+                class="close"
+                id="closeModal">
+
+                &times;
+
+            </span>
+
+
+            <h2>
+
+                <i class="fa-solid fa-file-lines"></i>
+
+                تفاصيل السجل
+
+            </h2>
+
+
+            <div id="modalBody">
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+
+                <button
+                    id="editRecord"
+                    type="button">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                    تعديل
+
+                </button>
+
+
+                <button
+                    id="downloadWord"
+                    type="button">
+
+                    <i class="fa-solid fa-file-word"></i>
+
+                    فتح ملف Word
+
+                </button>
+
+
+                <button
+                    id="deleteRecord"
+                    type="button">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    حذف
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/archive.js') }}"></script>
+
+
+</body>
+
+</html>

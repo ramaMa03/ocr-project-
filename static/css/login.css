@@ -1,0 +1,683 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Cairo",sans-serif;
+}
+
+:root{
+
+    --primary:#0F4C81;
+    --secondary:#2E8B8B;
+    --background:#F5F9FC;
+    --white:#FFFFFF;
+    --text:#243447;
+    --gray:#64748B;
+
+    --gradient:linear-gradient(
+        135deg,
+        #0F4C81,
+        #2E8B8B
+    );
+
+    --shadow:0 20px 45px rgba(15,76,129,.18);
+
+}
+
+body{
+
+    background:var(--gradient);
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+}
+
+.container{
+
+    width:1200px;
+
+    height:700px;
+
+    display:flex;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+
+}
+
+
+/*====================================
+            LEFT
+====================================*/
+
+.left{
+
+    width:50%;
+
+    background:linear-gradient(
+        180deg,
+        #0F4C81,
+        #2E8B8B
+    );
+
+    color:white;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    padding:60px;
+
+}
+
+.logo{
+
+    text-align:center;
+
+    margin-bottom:45px;
+
+}
+
+
+/*====================================
+            LOGO
+====================================*/
+
+.logo img{
+
+    width:180px;
+
+    height:180px;
+
+    object-fit:contain;
+
+    object-position:center;
+
+    border-radius:20px;
+
+    background:white;
+
+    padding:8px;
+
+    border:none;
+
+    display:block;
+
+    margin:0 auto;
+
+}
+
+
+/*====================================
+            LOGO TITLE
+====================================*/
+
+.logo h1{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    margin-top:20px;
+
+    white-space:nowrap;
+
+}
+
+.logo p{
+
+    font-size:18px;
+
+    opacity:.9;
+
+    white-space:nowrap;
+
+}
+
+
+/*====================================
+            FEATURES
+====================================*/
+
+.features{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+.item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:18px;
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:16px;
+
+    transition:.3s;
+
+}
+
+.item:hover{
+
+    transform:translateX(-6px);
+
+    background:rgba(255,255,255,.20);
+
+}
+
+.item i{
+
+    font-size:28px;
+
+    color:#FFD166;
+
+}
+
+.item span{
+
+    font-size:20px;
+
+    font-weight:600;
+
+}
+
+
+/*====================================
+            RIGHT
+====================================*/
+
+.right{
+
+    width:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:var(--background);
+
+}
+
+
+/*====================================
+            LOGIN CARD
+====================================*/
+
+.login-card{
+
+    width:430px;
+
+    background:var(--white);
+
+    border-radius:25px;
+
+    padding:45px;
+
+    box-shadow:var(--shadow);
+
+    position:relative;
+
+    animation:fadeUp .6s ease;
+
+}
+
+#dark{
+
+    position:absolute;
+
+    top:20px;
+
+    left:20px;
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:var(--gradient);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#dark:hover{
+
+    transform:rotate(15deg);
+
+}
+
+.login-card h2{
+
+    color:var(--primary);
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+}
+
+.login-card p{
+
+    color:var(--gray);
+
+    font-size:17px;
+
+    margin-bottom:35px;
+
+}
+
+
+/*====================================
+            INPUTS
+====================================*/
+
+.input-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    background:#F8FAFC;
+
+    border:2px solid #E2E8F0;
+
+    border-radius:15px;
+
+    padding:15px 18px;
+
+    margin-bottom:20px;
+
+    transition:.3s;
+
+}
+
+.input-box:focus-within{
+
+    border-color:var(--secondary);
+
+    background:white;
+
+    box-shadow:0 0 0 4px rgba(46,139,139,.12);
+
+}
+
+.input-box i{
+
+    color:var(--secondary);
+
+    font-size:20px;
+
+}
+
+.input-box input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:16px;
+
+    color:var(--text);
+
+}
+
+
+/*====================================
+            OPTIONS
+====================================*/
+
+.options{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    font-size:15px;
+
+}
+
+.options label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.options a{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+    font-weight:700;
+
+}
+
+.options a:hover{
+
+    text-decoration:underline;
+
+}
+
+
+/*====================================
+            BUTTON
+====================================*/
+
+.login-btn{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:15px;
+
+    padding:16px;
+
+    background:var(--gradient);
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--shadow);
+
+}
+
+
+/*====================================
+            DARK MODE
+====================================*/
+
+body.dark{
+
+    background:linear-gradient(
+        135deg,
+        #020617,
+        #0F172A
+    );
+
+}
+
+body.dark .right{
+
+    background:#0F172A;
+
+}
+
+body.dark .login-card{
+
+    background:#1E293B;
+
+    box-shadow:none;
+
+}
+
+body.dark .login-card h2{
+
+    color:white;
+
+}
+
+body.dark .login-card p{
+
+    color:#CBD5E1;
+
+}
+
+body.dark .input-box{
+
+    background:#334155;
+
+    border-color:#475569;
+
+}
+
+body.dark .input-box input{
+
+    color:white;
+
+}
+
+body.dark .input-box input::placeholder{
+
+    color:#CBD5E1;
+
+}
+
+body.dark .options{
+
+    color:white;
+
+}
+
+body.dark .options a{
+
+    color:#7DD3FC;
+
+}
+
+
+/*====================================
+            DARK LOGO
+====================================*/
+
+body.dark .logo img{
+
+    background:#0C1524;
+
+    border:none;
+
+    object-fit:contain;
+
+    object-position:center;
+
+}
+
+
+/*====================================
+            RESPONSIVE
+====================================*/
+
+@media(max-width:1000px){
+
+    .container{
+
+        flex-direction:column;
+
+        width:95%;
+
+        height:auto;
+
+    }
+
+    .left{
+
+        width:100%;
+
+        padding:45px;
+
+    }
+
+    .right{
+
+        width:100%;
+
+        padding:45px;
+
+    }
+
+    .login-card{
+
+        width:100%;
+
+        max-width:430px;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .logo img{
+
+        width:150px;
+
+        height:150px;
+
+    }
+
+    .logo h1{
+
+        font-size:32px;
+
+    }
+
+    .logo p{
+
+        font-size:16px;
+
+    }
+
+    .item{
+
+        font-size:17px;
+
+        padding:14px;
+
+    }
+
+    .login-card{
+
+        padding:30px;
+
+    }
+
+    .login-card h2{
+
+        font-size:28px;
+
+    }
+
+    #dark{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+}
+
+
+/*====================================
+            ANIMATION
+====================================*/
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.login-card{
+
+    animation:fadeUp .6s ease;
+
+}
+
+.item{
+
+    transition:.3s;
+
+}
+
+.item:hover{
+
+    box-shadow:0 10px 25px rgba(255,255,255,.12);
+
+}
+
+
+/*====================================
+                END
+====================================*/

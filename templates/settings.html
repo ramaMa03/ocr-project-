@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>الإعدادات | Bayan OCR</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/settings.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <div class="logo">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}"
+         alt="Bayan OCR"
+         class="page-logo">
+
+    <div class="logo-text">
+        <h2>Bayan OCR</h2>
+        <small>Smart Data Entry & Archiving System</small>
+    </div>
+
+</div>
+
+<h1>
+
+الإعدادات
+
+</h1>
+
+<a href="/dashboard">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+العودة للوحة التحكم
+
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+معلومات المشروع
+
+</h2>
+
+<div class="info">
+
+<p><strong>اسم المشروع:</strong></p>
+
+<p>Smart Data Entry System for Social Development Centers</p>
+
+<p><strong>الاسم المختصر:</strong></p>
+
+<p>Bayan OCR</p>
+
+<p><strong>هدف المشروع:</strong></p>
+
+<p>
+
+أتمتة إدخال بيانات المستفيدين وأرشفتها باستخدام OCR والذكاء الاصطناعي لتقليل الوقت والأخطاء البشرية.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+أعضاء الفريق
+
+</h2>
+
+<ul>
+
+<li>أصايل عاطف الحربي</li>
+
+<li>راما عليان الصاعدي</li>
+
+<li>شذى بندر العتيبي</li>
+
+</ul>
+
+</div>
+<div class="card">
+
+<h2>
+
+إعدادات النظام
+
+</h2>
+
+<div class="setting">
+
+<div>
+
+<h3>
+
+الوضع الليلي
+
+</h3>
+
+<p>
+
+تفعيل أو إيقاف الوضع الليلي للنظام.
+
+</p>
+
+</div>
+
+<label class="switch">
+
+<input type="checkbox" id="themeToggle">
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<div class="setting">
+
+<div>
+
+<h3>
+
+حفظ إعدادات المستخدم
+
+</h3>
+
+<p>
+
+سيتم حفظ إعدادات النظام داخل المتصفح تلقائياً.
+
+</p>
+
+</div>
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+معلومات النظام
+
+</h2>
+
+<div class="system-info">
+
+<div>
+
+<span>لغة البرمجة</span>
+
+<strong>Python + Flask</strong>
+
+</div>
+
+<div>
+
+<span>OCR Engine</span>
+
+<strong>EasyOCR</strong>
+
+</div>
+
+<div>
+
+<span>قاعدة البيانات</span>
+
+<strong>SQLite</strong>
+
+</div>
+
+<div>
+
+<span>واجهة المستخدم</span>
+
+<strong>HTML / CSS / JavaScript</strong>
+
+</div>
+
+<div>
+
+<span>الإصدار</span>
+
+<strong>Version 1.0</strong>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button id="saveSettings">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+حفظ الإعدادات
+
+</button>
+
+<button id="resetSettings">
+
+<i class="fa-solid fa-rotate-left"></i>
+
+إعادة التعيين
+
+</button>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+</body>
+
+</html>
