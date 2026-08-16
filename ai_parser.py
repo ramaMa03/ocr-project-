@@ -1,45 +1,75 @@
 
 import re
+import unicodedata
 
 
-# ==================================
-# تنظيف النص العام
-# ==================================
+# ============================================================
+# تنظيف النص
+# ============================================================
 
 def normalize_text(text):
 
     if not text:
         return ""
 
-    # توحيد بعض علامات الترقيم
-    text = text.replace("：", ":")
-    text = text.replace("–", "-")
-    text = text.replace("—", "-")
+    text = unicodedata.normalize("NFKC", text)
+
+    replacements = {
+        "：": ":",
+        "؛": ";",
+        "،": ",",
+        "–": "-",
+        "—": "-",
+        "ـ": "",
+        "\u200f": "",
+        "\u200e": "",
+        "\ufeff": "",
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    text = re.sub(r"[ \t]+", " ", text)
 
     return text.strip()
 
 
-# ==================================
-# تنظيف قيمة الحقل
-# ==================================
+# ============================================================
+# تحويل الأرقام العربية إلى إنجليزية
+# ============================================================
+
+def normalize_digits(text):
+
+    if not text:
+        return ""
+
+    table = str.maketrans(
+        "٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹",
+        "01234567890123456789"
+    )
+
+    return text.translate(table)
+
+
+# ============================================================
+# تنظيف قيمة
+# ============================================================
 
 def clean_value(value):
 
     if not value:
         return ""
 
-    value = value.strip()
+    value = normalize_text(value)
 
-    # إزالة الرموز من البداية
     value = re.sub(
-        r"^[\s:,\-–—_]+",
+        r"^[\s:،,؛;\-–—_=|]+",
         "",
         value
     )
 
-    # إزالة الرموز من النهاية
     value = re.sub(
-        r"[\s:,\-–—_]+$",
+        r"[\s:،,؛;\-–—_=|]+$",
         "",
         value
     )
@@ -47,43 +77,143 @@ def clean_value(value):
     return value.strip()
 
 
-# ==================================
-# معرفة هل السطر يحتوي على عنوان حقل
-# ==================================
+# ============================================================
+# عناوين الحقول
+# ============================================================
+
+FIELD_LABELS = {
+
+    "name": [
+        "الاسم الكامل",
+        "اسم المواطن/ة",
+        "اسم المواطن /ة",
+        "اسم المواطنه",
+        "اسم المواطنة",
+        "اسم المواطن",
+        "اسم المستفيد/ة",
+        "اسم المستفيد",
+        "اسم المستفيدة",
+        "اسم العميل/ة",
+        "اسم العميل",
+        "اسم العميلة",
+        "الاسم"
+    ],
+
+    "letter_number": [
+        "رقم الخطاب",
+        "رقم خطاب"
+    ],
+
+    "date": [
+        "تاريخ الخطاب",
+        "التاريخ",
+        "تاريخ"
+    ],
+
+    "organization": [
+        "اسم الجهة",
+        "الجهة المرسلة",
+        "الجهة المستفيدة",
+        "الجهة",
+        "جهة"
+    ]
+}
+
+
+# ============================================================
+# عناوين توقف استخراج الاسم
+# ============================================================
+
+STOP_LABELS = [
+    "رقم السجل المدني",
+    "رقم الهوية",
+    "رقم الهوية الوطنية",
+    "رقم الجوال",
+    "رقم الهاتف",
+    "العنوان",
+    "الجنس",
+    "الحالة الاجتماعية",
+    "المدينة",
+    "المنطقة",
+    "تاريخ الميلاد",
+    "الجنسية",
+    "رقم الخطاب",
+    "رقم خطاب",
+    "التاريخ",
+    "تاريخ الخطاب",
+    "الجهة",
+    "اسم الجهة",
+    "الموضوع",
+    "نوع الخدمة",
+    "الطلب",
+    "الحالة"
+]
+
+
+# ============================================================
+# هل السطر عنوان حقل؟
+# ============================================================
 
 def contains_label(line, labels):
 
-    line_lower = line.lower()
+    if not line:
+        return False
+
+    normalized = normalize_text(line)
 
     for label in labels:
 
-        if label in line_lower:
-            return label
+        if label in normalized:
+            return True
 
-    return None
+    return False
 
 
-# ==================================
-# استخراج القيمة بعد العنوان
-# ==================================
+# ============================================================
+# هل السطر حقل آخر؟
+# ============================================================
 
-def get_value_after_label(line, label):
+def is_field_line(line):
+
+    if not line:
+        return False
+
+    for field in FIELD_LABELS.values():
+
+        if contains_label(
+            line,
+            field
+        ):
+            return True
+
+    for label in STOP_LABELS:
+
+        if label in line:
+            return True
+
+    return False
+
+
+# ============================================================
+# استخراج ما بعد العنوان
+# ============================================================
+
+def get_after_label(line, label):
 
     if not line or not label:
         return ""
 
-    # إزالة العنوان مرة واحدة فقط
-    value = re.sub(
-        re.escape(label),
-        "",
-        line,
-        count=1,
-        flags=re.IGNORECASE
-    )
+    index = line.find(label)
 
-    # إزالة : أو - أو الرموز بين العنوان والقيمة
+    if index == -1:
+        return ""
+
+    value = line[
+        index + len(label):
+    ]
+
     value = re.sub(
-        r"^[\s:,\-–—_]+",
+        r"^[\s:：\-–—_/]+",
         "",
         value
     )
@@ -91,404 +221,481 @@ def get_value_after_label(line, label):
     return clean_value(value)
 
 
-# ==================================
-# التحقق من أن السطر عنوان حقل آخر
-# ==================================
+# ============================================================
+# هل النص اسم منطقي؟
+# ============================================================
 
-def is_another_field(line):
+def valid_name(value):
 
-    labels = [
+    if not value:
+        return False
 
-        "اسم المواطن",
-        "اسم المواطنة",
-        "اسم المستفيد",
-        "اسم العميل",
-        "الاسم",
+    value = clean_value(value)
 
-        "رقم الخطاب",
-        "رقم خطاب",
+    if len(value) < 3:
+        return False
 
-        "التاريخ",
-        "تاريخ",
+    # الاسم لا ينبغي أن يحتوي أرقامًا
+    if re.search(r"\d", value):
+        return False
 
-        "الجهة",
-        "جهة",
-
-        "العدد",
-
-        "الموضوع",
-        "الطلب",
-
-        "المشكلة",
-        "الحالة",
-
-        "نوع الخدمة",
-
-        "رقم الهوية",
-        "رقم الهوية الوطنية",
-
-        "رقم الجوال",
-        "رقم الهاتف"
-
-    ]
-
-    return contains_label(
-        line,
-        labels
-    ) is not None
-
-
-# ==================================
-# الحصول على السطر التالي المفيد
-# ==================================
-
-def get_next_useful_line(lines, index):
-
-    for next_index in range(
-        index + 1,
-        min(index + 4, len(lines))
+    # يجب أن يحتوي حروفًا
+    if not re.search(
+        r"[A-Za-z\u0600-\u06FF]",
+        value
     ):
+        return False
 
-        value = clean_value(
-            lines[next_index]
-        )
-
-        if not value:
-            continue
-
-        # إذا وصلنا إلى حقل آخر نتوقف
-        if is_another_field(value):
-            return ""
-
-        return value
-
-    return ""
+    return True
 
 
-# ==================================
+# ============================================================
 # استخراج الاسم
-# ==================================
+# ============================================================
 
 def extract_client_name(lines):
 
-    labels = [
-
-        "اسم المواطنة",
-        "اسم المواطن",
-        "اسم المستفيد",
-        "اسم العميل",
-        "الاسم"
-
-    ]
-
     for i, line in enumerate(lines):
 
-        label = contains_label(
-            line,
-            labels
-        )
+        if not line:
+            continue
+
+        # ----------------------------------------------------
+        # البحث عن "الاسم الكامل" أولًا
+        # ----------------------------------------------------
+
+        label = None
+
+        for candidate in FIELD_LABELS["name"]:
+
+            if candidate in line:
+                label = candidate
+                break
 
         if not label:
             continue
 
+        # ----------------------------------------------------
+        # القيمة في نفس السطر
+        # ----------------------------------------------------
 
-        # ==================================
-        # القيمة الموجودة في نفس السطر
-        # ==================================
-
-        value = get_value_after_label(
+        value = get_after_label(
             line,
             label
         )
 
-
-        # ==================================
-        # حالة OCR:
-        # اسم المواطن ة: فهد عبد العزيز
-        # ==================================
-
-        value = re.sub(
-            r"^[\s:：\-–—_]*[ةه]\s*[:：\-–—]?\s*",
-            "",
-            value
-        ).strip()
-
-
         if value:
 
-            # إذا كان بعد الاسم حقل آخر
-            if not is_another_field(value):
-
-                return clean_value(value)
-
-
-        # ==================================
-        # إذا كانت القيمة في السطر التالي
-        # ==================================
-
-        next_value = get_next_useful_line(
-            lines,
-            i
-        )
-
-        if next_value:
-
-            return clean_value(
-                next_value
+            # إزالة كلمات غير مرغوبة
+            value = re.sub(
+                r"^[\s:：\-–—_/]+",
+                "",
+                value
             )
 
+            value = clean_value(value)
+
+        # ----------------------------------------------------
+        # إذا لم توجد قيمة في نفس السطر
+        # ----------------------------------------------------
+
+        collected = []
+
+        if value and valid_name(value):
+
+            collected.append(value)
+
+        # ----------------------------------------------------
+        # نقرأ الأسطر التالية لاستكمال الاسم
+        # ----------------------------------------------------
+
+        for j in range(
+            i + 1,
+            min(i + 4, len(lines))
+        ):
+
+            next_line = clean_value(
+                lines[j]
+            )
+
+            if not next_line:
+                continue
+
+            # توقف عند بداية حقل جديد
+            if is_field_line(next_line):
+                break
+
+            # لا نريد أرقام داخل الاسم
+            if re.search(
+                r"\d",
+                next_line
+            ):
+                break
+
+            # يجب أن يحتوي على حروف
+            if not re.search(
+                r"[A-Za-z\u0600-\u06FF]",
+                next_line
+            ):
+                continue
+
+            collected.append(next_line)
+
+            # الاسم عادة لا يحتاج أكثر من سطرين
+            if len(" ".join(collected)) > 100:
+                break
+
+        # ----------------------------------------------------
+        # دمج أجزاء الاسم
+        # ----------------------------------------------------
+
+        if collected:
+
+            result = " ".join(
+                collected
+            )
+
+            result = clean_value(
+                result
+            )
+
+            if valid_name(result):
+
+                # إزالة بقايا "الكامل"
+                result = re.sub(
+                    r"^الكامل\s*[:：\-]?\s*",
+                    "",
+                    result
+                )
+
+                return result.strip()
 
     return ""
 
 
-# ==================================
+# ============================================================
 # استخراج رقم الخطاب
-# ==================================
+# ============================================================
 
 def extract_letter_number(lines):
 
-    labels = [
-
-        "رقم الخطاب",
-        "رقم خطاب"
-
-    ]
-
     for i, line in enumerate(lines):
 
-        label = contains_label(
-            line,
-            labels
-        )
+        label = None
+
+        for candidate in FIELD_LABELS["letter_number"]:
+
+            if candidate in line:
+                label = candidate
+                break
 
         if not label:
             continue
 
-
-        value = get_value_after_label(
+        value = get_after_label(
             line,
             label
         )
 
-
+        # إذا كان الرقم في نفس السطر
         if value:
 
-            # إزالة المسافات الزائدة فقط
+            value = normalize_digits(
+                value
+            )
+
+            # الاحتفاظ بالأرقام والحروف والرموز المعتادة
             value = re.sub(
-                r"\s+",
-                " ",
+                r"[^\w\-/.]",
+                "",
+                value,
+                flags=re.UNICODE
+            )
+
+            if re.search(
+                r"\d",
                 value
+            ):
+                return value
+
+        # الرقم في السطر التالي
+        if i + 1 < len(lines):
+
+            next_line = clean_value(
+                lines[i + 1]
             )
 
-            return clean_value(
-                value
-            )
+            if next_line:
 
+                next_line = normalize_digits(
+                    next_line
+                )
 
-        next_value = get_next_useful_line(
-            lines,
-            i
-        )
+                next_line = re.sub(
+                    r"[^\w\-/.]",
+                    "",
+                    next_line,
+                    flags=re.UNICODE
+                )
 
-        if next_value:
-
-            return clean_value(
-                next_value
-            )
-
+                if re.search(
+                    r"\d",
+                    next_line
+                ):
+                    return next_line
 
     return ""
 
 
-# ==================================
+# ============================================================
 # استخراج التاريخ
-# ==================================
+# ============================================================
+
+def normalize_date(value):
+
+    if not value:
+        return ""
+
+    value = normalize_digits(
+        value
+    )
+
+    value = value.replace(
+        "/",
+        "-"
+    )
+
+    value = value.replace(
+        ".",
+        "-"
+    )
+
+    value = re.sub(
+        r"\s+",
+        "",
+        value
+    )
+
+    # DD-MM-YYYY
+    match = re.search(
+        r"\b(\d{1,2})-(\d{1,2})-(\d{4})\b",
+        value
+    )
+
+    if match:
+
+        day = int(
+            match.group(1)
+        )
+
+        month = int(
+            match.group(2)
+        )
+
+        year = int(
+            match.group(3)
+        )
+
+        if (
+            1 <= day <= 31
+            and
+            1 <= month <= 12
+        ):
+
+            return (
+                f"{day:02d}-"
+                f"{month:02d}-"
+                f"{year}"
+            )
+
+    # YYYY-MM-DD
+    match = re.search(
+        r"\b(\d{4})-(\d{1,2})-(\d{1,2})\b",
+        value
+    )
+
+    if match:
+
+        year = int(
+            match.group(1)
+        )
+
+        month = int(
+            match.group(2)
+        )
+
+        day = int(
+            match.group(3)
+        )
+
+        if (
+            1 <= day <= 31
+            and
+            1 <= month <= 12
+        ):
+
+            return (
+                f"{day:02d}-"
+                f"{month:02d}-"
+                f"{year}"
+            )
+
+    return ""
+
 
 def extract_date(lines):
 
-    labels = [
-
-        "التاريخ",
-        "تاريخ"
-
-    ]
-
+    # أولًا ابحث عن التاريخ بجانب عنوانه
     for i, line in enumerate(lines):
 
-        label = contains_label(
-            line,
-            labels
-        )
+        for label in FIELD_LABELS["date"]:
 
-        if not label:
-            continue
+            if label not in line:
+                continue
 
+            value = get_after_label(
+                line,
+                label
+            )
 
-        value = get_value_after_label(
-            line,
-            label
-        )
-
-
-        if value:
-
-            return clean_value(
+            result = normalize_date(
                 value
             )
 
+            if result:
+                return result
 
-        next_value = get_next_useful_line(
-            lines,
-            i
+            if i + 1 < len(lines):
+
+                result = normalize_date(
+                    lines[i + 1]
+                )
+
+                if result:
+                    return result
+
+    # محاولة أخيرة: أي تاريخ في النص
+    for line in lines:
+
+        result = normalize_date(
+            line
         )
 
-        if next_value:
-
-            return clean_value(
-                next_value
-            )
-
+        if result:
+            return result
 
     return ""
 
 
-# ==================================
+# ============================================================
 # استخراج الجهة
-# ==================================
+# ============================================================
 
 def extract_organization(lines):
 
-    labels = [
-
-        "الجهة",
-        "جهة"
-
-    ]
-
     for i, line in enumerate(lines):
 
-        label = contains_label(
-            line,
-            labels
-        )
+        label = None
+
+        for candidate in FIELD_LABELS["organization"]:
+
+            if candidate in line:
+                label = candidate
+                break
 
         if not label:
             continue
 
-
-        value = get_value_after_label(
+        value = get_after_label(
             line,
             label
         )
 
-
         if value:
 
-            return clean_value(
+            # إزالة رموز البداية
+            value = clean_value(
                 value
             )
 
+            if len(value) >= 3:
+                return value
 
-        next_value = get_next_useful_line(
-            lines,
-            i
-        )
+        # الجهة في السطر التالي
+        if i + 1 < len(lines):
 
-        if next_value:
-
-            return clean_value(
-                next_value
+            next_line = clean_value(
+                lines[i + 1]
             )
 
+            if (
+                next_line
+                and
+                not is_field_line(next_line)
+                and
+                len(next_line) >= 3
+            ):
+
+                return next_line
 
     return ""
 
 
-# ==================================
-# استخراج بيانات الأرشفة
-# ==================================
+# ============================================================
+# الدالة الرئيسية
+# ============================================================
 
 def parse_text(text):
 
     data = {
-
         "client_name": "",
-
         "letter_number": "",
-
         "date": "",
-
         "organization": ""
-
     }
 
-
     if not text:
-
         return data
-
-
-    # ==================================
-    # تنظيف النص
-    # ==================================
 
     text = normalize_text(
         text
     )
 
-
-    # ==================================
-    # تقسيم النص إلى أسطر
-    # ==================================
-
     lines = [
-
-        line.strip()
-
+        clean_value(line)
         for line in text.splitlines()
-
-        if line.strip()
-
+        if clean_value(line)
     ]
 
-
     if not lines:
-
         return data
 
-
-    # ==================================
-    # استخراج الحقول المطلوبة فقط
-    # ==================================
+    # --------------------------------------------------------
+    # استخراج البيانات
+    # --------------------------------------------------------
 
     data["client_name"] = (
         extract_client_name(lines)
     )
 
-
     data["letter_number"] = (
         extract_letter_number(lines)
     )
-
 
     data["date"] = (
         extract_date(lines)
     )
 
-
     data["organization"] = (
         extract_organization(lines)
     )
 
-
-    # ==================================
-    # عرض النتيجة في Terminal
-    # ==================================
+    # --------------------------------------------------------
+    # عرض النتيجة
+    # --------------------------------------------------------
 
     print("=" * 60)
-
     print("PARSED DATA")
-
     print("=" * 60)
 
     print(
@@ -512,6 +719,5 @@ def parse_text(text):
     )
 
     print("=" * 60)
-
 
     return data

@@ -7,6 +7,7 @@ const fileInput = document.getElementById("fileInput");
 const previewImage = document.getElementById("previewImage");
 const previewPDF = document.getElementById("previewPDF");
 const dropArea = document.getElementById("dropArea");
+const fileName = document.getElementById("fileName");
 
 const progress = document.getElementById("progress");
 const statusText = document.getElementById("status");
@@ -30,11 +31,11 @@ let selectedFile = null;
 // اختيار ملف
 //====================================
 
-if(fileInput){
+if (fileInput) {
 
-    fileInput.addEventListener("change", function(){
+    fileInput.addEventListener("change", function () {
 
-        if(this.files.length === 0){
+        if (this.files.length === 0) {
             return;
         }
 
@@ -51,15 +52,29 @@ if(fileInput){
 // معاينة الملف
 //====================================
 
-function previewFile(file){
+function previewFile(file) {
 
     const reader = new FileReader();
 
-    if(file.type.startsWith("image")){
+    // عرض اسم الملف
+    if (fileName) {
 
-        reader.onload = function(e){
+        fileName.innerHTML =
+            "📄 " + file.name;
+
+    }
+
+
+    //================================
+    // صورة
+    //================================
+
+    if (file.type.startsWith("image")) {
+
+        reader.onload = function (e) {
 
             previewImage.src = e.target.result;
+
             previewImage.style.display = "block";
 
             previewPDF.style.display = "none";
@@ -70,11 +85,17 @@ function previewFile(file){
 
     }
 
-    else if(file.type === "application/pdf"){
 
-        reader.onload = function(e){
+    //================================
+    // PDF
+    //================================
+
+    else if (file.type === "application/pdf") {
+
+        reader.onload = function (e) {
 
             previewPDF.src = e.target.result;
+
             previewPDF.style.display = "block";
 
             previewImage.style.display = "none";
@@ -85,7 +106,9 @@ function previewFile(file){
 
     }
 
-    statusText.innerHTML = "✅ تم اختيار الصورة أو ملف PDF";
+
+    statusText.innerHTML =
+        "✅ تم اختيار الملف بنجاح";
 
     progress.style.width = "10%";
 
@@ -96,27 +119,28 @@ function previewFile(file){
 // CAMERA
 //====================================
 
-if(cameraBtn){
+if (cameraBtn) {
 
-    cameraBtn.addEventListener("click", async ()=>{
+    cameraBtn.addEventListener("click", async () => {
 
         cameraSection.classList.add("active");
 
-        try{
+        try {
 
-            stream = await navigator.mediaDevices.getUserMedia({
+            stream =
+                await navigator.mediaDevices.getUserMedia({
 
-                video:{
-                    facingMode:"environment"
-                }
+                    video: {
+                        facingMode: "environment"
+                    }
 
-            });
+                });
 
             video.srcObject = stream;
 
         }
 
-        catch(error){
+        catch (error) {
 
             alert("تعذر تشغيل الكاميرا");
 
@@ -133,14 +157,18 @@ if(cameraBtn){
 // CAPTURE IMAGE
 //====================================
 
-if(captureBtn){
+if (captureBtn) {
 
-    captureBtn.addEventListener("click",()=>{
+    captureBtn.addEventListener("click", () => {
 
-        const context = canvas.getContext("2d");
+        const context =
+            canvas.getContext("2d");
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        canvas.width =
+            video.videoWidth;
+
+        canvas.height =
+            video.videoHeight;
 
         context.drawImage(
             video,
@@ -150,30 +178,52 @@ if(captureBtn){
             canvas.height
         );
 
-        canvas.toBlob(function(blob){
+
+        canvas.toBlob(function (blob) {
 
             selectedFile = new File(
                 [blob],
                 "camera.jpg",
                 {
-                    type:"image/png"
+                    type: "image/jpeg"
                 }
             );
 
-            previewImage.src = URL.createObjectURL(selectedFile);
 
-            previewImage.style.display = "block";
+            previewImage.src =
+                URL.createObjectURL(selectedFile);
 
-            previewPDF.style.display = "none";
+            previewImage.style.display =
+                "block";
 
-            statusText.innerHTML = "📷 تم التقاط الصورة بنجاح";
+            previewPDF.style.display =
+                "none";
 
-            progress.style.width = "20%";
 
-        });
+            // اسم الملف
+            if (fileName) {
 
-        if(stream){
-            stream.getTracks().forEach(track=>track.stop());
+                fileName.innerHTML =
+                    "📷 camera.jpg";
+
+            }
+
+
+            statusText.innerHTML =
+                "📷 تم التقاط الصورة بنجاح";
+
+            progress.style.width =
+                "20%";
+
+        }, "image/jpeg");
+
+
+        if (stream) {
+
+            stream
+                .getTracks()
+                .forEach(track => track.stop());
+
         }
 
         cameraSection.classList.remove("active");
@@ -187,12 +237,16 @@ if(captureBtn){
 // CLOSE CAMERA
 //====================================
 
-if(closeCamera){
+if (closeCamera) {
 
-    closeCamera.addEventListener("click",()=>{
+    closeCamera.addEventListener("click", () => {
 
-        if(stream){
-            stream.getTracks().forEach(track=>track.stop());
+        if (stream) {
+
+            stream
+                .getTracks()
+                .forEach(track => track.stop());
+
         }
 
         cameraSection.classList.remove("active");
@@ -206,114 +260,176 @@ if(closeCamera){
 // DRAG & DROP
 //====================================
 
-dropArea.addEventListener("dragover",(e)=>{
+if (dropArea) {
 
-    e.preventDefault();
+    dropArea.addEventListener("dragover", (e) => {
 
-    dropArea.classList.add("dragover");
+        e.preventDefault();
 
-});
+        dropArea.classList.add("dragover");
 
-dropArea.addEventListener("dragleave",()=>{
+    });
 
-    dropArea.classList.remove("dragover");
 
-});
+    dropArea.addEventListener("dragleave", () => {
 
-dropArea.addEventListener("drop",(e)=>{
+        dropArea.classList.remove("dragover");
 
-    e.preventDefault();
+    });
 
-    dropArea.classList.remove("dragover");
 
-    if(e.dataTransfer.files.length===0){
-        return;
-    }
+    dropArea.addEventListener("drop", (e) => {
 
-    selectedFile = e.dataTransfer.files[0];
+        e.preventDefault();
 
-    previewFile(selectedFile);
+        dropArea.classList.remove("dragover");
 
-});
+
+        if (e.dataTransfer.files.length === 0) {
+
+            return;
+
+        }
+
+
+        selectedFile =
+            e.dataTransfer.files[0];
+
+        previewFile(selectedFile);
+
+    });
+
+}
 
 
 //====================================
 // EXTRACT DATA
 //====================================
 
-if(extractBtn){
+if (extractBtn) {
 
-    extractBtn.addEventListener("click", async ()=>{
+    extractBtn.addEventListener("click", async (event) => {
 
-        if(!selectedFile){
+        // مهم جدًا:
+        // منع إرسال الفورم بشكل طبيعي
+        event.preventDefault();
 
-            alert("الرجاء اختيار صورة أو ملف PDF أولاً.");
+
+        if (!selectedFile) {
+
+            alert(
+                "الرجاء اختيار صورة أو ملف PDF أولاً."
+            );
 
             return;
 
         }
 
-        const formData = new FormData();
 
-        formData.append("image", selectedFile);
+        const formData =
+            new FormData();
 
-        statusText.innerHTML = "🔍 جاري قراءة النموذج...";
+        formData.append(
+            "image",
+            selectedFile
+        );
 
-        progress.style.width = "20%";
+
+        statusText.innerHTML =
+            "🔍 جاري قراءة النموذج...";
+
+        progress.style.width =
+            "20%";
+
 
         let value = 20;
 
-        const loading = setInterval(()=>{
 
-            if(value < 90){
+        const loading =
+            setInterval(() => {
 
-                value += 5;
+                if (value < 90) {
 
-                progress.style.width = value + "%";
+                    value += 5;
 
-            }
+                    progress.style.width =
+                        value + "%";
 
-        },200);
+                }
 
-        try{
+            }, 200);
 
-            const response = await fetch("/upload-image",{
 
-                method:"POST",
+        try {
 
-                body:formData
+            const response =
+                await fetch(
+                    "/upload-image",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
 
-            });
 
             clearInterval(loading);
 
-            progress.style.width = "100%";
 
-            if(response.ok){
+            //================================
+            // قراءة JSON
+            //================================
 
-                statusText.innerHTML = "✅ تم استخراج البيانات بنجاح، سيتم تحويلك...";
+            const result =
+                await response.json();
 
-                setTimeout(()=>{
 
-                    window.location.href="/result";
+            if (
+                response.ok &&
+                result.success
+            ) {
 
-                },800);
+                progress.style.width =
+                    "100%";
 
-            }else{
 
-                statusText.innerHTML="❌ تعذر استخراج البيانات، يرجى تجربة صورة أوضح.";
+                statusText.innerHTML =
+                    "✅ تم استخراج البيانات بنجاح";
+
+
+                // عرض البيانات
+                displayExtractedData(
+                    result.data
+                );
+
+
+            }
+
+            else {
+
+                statusText.innerHTML =
+                    "❌ تعذر استخراج البيانات";
+
+
+                alert(
+                    result.message ||
+                    "حدث خطأ أثناء استخراج البيانات."
+                );
 
             }
 
         }
 
-        catch(error){
+        catch (error) {
 
             clearInterval(loading);
 
-            progress.style.width="0%";
+            progress.style.width =
+                "0%";
 
-            statusText.innerHTML="❌ تعذر الاتصال بالخادم.";
+
+            statusText.innerHTML =
+                "❌ تعذر الاتصال بالخادم";
+
 
             console.log(error);
 
@@ -322,74 +438,340 @@ if(extractBtn){
     });
 
 }
+
+
 //====================================
-// DARK MODE
+// عرض البيانات المستخرجة
 //====================================
 
-const dark = document.getElementById("dark");
-const logo = document.getElementById("logo");
+function displayExtractedData(data) {
 
-function setTheme(theme){
+    if (!resultBox) {
+        return;
+    }
 
-    const icon = dark ? dark.querySelector("i") : null;
 
-    if(theme === "dark"){
+    resultBox.innerHTML = `
 
-        document.body.classList.add("dark");
+        <div class="extracted-fields">
 
-        if(icon){
-            icon.className = "fa-solid fa-sun";
+            <div class="field">
+
+                <label>اسم المواطن</label>
+
+                <input
+                    type="text"
+                    id="client_name"
+                    value="${escapeHtml(data.client_name || "")}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>رقم الخطاب</label>
+
+                <input
+                    type="text"
+                    id="letter_number"
+                    value="${escapeHtml(data.letter_number || "")}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>التاريخ</label>
+
+                <input
+                    type="text"
+                    id="date"
+                    value="${escapeHtml(data.date || "")}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>الجهة</label>
+
+                <input
+                    type="text"
+                    id="organization"
+                    value="${escapeHtml(data.organization || "")}"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                id="saveBtn"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                حفظ البيانات
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    // زر الحفظ
+    const saveBtn =
+        document.getElementById("saveBtn");
+
+
+    if (saveBtn) {
+
+        saveBtn.addEventListener(
+            "click",
+            saveData
+        );
+
+    }
+
+}
+
+
+//====================================
+// حفظ البيانات
+//====================================
+
+async function saveData() {
+
+    const data = {
+
+        client_name:
+            document.getElementById(
+                "client_name"
+            ).value.trim(),
+
+        letter_number:
+            document.getElementById(
+                "letter_number"
+            ).value.trim(),
+
+        date:
+            document.getElementById(
+                "date"
+            ).value.trim(),
+
+        organization:
+            document.getElementById(
+                "organization"
+            ).value.trim()
+
+    };
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/save",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(data)
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            response.ok &&
+            result.success
+        ) {
+
+            alert(
+                "✅ تم حفظ البيانات وأرشفتها بنجاح."
+            );
+
+
+            // الانتقال لصفحة النجاح
+            window.location.href =
+                "/result?id=" +
+                result.id;
+
         }
 
-        if(logo){
-            logo.src = "/static/images/logo-dark.jpg";
-        }
+        else {
 
-    }else{
+            alert(
+                result.message ||
+                "حدث خطأ أثناء الحفظ."
+            );
 
-        document.body.classList.remove("dark");
-
-        if(icon){
-            icon.className = "fa-solid fa-moon";
-        }
-
-        if(logo){
-            logo.src = "/static/images/logo.jpg";
         }
 
     }
 
-    localStorage.setItem("theme", theme);
+    catch (error) {
+
+        console.log(error);
+
+        alert(
+            "تعذر الاتصال بالخادم."
+        );
+
+    }
 
 }
 
-const savedTheme = localStorage.getItem("theme");
 
-if(savedTheme){
+//====================================
+// حماية النص من HTML
+//====================================
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+//====================================
+// DARK MODE
+//====================================
+
+const dark =
+    document.getElementById("dark");
+
+const logo =
+    document.getElementById("logo");
+
+
+function setTheme(theme) {
+
+    const icon =
+        dark
+            ? dark.querySelector("i")
+            : null;
+
+
+    if (theme === "dark") {
+
+        document.body.classList.add("dark");
+
+
+        if (icon) {
+
+            icon.className =
+                "fa-solid fa-sun";
+
+        }
+
+
+        if (logo) {
+
+            logo.src =
+                "/static/images/logo-dark.jpg";
+
+        }
+
+    }
+
+    else {
+
+        document.body.classList.remove("dark");
+
+
+        if (icon) {
+
+            icon.className =
+                "fa-solid fa-moon";
+
+        }
+
+
+        if (logo) {
+
+            logo.src =
+                "/static/images/logo.jpg";
+
+        }
+
+    }
+
+
+    localStorage.setItem(
+        "theme",
+        theme
+    );
+
+}
+
+
+const savedTheme =
+    localStorage.getItem("theme");
+
+
+if (savedTheme) {
 
     setTheme(savedTheme);
 
-}else{
+}
+
+else {
 
     setTheme("light");
 
 }
 
-if(dark){
 
-    dark.addEventListener("click", ()=>{
+if (dark) {
 
-        if(document.body.classList.contains("dark")){
+    dark.addEventListener(
+        "click",
+        () => {
 
-            setTheme("light");
+            if (
+                document.body.classList.contains(
+                    "dark"
+                )
+            ) {
 
-        }else{
+                setTheme("light");
 
-            setTheme("dark");
+            }
+
+            else {
+
+                setTheme("dark");
+
+            }
 
         }
-
-    });
+    );
 
 }
 
@@ -398,40 +780,71 @@ if(dark){
 // RESET
 //====================================
 
-function resetUpload(){
+function resetUpload() {
 
     selectedFile = null;
 
-    if(fileInput){
+
+    if (fileInput) {
+
         fileInput.value = "";
+
     }
 
-    progress.style.width = "0%";
 
-    statusText.innerHTML = "بانتظار رفع صورة أو ملف PDF...";
+    progress.style.width =
+        "0%";
 
-    if(previewImage){
+
+    statusText.innerHTML =
+        "بانتظار اختيار صورة أو ملف PDF...";
+
+
+    if (fileName) {
+
+        fileName.innerHTML =
+            "لم يتم اختيار أي صورة أو ملف PDF";
+
+    }
+
+
+    if (previewImage) {
 
         previewImage.src = "";
-        previewImage.style.display = "none";
+
+        previewImage.style.display =
+            "none";
 
     }
 
-    if(previewPDF){
+
+    if (previewPDF) {
 
         previewPDF.src = "";
-        previewPDF.style.display = "none";
+
+        previewPDF.style.display =
+            "none";
 
     }
 
-    if(resultBox){
+
+    if (resultBox) {
 
         resultBox.innerHTML = `
+
             <p>
+
                 بعد الضغط على
-                <strong>استخراج البيانات</strong>
-                ستظهر النتائج هنا.
+
+                <strong>
+                    "استخراج البيانات"
+                </strong>
+
+                ستظهر البيانات المستخرجة هنا،
+                ويمكنك مراجعتها قبل الحفظ.
+
             </p>
+
         `;
 
     }
@@ -443,4 +856,6 @@ function resetUpload(){
 // END
 //====================================
 
-console.log("✅ Bayan OCR Upload Loaded Successfully");
+console.log(
+    "✅ Bayan OCR Upload Loaded Successfully"
+);

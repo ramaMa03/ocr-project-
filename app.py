@@ -1,7 +1,16 @@
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    jsonify,
+    send_file
+)
 
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
 import os
-from werkzeug.utils import secure_filename
+import uuid
 
 from database import (
     create_database,
@@ -146,15 +155,20 @@ def archive_data():
 
             "id": record["id"],
 
-            "name": record["client_name"] or "",
+            "name":
+            record["client_name"] or "",
 
-            "letter_number": record["letter_number"] or "",
+            "letter_number":
+            record["letter_number"] or "",
 
-            "date": record["date"] or "",
+            "date":
+            record["date"] or "",
 
-            "department": record["organization"] or "",
+            "department":
+            record["organization"] or "",
 
-            "count": record["id"]
+            "count":
+            record["id"]
 
         })
 
@@ -186,7 +200,7 @@ def result():
 
 
 # ==================================
-# استقبال الصورة وتشغيل OCR
+# استقبال الصورة أو PDF وتشغيل OCR
 # ==================================
 
 @app.route(
@@ -195,45 +209,178 @@ def result():
 )
 def upload_image():
 
+    # ==================================
+    # التأكد من وجود الملف
+    # ==================================
+
     if "image" not in request.files:
 
-        flash(
-            "الرجاء اختيار صورة أو ملف PDF"
-        )
+        return jsonify({
 
-        return redirect(
-            url_for("upload")
-        )
+            "success": False,
+
+            "message":
+            "الرجاء اختيار صورة أو ملف PDF"
+
+        }), 400
 
 
     file = request.files["image"]
 
 
+    # ==================================
+    # التأكد من اختيار ملف
+    # ==================================
+
     if file.filename == "":
 
-        flash(
+        return jsonify({
+
+            "success": False,
+
+            "message":
             "لم يتم اختيار أي ملف"
-        )
 
-        return redirect(
-            url_for("upload")
-        )
+        }), 400
 
 
-    filename = secure_filename(
-        file.filename
+    # ==================================
+    # معلومات الملف
+    # ==================================
+
+    original_filename = (
+        file.filename or ""
     )
 
+    print("=" * 60)
+
+    print(
+        "ORIGINAL FILENAME:",
+        original_filename
+    )
+
+    print(
+        "CONTENT TYPE:",
+        file.content_type
+    )
+
+    print("=" * 60)
+
 
     # ==================================
-    # منع تكرار أسماء الملفات
+    # قراءة بداية الملف
+    # لمعرفة نوعه الحقيقي
     # ==================================
 
-    import uuid
+    file.seek(0)
+
+    file_header = file.read(8)
+
+    file.seek(0)
+
+
+    # ==================================
+    # استخراج الامتداد
+    # ==================================
 
     extension = os.path.splitext(
-        filename
-    )[1]
+        original_filename
+    )[1].lower()
+
+
+    # ==================================
+    # اكتشاف PDF من محتوى الملف
+    # ==================================
+
+    if file_header.startswith(
+        b"%PDF"
+    ):
+
+        extension = ".pdf"
+
+
+    # ==================================
+    # اكتشاف JPEG
+    # ==================================
+
+    elif file_header.startswith(
+        b"\xff\xd8\xff"
+    ):
+
+        extension = ".jpg"
+
+
+    # ==================================
+    # اكتشاف PNG
+    # ==================================
+
+    elif file_header.startswith(
+        b"\x89PNG"
+    ):
+
+        extension = ".png"
+
+
+    # ==================================
+    # أنواع الملفات المسموحة
+    # ==================================
+
+    allowed_extensions = {
+
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".bmp",
+        ".webp",
+        ".tif",
+        ".tiff",
+        ".pdf"
+
+    }
+
+
+    # ==================================
+    # التحقق من نوع الملف
+    # ==================================
+
+    if extension not in allowed_extensions:
+
+        print("=" * 60)
+
+        print(
+            "UNSUPPORTED FILE"
+        )
+
+        print(
+            "Filename:",
+            original_filename
+        )
+
+        print(
+            "Content-Type:",
+            file.content_type
+        )
+
+        print(
+            "Header:",
+            file_header
+        )
+
+        print("=" * 60)
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "نوع الملف غير مدعوم."
+
+        }), 400
+
+
+    # ==================================
+    # إنشاء اسم فريد للملف
+    # ==================================
 
     filename = (
         str(uuid.uuid4())
@@ -246,44 +393,161 @@ def upload_image():
         app.config["UPLOAD_FOLDER"],
 
         filename
+
     )
 
 
-    file.save(filepath)
+    # ==================================
+    # حفظ الملف
+    # ==================================
+
+    file.seek(0)
+
+    file.save(
+        filepath
+    )
+
+
+    # ==================================
+    # التأكد من حفظ الملف
+    # ==================================
+
+    print("=" * 60)
+
+    print(
+        "SAVED FILE:",
+        filepath
+    )
+
+    print(
+        "FILE EXTENSION:",
+        extension
+    )
+
+    print(
+        "FILE EXISTS:",
+        os.path.exists(
+            filepath
+        )
+    )
+
+    if os.path.exists(filepath):
+
+        print(
+            "FILE SIZE:",
+            os.path.getsize(
+                filepath
+            )
+        )
+
+    print("=" * 60)
 
 
     # ==================================
     # OCR
     # ==================================
 
-    extracted_text = extract_text(
-        filepath
+    try:
+
+        extracted_text = extract_text(
+            filepath
+        )
+
+    except Exception as e:
+
+        print(
+            "OCR ERROR:",
+            e
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "حدث خطأ أثناء قراءة الملف."
+
+        }), 500
+
+
+    # ==================================
+    # عرض النص المستخرج في Terminal
+    # ==================================
+
+    print("=" * 60)
+
+    print(
+        "EXTRACTED TEXT:"
     )
+
+    print(
+        extracted_text
+    )
+
+    print("=" * 60)
 
 
     # ==================================
     # تحليل النص
     # ==================================
 
-    data = parse_text(
-        extracted_text
-    )
+    try:
+
+        data = parse_text(
+            extracted_text
+        )
+
+    except Exception as e:
+
+        print(
+            "AI PARSER ERROR:",
+            e
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "حدث خطأ أثناء تحليل البيانات."
+
+        }), 500
 
 
     # ==================================
-    # عرض النتائج للمراجعة
+    # عرض البيانات المستخرجة
     # ==================================
 
-    return render_template(
+    print("=" * 60)
 
-        "result.html",
-
-        data=data,
-
-        image=filename,
-
-        extracted_text=extracted_text
+    print(
+        "PARSED DATA:"
     )
+
+    print(
+        data
+    )
+
+    print("=" * 60)
+
+
+    # ==================================
+    # إرسال النتائج إلى نفس الصفحة
+    # ==================================
+
+    return jsonify({
+
+        "success": True,
+
+        "data": data,
+
+        "image": filename,
+
+        "extracted_text": extracted_text,
+
+        "filename": original_filename
+
+    })
 
 
 # ==================================

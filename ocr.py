@@ -1,610 +1,422 @@
-
-import easyocr
 import os
-import cv2
+import base64
+import requests
 
-from pdf2image import convert_from_path
+from dotenv import load_dotenv
 
 
-# ==================================
-# إنشاء قارئ OCR
-# ==================================
+# ============================================================
+# تحميل API Key من ملف .env
+# ============================================================
 
-reader = easyocr.Reader(
-    ['ar', 'en'],
-    gpu=False
-)
+load_dotenv()
 
+API_KEY = os.getenv("MISTRAL_API_KEY")
 
-# ==================================
-# تحسين الصورة قبل القراءة
-# ==================================
+if not API_KEY:
+    raise ValueError(
+        "MISTRAL_API_KEY غير موجود في ملف .env"
+    )
 
-def preprocess_image(image_path):
 
-    try:
+# ============================================================
+# إعدادات Mistral API
+# ============================================================
 
-        image = cv2.imread(image_path)
+OCR_URL = "https://api.mistral.ai/v1/ocr"
 
-        if image is None:
+HEADERS = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
 
-            print("تعذر فتح الصورة:", image_path)
 
-            return image_path
-
-
-        # ----------------------------------
-        # تكبير الصورة
-        # ----------------------------------
-
-        height, width = image.shape[:2]
-
-        if width < 1800:
-
-            scale = 2
-
-            image = cv2.resize(
-                image,
-                None,
-                fx=scale,
-                fy=scale,
-                interpolation=cv2.INTER_CUBIC
-            )
-
-
-        # ----------------------------------
-        # تحسين التباين
-        # ----------------------------------
-
-        gray = cv2.cvtColor(
-            image,
-            cv2.COLOR_BGR2GRAY
-        )
-
-
-        # ----------------------------------
-        # إزالة التشويش الخفيف
-        # ----------------------------------
-
-        gray = cv2.fastNlMeansDenoising(
-            gray,
-            None,
-            10,
-            7,
-            21
-        )
-
-
-        # ----------------------------------
-        # تحسين التباين
-        # ----------------------------------
-
-        clahe = cv2.createCLAHE(
-            clipLimit=2.0,
-            tileGridSize=(8, 8)
-        )
-
-        enhanced = clahe.apply(gray)
-
-
-        # ----------------------------------
-        # حفظ نسخة مؤقتة
-        # ----------------------------------
-
-        temp_path = image_path + "_processed.jpg"
-
-        cv2.imwrite(
-            temp_path,
-            enhanced,
-            [
-                cv2.IMWRITE_JPEG_QUALITY,
-                95
-            ]
-        )
-
-
-        return temp_path
-
-
-    except Exception as e:
-
-        print(
-            "IMAGE PREPROCESS ERROR:",
-            e
-        )
-
-        return image_path
-
-
-# ==================================
-# قراءة صورة واحدة
-# ==================================
-
-def read_image(image_path):
-
-    processed_path = None
-
-    try:
-
-        # ----------------------------------
-        # محاولة قراءة الصورة الأصلية
-        # ----------------------------------
-
-        original_result = reader.readtext(
-
-            image_path,
-
-            detail=1,
-
-            paragraph=False,
-
-            width_ths=0.7,
-
-            height_ths=0.7,
-
-            text_threshold=0.25,
-
-            low_text=0.15,
-
-            link_threshold=0.25,
-
-            mag_ratio=1.5
-        )
-
-
-        # ----------------------------------
-        # ترتيب النتائج
-        # ----------------------------------
-
-        original_lines = []
-
-
-        for item in original_result:
-
-            if len(item) < 2:
-
-                continue
-
-
-            box = item[0]
-
-            text = item[1]
-
-
-            if not text:
-
-                continue
-
-
-            text = text.strip()
-
-
-            if not text:
-
-                continue
-
-
-            # مركز منطقة النص
-
-            center_y = sum(
-                point[1]
-                for point in box
-            ) / 4
-
-
-            center_x = sum(
-                point[0]
-                for point in box
-            ) / 4
-
-
-            original_lines.append({
-
-                "text": text,
-
-                "x": center_x,
-
-                "y": center_y
-
-            })
-
-
-        # ----------------------------------
-        # ترتيب النص من أعلى إلى أسفل
-        # ----------------------------------
-
-        original_lines.sort(
-            key=lambda item: (
-                round(item["y"] / 25),
-                -item["x"]
-            )
-        )
-
-
-        original_text = "\n".join(
-
-            item["text"]
-
-            for item in original_lines
-
-            if item["text"]
-
-        )
-
-
-        # ==================================
-        # إذا كانت القراءة جيدة
-        # نستخدمها مباشرة
-        # ==================================
-
-        if len(original_text.strip()) >= 15:
-
-            print("=" * 60)
-
-            print("OCR RESULT")
-
-            print("=" * 60)
-
-            print(original_text)
-
-            print("=" * 60)
-
-            return original_text
-
-
-        # ==================================
-        # إذا كانت القراءة ضعيفة
-        # نحاول تحسين الصورة
-        # ==================================
-
-        print(
-            "القراءة الأصلية ضعيفة، جاري تحسين الصورة..."
-        )
-
-
-        processed_path = preprocess_image(
-            image_path
-        )
-
-
-        processed_result = reader.readtext(
-
-            processed_path,
-
-            detail=1,
-
-            paragraph=False,
-
-            width_ths=0.7,
-
-            height_ths=0.7,
-
-            text_threshold=0.25,
-
-            low_text=0.15,
-
-            link_threshold=0.25,
-
-            mag_ratio=1.5
-        )
-
-
-        processed_lines = []
-
-
-        for item in processed_result:
-
-            if len(item) < 2:
-
-                continue
-
-
-            box = item[0]
-
-            text = item[1]
-
-
-            if not text:
-
-                continue
-
-
-            text = text.strip()
-
-
-            if not text:
-
-                continue
-
-
-            center_y = sum(
-                point[1]
-                for point in box
-            ) / 4
-
-
-            center_x = sum(
-                point[0]
-                for point in box
-            ) / 4
-
-
-            processed_lines.append({
-
-                "text": text,
-
-                "x": center_x,
-
-                "y": center_y
-
-            })
-
-
-        processed_lines.sort(
-            key=lambda item: (
-                round(item["y"] / 25),
-                -item["x"]
-            )
-        )
-
-
-        processed_text = "\n".join(
-
-            item["text"]
-
-            for item in processed_lines
-
-            if item["text"]
-
-        )
-
-
-        # ==================================
-        # اختيار القراءة الأفضل
-        # ==================================
-
-        if len(processed_text.strip()) > len(
-            original_text.strip()
-        ):
-
-            final_text = processed_text
-
-        else:
-
-            final_text = original_text
-
-
-        print("=" * 60)
-
-        print("OCR RESULT")
-
-        print("=" * 60)
-
-        print(final_text)
-
-        print("=" * 60)
-
-
-        return final_text
-
-
-    except Exception as e:
-
-        print(
-            "IMAGE OCR ERROR:",
-            e
-        )
-
-        return ""
-
-
-    finally:
-
-        # ----------------------------------
-        # حذف الصورة المؤقتة
-        # ----------------------------------
-
-        if processed_path:
-
-            try:
-
-                if os.path.exists(
-                    processed_path
-                ):
-
-                    os.remove(
-                        processed_path
-                    )
-
-            except Exception:
-
-                pass
-
-
-# ==================================
-# استخراج النص من صورة أو PDF
-# ==================================
+# ============================================================
+# استخراج النص
+# ============================================================
 
 def extract_text(file_path):
 
+    # --------------------------------------------------------
+    # التأكد من وجود الملف
+    # --------------------------------------------------------
+
     if not os.path.exists(file_path):
 
-        print(
-            "الملف غير موجود:",
-            file_path
-        )
+        print("الملف غير موجود:", file_path)
 
         return ""
 
 
-    # ==================================
-    # معرفة نوع الملف
-    # ==================================
-
-    extension = os.path.splitext(
-        file_path
-    )[1].lower()
+    extension = os.path.splitext(file_path)[1].lower()
 
 
-    # ==================================
-    # الصور المدعومة
-    # ==================================
+    # --------------------------------------------------------
+    # أنواع الصور المدعومة
+    # --------------------------------------------------------
 
-    image_extensions = [
-
+    image_extensions = {
         ".jpg",
         ".jpeg",
         ".png",
-        ".bmp",
         ".webp",
-        ".tif",
-        ".tiff"
-
-    ]
+        ".avif"
+    }
 
 
-    # ==================================
-    # قراءة الصورة
-    # ==================================
+    print("=" * 60)
+    print("بدء Mistral OCR")
+    print("=" * 60)
 
-    if extension in image_extensions:
-
-        return read_image(
-            file_path
-        )
+    print("FILE:", file_path)
+    print("TYPE:", extension)
 
 
-    # ==================================
-    # PDF
-    # ==================================
+    try:
 
-    if extension == ".pdf":
+        # ====================================================
+        # PDF
+        # ====================================================
 
-        try:
+        if extension == ".pdf":
 
-            print(
-                "جاري تحويل صفحات PDF إلى صور..."
-            )
+            print("جاري رفع PDF إلى Mistral...")
 
 
-            pages = convert_from_path(
+            # ------------------------------------------------
+            # رفع الملف إلى Files API
+            # ------------------------------------------------
 
-                file_path,
+            with open(file_path, "rb") as pdf_file:
 
-                dpi=300
+                files = {
+                    "file": (
+                        os.path.basename(file_path),
+                        pdf_file,
+                        "application/pdf"
+                    )
+                }
 
-            )
+                data = {
+                    "purpose": "ocr"
+                }
+
+                upload_response = requests.post(
+                    "https://api.mistral.ai/v1/files",
+                    headers={
+                        "Authorization":
+                        f"Bearer {API_KEY}"
+                    },
+                    files=files,
+                    data=data,
+                    timeout=120
+                )
 
 
-            all_text = []
-
-
-            for page_number, page in enumerate(
-
-                pages,
-
-                start=1
-
-            ):
+            if not upload_response.ok:
 
                 print(
-                    f"جاري قراءة الصفحة {page_number}..."
+                    "فشل رفع PDF:",
+                    upload_response.status_code
                 )
 
-
-                temp_image = (
-
-                    file_path
-
-                    + f"_page_{page_number}.jpg"
-
+                print(
+                    upload_response.text
                 )
 
-
-                page.save(
-
-                    temp_image,
-
-                    "JPEG",
-
-                    quality=95
-
-                )
+                return ""
 
 
-                page_text = read_image(
+            uploaded_file = upload_response.json()
 
-                    temp_image
+            file_id = uploaded_file["id"]
 
-                )
-
-
-                if page_text:
-
-                    all_text.append(
-
-                        page_text
-
-                    )
+            print("تم رفع PDF بنجاح.")
+            print("FILE ID:", file_id)
 
 
-                # ----------------------------------
-                # حذف الصورة المؤقتة
-                # ----------------------------------
+            # ------------------------------------------------
+            # الحصول على Signed URL
+            # ------------------------------------------------
 
-                try:
+            signed_url_response = requests.get(
 
-                    if os.path.exists(
-                        temp_image
-                    ):
+                f"https://api.mistral.ai/v1/files/"
+                f"{file_id}/url",
 
-                        os.remove(
-                            temp_image
-                        )
+                headers={
+                    "Authorization":
+                    f"Bearer {API_KEY}"
+                },
 
-                except Exception:
+                params={
+                    "expiry": 1
+                },
 
-                    pass
-
-
-            text = "\n".join(
-
-                all_text
-
+                timeout=30
             )
 
 
-            print("=" * 60)
+            if not signed_url_response.ok:
 
-            print("PDF OCR RESULT")
+                print(
+                    "فشل الحصول على رابط PDF:"
+                )
 
-            print("=" * 60)
+                print(
+                    signed_url_response.text
+                )
 
-            print(text)
-
-            print("=" * 60)
-
-
-            return text
+                return ""
 
 
-        except Exception as e:
+            signed_url = signed_url_response.json()["url"]
+
+            print("تم الحصول على رابط الملف.")
+
+
+            # ------------------------------------------------
+            # إرسال PDF إلى OCR
+            # ------------------------------------------------
+
+            payload = {
+
+                "model": "mistral-ocr-latest",
+
+                "document": {
+
+                    "type": "document_url",
+
+                    "document_url": signed_url
+                }
+            }
+
+
+        # ====================================================
+        # الصور
+        # ====================================================
+
+        elif extension in image_extensions:
 
             print(
-                "PDF OCR ERROR:",
-                e
+                "جاري إرسال الصورة إلى Mistral..."
+            )
+
+
+            # ------------------------------------------------
+            # قراءة الصورة
+            # ------------------------------------------------
+
+            with open(
+                file_path,
+                "rb"
+            ) as image_file:
+
+                image_bytes = image_file.read()
+
+
+            # ------------------------------------------------
+            # تحويل الصورة إلى Base64
+            # ------------------------------------------------
+
+            encoded_image = base64.b64encode(
+                image_bytes
+            ).decode("utf-8")
+
+
+            # ------------------------------------------------
+            # تحديد MIME Type
+            # ------------------------------------------------
+
+            if extension in {
+                ".jpg",
+                ".jpeg"
+            }:
+
+                mime_type = "image/jpeg"
+
+            elif extension == ".png":
+
+                mime_type = "image/png"
+
+            elif extension == ".webp":
+
+                mime_type = "image/webp"
+
+            elif extension == ".avif":
+
+                mime_type = "image/avif"
+
+            else:
+
+                mime_type = "image/jpeg"
+
+
+            image_url = (
+                f"data:{mime_type};base64,"
+                f"{encoded_image}"
+            )
+
+
+            # ------------------------------------------------
+            # إعداد طلب OCR
+            # ------------------------------------------------
+
+            payload = {
+
+                "model": "mistral-ocr-latest",
+
+                "document": {
+
+                    "type": "image_url",
+
+                    "image_url": image_url
+                }
+            }
+
+
+        # ====================================================
+        # نوع غير مدعوم
+        # ====================================================
+
+        else:
+
+            print(
+                "نوع الملف غير مدعوم:",
+                extension
             )
 
             return ""
 
 
-    # ==================================
-    # نوع ملف غير مدعوم
-    # ==================================
+        # ====================================================
+        # إرسال الطلب إلى Mistral OCR API
+        # ====================================================
 
-    print(
-        "نوع الملف غير مدعوم:",
-        extension
-    )
+        print("جاري إرسال الملف إلى Mistral OCR...")
 
-    return ""
+        response = requests.post(
+
+            OCR_URL,
+
+            headers=HEADERS,
+
+            json=payload,
+
+            timeout=180
+        )
+
+
+        # ----------------------------------------------------
+        # التحقق من نجاح الطلب
+        # ----------------------------------------------------
+
+        if not response.ok:
+
+            print("=" * 60)
+
+            print(
+                "MISTRAL OCR ERROR:"
+            )
+
+            print(
+                "STATUS:",
+                response.status_code
+            )
+
+            print(
+                response.text
+            )
+
+            print("=" * 60)
+
+            return ""
+
+
+        # ====================================================
+        # قراءة النتيجة
+        # ====================================================
+
+        result = response.json()
+
+        all_text = []
+
+
+        for page in result.get(
+            "pages",
+            []
+        ):
+
+            markdown = page.get(
+                "markdown",
+                ""
+            )
+
+            if markdown:
+
+                all_text.append(
+                    markdown
+                )
+
+
+        extracted_text = "\n\n".join(
+            all_text
+        )
+
+
+        # ====================================================
+        # عرض النتيجة
+        # ====================================================
+
+        print("=" * 60)
+
+        print(
+            "MISTRAL OCR RESULT"
+        )
+
+        print("=" * 60)
+
+        print(
+            extracted_text
+        )
+
+        print("=" * 60)
+
+
+        return extracted_text
+
+
+    except requests.exceptions.Timeout:
+
+        print("=" * 60)
+
+        print(
+            "MISTRAL OCR ERROR:"
+        )
+
+        print(
+            "انتهت مهلة الاتصال بـ Mistral."
+        )
+
+        print("=" * 60)
+
+        return ""
+
+
+    except Exception as e:
+
+        print("=" * 60)
+
+        print(
+            "MISTRAL OCR ERROR:"
+        )
+
+        print(
+            type(e).__name__,
+            ":",
+            e
+        )
+
+        print("=" * 60)
+
+        return ""
