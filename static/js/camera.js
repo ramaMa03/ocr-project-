@@ -5,7 +5,7 @@
 
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
-const captureBtn = document.getElementById("capture");
+const captureBtn = document.getElementById("captureBtn");
 const startBtn = document.getElementById("startCamera");
 const preview = document.getElementById("preview");
 const uploadInput = document.getElementById("imageInput");

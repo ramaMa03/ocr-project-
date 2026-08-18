@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>رفع النماذج | Bayan OCR</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/upload.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/upload_v2.css') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
           rel="stylesheet">
@@ -42,17 +41,12 @@
         <div class="actions">
 
             <button id="dark">
-
                 <i class="fa-solid fa-moon"></i>
-
             </button>
 
             <a href="/dashboard" class="back">
-
                 <i class="fa-solid fa-arrow-right"></i>
-
                 لوحة التحكم
-
             </a>
 
         </div>
@@ -65,11 +59,7 @@
 
         <h2>رفع صورة أو ملف PDF</h2>
 
-        <p>
-
-            يمكنك رفع صورة أو ملف PDF أو التقاط صورة مباشرة باستخدام كاميرا الجهاز.
-
-        </p>
+        <p>يمكنك رفع صورة أو ملف PDF أو التقاط صورة مباشرة باستخدام كاميرا الجهاز.</p>
 
         <form action="/upload-image"
               method="POST"
@@ -85,16 +75,14 @@
                 <p>أو اضغط لاختيار ملف</p>
 
                 <input
-                        type="file"
-                        id="fileInput"
-                        name="image"
-                        accept="image/*,.pdf"
-                        hidden>
+                    type="file"
+                    id="fileInput"
+                    name="image"
+                    accept="image/*,.pdf"
+                    hidden>
 
                 <label for="fileInput" class="choose">
-
                     رفع صورة أو PDF
-
                 </label>
 
             </div>
@@ -102,19 +90,13 @@
             <div class="buttons">
 
                 <button type="button" id="cameraBtn">
-
                     <i class="fa-solid fa-camera"></i>
-
                     تشغيل الكاميرا
-
                 </button>
 
-                <button type="submit" id="extractBtn">
-
+                <button type="button" id="extractBtn">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-
                     استخراج البيانات
-
                 </button>
 
             </div>
@@ -136,26 +118,20 @@
         <div class="camera-buttons">
 
             <button type="button" id="captureBtn">
-
                 <i class="fa-solid fa-camera"></i>
-
                 التقاط الصورة
-
             </button>
 
-<button type="button" id="extractBtn">
+            <button type="button" id="closeCamera">
                 <i class="fa-solid fa-xmark"></i>
-
                 إغلاق
-
             </button>
 
         </div>
 
     </div>
-        <!-- ==========================
-            PREVIEW
-    =========================== -->
+
+    <!-- ================= PREVIEW ================= -->
 
     <div class="preview-box">
 
@@ -170,87 +146,60 @@
                 style="display:none;"></iframe>
 
         <p id="fileName">
-
             لم يتم اختيار أي صورة أو ملف PDF
-
         </p>
 
     </div>
 
-    <!-- ==========================
-            PROGRESS
-    =========================== -->
+    <!-- ================= PROGRESS ================= -->
 
     <div class="progress-container">
 
         <div class="progress-bar">
-
             <div id="progress"></div>
-
         </div>
 
         <p id="status">
-
             بانتظار اختيار صورة أو ملف PDF...
-
         </p>
 
     </div>
 
-    <!-- ==========================
-            OCR RESULT
-    =========================== -->
+    <!-- ================= OCR RESULT ================= -->
 
     <div class="result-box">
 
         <h2>البيانات المستخرجة</h2>
 
         <div id="result">
-
             <p>
-
                 بعد الضغط على <strong>"استخراج البيانات"</strong> ستظهر البيانات المستخرجة هنا، ويمكنك مراجعتها قبل الحفظ.
-
             </p>
-
         </div>
 
     </div>
 
-    <!-- ==========================
-            FLASH MESSAGES
-    =========================== -->
+    <!-- ================= FLASH MESSAGES ================= -->
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-
             <div class="flash-messages">
-
                 {% for message in messages %}
-
                     <div class="flash">
-
                         {{ message }}
-
                     </div>
-
                 {% endfor %}
-
             </div>
-
         {% endif %}
     {% endwith %}
 
 </div>
 
-<!-- ==========================
-        JAVASCRIPT
-=========================== -->
+<!-- ================= JAVASCRIPT ================= -->
+
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
-
-<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload_v2.js') }}"></script>
 
 </body>
 
