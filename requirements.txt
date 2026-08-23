@@ -1,7 +1,8 @@
-
 Flask
-easyocr
-opencv-python
+gunicorn
+requests
+python-dotenv
 python-docx
 Pillow
 numpy
+opencv-python
