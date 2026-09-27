@@ -16,6 +16,75 @@ const darkBtn = document.getElementById("dark");
 
 const logo = document.getElementById("logo");
 
+// ====================================
+// استقبال البيانات المستخرجة
+// ====================================
+
+const extractedData = sessionStorage.getItem(
+    "bayanExtractedData"
+);
+
+
+if (extractedData) {
+
+    const data = JSON.parse(
+        extractedData
+    );
+
+
+    const clientName =
+        document.getElementById(
+            "client_name"
+        );
+
+    const letterNumber =
+        document.getElementById(
+            "letter_number"
+        );
+
+    const date =
+        document.getElementById(
+            "date"
+        );
+
+    const organization =
+        document.getElementById(
+            "organization"
+        );
+
+
+    if (clientName) {
+
+        clientName.value =
+            data.client_name || "";
+
+    }
+
+
+    if (letterNumber) {
+
+        letterNumber.value =
+            data.letter_number || "";
+
+    }
+
+
+    if (date) {
+
+        date.value =
+            data.date || "";
+
+    }
+
+
+    if (organization) {
+
+        organization.value =
+            data.organization || "";
+
+    }
+
+}
 
 // ====================================
 // حفظ بيانات الأرشفة

@@ -4,8 +4,13 @@
 
 <head>
 
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/responsive.css') }}">
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Dashboard | Bayan OCR</title>
 
@@ -22,6 +27,10 @@
 
 <body>
 
+<!-- =======================
+        SIDEBAR
+======================= -->
+
 <div class="sidebar">
 
     <div class="logo">
@@ -35,82 +44,152 @@
 
             <h2>Bayan OCR</h2>
 
-            <span>Smart Data Entry & Archiving System</span>
+            <span>
+                Smart Data Entry & Archiving System
+            </span>
 
         </div>
 
     </div>
 
+
     <ul>
 
         <li class="active">
+
             <a href="/dashboard">
+
                 <i class="fa-solid fa-house"></i>
+
                 الرئيسية
+
             </a>
+
         </li>
 
+
         <li>
+
             <a href="/upload">
+
                 <i class="fa-solid fa-camera"></i>
+
                 رفع نموذج
+
             </a>
+
         </li>
 
+
         <li>
+
             <a href="/archive">
+
                 <i class="fa-solid fa-folder-open"></i>
+
                 الأرشيف
+
             </a>
+
         </li>
 
+
         <li>
+
             <a href="/settings">
+
                 <i class="fa-solid fa-gear"></i>
+
                 الإعدادات
+
             </a>
+
         </li>
 
+
         <li>
+
             <a href="/">
+
                 <i class="fa-solid fa-right-from-bracket"></i>
+
                 تسجيل الخروج
+
             </a>
+
         </li>
 
     </ul>
 
 </div>
 
+
+<!-- =======================
+        SIDEBAR OVERLAY
+======================= -->
+
+<div class="sidebar-overlay"
+     id="sidebarOverlay">
+</div>
+
+
+<!-- =======================
+        MAIN
+======================= -->
+
 <div class="main">
+
+
+    <!-- =======================
+            TOP BAR
+    ======================== -->
 
     <div class="topbar">
 
         <div>
 
-            <h1>مرحباً 👋</h1>
+            <h1>
+                مرحباً 👋
+            </h1>
 
             <p class="welcome-text">
-
                 مرحبًا بك في نظام Bayan OCR
-
             </p>
 
         </div>
 
+
         <div class="icons">
 
-            <button id="dark">
+
+            <!-- زر القائمة في الجوال -->
+
+            <button
+                id="menuToggle"
+                class="menu-toggle"
+                type="button"
+                aria-label="فتح القائمة"
+                aria-expanded="false">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <!-- الوضع الليلي -->
+
+            <button
+                id="dark"
+                type="button">
 
                 <i class="fa-solid fa-moon"></i>
 
             </button>
 
-            
-
         </div>
 
     </div>
+
 
     <!-- =======================
             الإحصائيات
@@ -118,60 +197,87 @@
 
     <div class="cards">
 
+
         <div class="card">
 
             <i class="fa-solid fa-users"></i>
 
-            <h2>{{ total_clients|default(0) }}</h2>
+            <h2>
+                {{ total_clients|default(0) }}
+            </h2>
 
-            <p>إجمالي العملاء</p>
+            <p>
+                إجمالي العملاء
+            </p>
 
         </div>
+
 
         <div class="card">
 
             <i class="fa-solid fa-folder-open"></i>
 
-            <h2>{{ archived|default(0) }}</h2>
+            <h2>
+                {{ archived|default(0) }}
+            </h2>
 
-            <p>النماذج المؤرشفة</p>
+            <p>
+                النماذج المؤرشفة
+            </p>
 
         </div>
+
 
         <div class="card">
 
             <i class="fa-solid fa-calendar-day"></i>
 
-            <h2>{{ today|default(0) }}</h2>
+            <h2>
+                {{ today|default(0) }}
+            </h2>
 
-            <p>عمليات اليوم</p>
+            <p>
+                عمليات اليوم
+            </p>
 
         </div>
+
 
         <div class="card">
 
             <i class="fa-solid fa-check"></i>
 
-            <h2>{{ accuracy|default('100%') }}</h2>
+            <h2>
+                {{ accuracy|default('100%') }}
+            </h2>
 
-            <p>دقة النظام</p>
+            <p>
+                دقة النظام
+            </p>
 
         </div>
 
     </div>
-        <!-- =======================
+
+
+    <!-- =======================
             آخر العمليات
     ======================== -->
 
     <div class="content">
 
+
         <div class="recent">
+
 
             <div class="title">
 
-                <h2>آخر العمليات</h2>
+                <h2>
+                    آخر العمليات
+                </h2>
 
-                <a href="/archive" class="view">
+                <a href="/archive"
+                   class="view">
 
                     عرض الكل
 
@@ -179,48 +285,65 @@
 
             </div>
 
+
             <table>
 
                 <thead>
 
-    <tr>
+                    <tr>
 
-        <th>اسم العميل</th>
-        <th>رقم الخطاب</th>
-        <th>التاريخ</th>
-        <th>الحالة</th>
+                        <th>
+                            اسم العميل
+                        </th>
 
-    </tr>
+                        <th>
+                            رقم الخطاب
+                        </th>
 
-</thead>
+                        <th>
+                            التاريخ
+                        </th>
 
-<tbody>
+                        <th>
+                            الحالة
+                        </th>
 
-{% if records %}
+                    </tr>
 
-    {% for record in records %}
+                </thead>
 
-    <tr>
 
-        <td>{{ record.client_name }}</td>
+                <tbody>
 
-        <td>{{ record.letter_number }}</td>
+                {% if records %}
 
-        <td>{{ record.date }}</td>
+                    {% for record in records %}
 
-        <td>
+                    <tr>
 
-            <span class="success">
+                        <td>
+                            {{ record.client_name }}
+                        </td>
 
-                تمت الأرشفة
+                        <td>
+                            {{ record.letter_number }}
+                        </td>
 
-            </span>
+                        <td>
+                            {{ record.date }}
+                        </td>
 
-        </td>
+                        <td>
 
-    </tr>
+                            <span class="success">
+                                تمت الأرشفة
+                            </span>
 
-    {% endfor %}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
 
                 {% else %}
 
@@ -243,70 +366,70 @@
 
         </div>
 
+
         <!-- =======================
                 الوصول السريع
         ======================== -->
 
         <div class="quick">
 
-            <h2>الوصول السريع</h2>
+            <h2>
+                الوصول السريع
+            </h2>
+
 
             <div class="quick-card">
 
                 <i class="fa-solid fa-camera"></i>
 
-                <h3>رفع نموذج</h3>
+                <h3>
+                    رفع نموذج
+                </h3>
 
                 <p>
-
                     ابدأ برفع نموذج جديد وتحويله إلى بيانات رقمية.
-
                 </p>
 
                 <a href="/upload">
-
                     ابدأ الآن
-
                 </a>
 
             </div>
+
 
             <div class="quick-card">
 
                 <i class="fa-solid fa-folder-open"></i>
 
-                <h3>الأرشيف</h3>
+                <h3>
+                    الأرشيف
+                </h3>
 
                 <p>
-
                     استعرض جميع النماذج المحفوظة داخل النظام.
-
                 </p>
 
                 <a href="/archive">
-
                     فتح
-
                 </a>
 
             </div>
+
 
             <div class="quick-card">
 
                 <i class="fa-solid fa-gear"></i>
 
-                <h3>الإعدادات</h3>
+                <h3>
+                    الإعدادات
+                </h3>
 
                 <p>
-
                     إدارة إعدادات النظام والوضع الليلي.
-
                 </p>
 
                 <a href="/settings">
-
                     دخول
-
                 </a>
 
             </div>
@@ -314,7 +437,9 @@
         </div>
 
     </div>
-        <!-- =======================
+
+
+    <!-- =======================
             الرسم البياني
     ======================== -->
 
@@ -338,15 +463,21 @@
 
 </div>
 
+
 <!-- =======================
         Chart.js
 ======================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Dashboard JS -->
+
+<!-- =======================
+        Dashboard JS
+======================= -->
 
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
 </body>
 
 </html>
+

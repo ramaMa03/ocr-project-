@@ -208,3 +208,89 @@ card.style.transform="translateY(0)";
 });
 
 });
+/* ====================================
+        MOBILE SIDEBAR MENU
+==================================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    if (!menuToggle || !sidebar || !sidebarOverlay) {
+        return;
+    }
+
+    function openMenu() {
+
+        sidebar.classList.add("open");
+        sidebarOverlay.classList.add("active");
+        document.body.classList.add("menu-open");
+
+        menuToggle.setAttribute("aria-expanded", "true");
+
+        menuToggle.innerHTML =
+            '<i class="fa-solid fa-xmark"></i>';
+    }
+
+
+    function closeMenu() {
+
+        sidebar.classList.remove("open");
+        sidebarOverlay.classList.remove("active");
+        document.body.classList.remove("menu-open");
+
+        menuToggle.setAttribute("aria-expanded", "false");
+
+        menuToggle.innerHTML =
+            '<i class="fa-solid fa-bars"></i>';
+    }
+
+
+    menuToggle.addEventListener("click", function () {
+
+        if (sidebar.classList.contains("open")) {
+
+            closeMenu();
+
+        } else {
+
+            openMenu();
+
+        }
+
+    });
+
+
+    sidebarOverlay.addEventListener("click", function () {
+
+        closeMenu();
+
+    });
+
+
+    /* إغلاق القائمة عند الضغط على أي رابط */
+    sidebar.querySelectorAll("a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            closeMenu();
+
+        });
+
+    });
+
+
+    /* عند الرجوع للشاشة الكبيرة */
+    window.addEventListener("resize", function () {
+
+        if (window.innerWidth > 576) {
+
+            closeMenu();
+
+        }
+
+    });
+
+});

@@ -3,7 +3,9 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/responsive.css') }}">
+      
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -68,11 +70,50 @@
 
             <div class="drop-area" id="dropArea">
 
-                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <div id="uploadPlaceholder" class="upload-placeholder">
 
-                <h3>اسحب صورة أو ملف PDF هنا</h3>
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
 
-                <p>أو اضغط لاختيار ملف</p>
+                    <h3>اسحب صورة أو ملف PDF هنا</h3>
+
+                    <p>أو اضغط لاختيار ملف</p>
+
+                    <label for="fileInput" class="choose">
+                        رفع صورة أو PDF
+                    </label>
+
+                </div>
+
+                <div id="selectedFilePreview"
+                     class="selected-file-preview"
+                     style="display:none;">
+
+                    <img id="previewImage"
+                         src=""
+                         alt="معاينة الصورة"
+                         style="display:none;">
+
+                    <div id="pdfPreview"
+                         class="pdf-preview"
+                         style="display:none;">
+
+                        <i class="fa-solid fa-file-pdf"></i>
+
+                        <span>تم اختيار ملف PDF</span>
+
+                    </div>
+
+                    <p id="fileName"></p>
+
+                    <label for="fileInput"
+                           class="change-file">
+
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        تغيير الملف
+
+                    </label>
+
+                </div>
 
                 <input
                     type="file"
@@ -80,10 +121,6 @@
                     name="image"
                     accept="image/*,.pdf"
                     hidden>
-
-                <label for="fileInput" class="choose">
-                    رفع صورة أو PDF
-                </label>
 
             </div>
 
@@ -131,26 +168,6 @@
 
     </div>
 
-    <!-- ================= PREVIEW ================= -->
-
-    <div class="preview-box">
-
-        <h2>معاينة الملف</h2>
-
-        <img id="previewImage"
-             src=""
-             alt="معاينة الصورة"
-             style="display:none;">
-
-        <iframe id="previewPDF"
-                style="display:none;"></iframe>
-
-        <p id="fileName">
-            لم يتم اختيار أي صورة أو ملف PDF
-        </p>
-
-    </div>
-
     <!-- ================= PROGRESS ================= -->
 
     <div class="progress-container">
@@ -165,19 +182,7 @@
 
     </div>
 
-    <!-- ================= OCR RESULT ================= -->
-
-    <div class="result-box">
-
-        <h2>البيانات المستخرجة</h2>
-
-        <div id="result">
-            <p>
-                بعد الضغط على <strong>"استخراج البيانات"</strong> ستظهر البيانات المستخرجة هنا، ويمكنك مراجعتها قبل الحفظ.
-            </p>
-        </div>
-
-    </div>
+    
 
     <!-- ================= FLASH MESSAGES ================= -->
 

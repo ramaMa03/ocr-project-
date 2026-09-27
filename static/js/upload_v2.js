@@ -5,9 +5,15 @@
 
 const fileInput = document.getElementById("fileInput");
 const previewImage = document.getElementById("previewImage");
-const previewPDF = document.getElementById("previewPDF");
+const pdfPreview = document.getElementById("pdfPreview");
 const dropArea = document.getElementById("dropArea");
 const fileName = document.getElementById("fileName");
+
+const uploadPlaceholder =
+    document.getElementById("uploadPlaceholder");
+
+const selectedFilePreview =
+    document.getElementById("selectedFilePreview");
 
 const progress = document.getElementById("progress");
 const statusText = document.getElementById("status");
@@ -37,32 +43,66 @@ if (fileInput) {
 //====================================
 
 function previewFile(file) {
-    const reader = new FileReader();
+
+    if (!file) return;
 
     if (fileName) {
-        fileName.innerHTML = "📄 " + file.name;
+        fileName.textContent = file.name;
+    }
+
+    if (uploadPlaceholder) {
+        uploadPlaceholder.style.display = "none";
+    }
+
+    if (selectedFilePreview) {
+        selectedFilePreview.style.display = "flex";
     }
 
     if (file.type.startsWith("image")) {
+
+        const reader = new FileReader();
+
         reader.onload = function (e) {
-            previewImage.src = e.target.result;
-            previewImage.style.display = "block";
-            previewPDF.style.display = "none";
+
+            if (previewImage) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = "block";
+            }
+
+            if (pdfPreview) {
+                pdfPreview.style.display = "none";
+            }
+
         };
+
         reader.readAsDataURL(file);
+
     }
 
-    else if (file.type === "application/pdf") {
-        reader.onload = function (e) {
-            previewPDF.src = e.target.result;
-            previewPDF.style.display = "block";
+    else if (
+        file.type === "application/pdf" ||
+        file.name.toLowerCase().endsWith(".pdf")
+    ) {
+
+        if (previewImage) {
+            previewImage.src = "";
             previewImage.style.display = "none";
-        };
-        reader.readAsDataURL(file);
+        }
+
+        if (pdfPreview) {
+            pdfPreview.style.display = "flex";
+        }
+
     }
 
-    statusText.innerHTML = "✅ تم اختيار الملف بنجاح";
-    progress.style.width = "10%";
+    if (statusText) {
+        statusText.innerHTML = "✅ تم اختيار الملف بنجاح";
+    }
+
+    if (progress) {
+        progress.style.width = "10%";
+    }
+
 }
 
 
@@ -135,9 +175,22 @@ if (extractBtn) {
             if (response.ok && result.success) {
 
                 progress.style.width = "100%";
-                statusText.innerHTML = "✅ تم استخراج البيانات بنجاح";
 
-                displayExtractedData(result.data);
+                statusText.innerHTML =
+                    "✅ تم استخراج البيانات بنجاح، جاري الانتقال للمراجعة...";
+
+
+                sessionStorage.setItem(
+                    "bayanExtractedData",
+                    JSON.stringify(result.data)
+                );
+
+
+                setTimeout(() => {
+
+                    window.location.href = "/result?image=" + encodeURIComponent(result.image);
+
+                }, 500);
 
             } else {
 
@@ -155,91 +208,6 @@ if (extractBtn) {
             console.log(error);
         }
     });
-}
-
-
-//====================================
-// عرض البيانات المستخرجة
-//====================================
-
-function displayExtractedData(data) {
-
-    if (!resultBox) return;
-
-    resultBox.innerHTML = `
-        <div class="extracted-fields">
-
-            <div class="field">
-                <label>اسم المواطن</label>
-                <input type="text" id="client_name" value="${escapeHtml(data.client_name || "")}">
-            </div>
-
-            <div class="field">
-                <label>رقم الخطاب</label>
-                <input type="text" id="letter_number" value="${escapeHtml(data.letter_number || "")}">
-            </div>
-
-            <div class="field">
-                <label>التاريخ</label>
-                <input type="text" id="date" value="${escapeHtml(data.date || "")}">
-            </div>
-
-            <div class="field">
-                <label>الجهة</label>
-                <input type="text" id="organization" value="${escapeHtml(data.organization || "")}">
-            </div>
-
-            <button type="button" id="saveBtn" class="save-btn">
-                <i class="fa-solid fa-floppy-disk"></i>
-                حفظ البيانات
-            </button>
-
-        </div>
-    `;
-
-    const saveBtn = document.getElementById("saveBtn");
-
-    if (saveBtn) {
-        saveBtn.addEventListener("click", saveData);
-    }
-}
-
-
-//====================================
-// حفظ البيانات
-//====================================
-
-async function saveData() {
-
-    const data = {
-        client_name: document.getElementById("client_name").value.trim(),
-        letter_number: document.getElementById("letter_number").value.trim(),
-        date: document.getElementById("date").value.trim(),
-        organization: document.getElementById("organization").value.trim()
-    };
-
-    try {
-        const response = await fetch("/save", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-
-            alert("✅ تم حفظ البيانات وأرشفتها بنجاح.");
-            window.location.href = "/result?id=" + result.id;
-
-        } else {
-            alert(result.message || "حدث خطأ أثناء الحفظ.");
-        }
-
-    } catch (error) {
-        console.log(error);
-        alert("تعذر الاتصال بالخادم.");
-    }
 }
 
 
@@ -277,9 +245,16 @@ function resetUpload() {
         previewImage.style.display = "none";
     }
 
-    if (previewPDF) {
-        previewPDF.src = "";
-        previewPDF.style.display = "none";
+    if (pdfPreview) {
+        pdfPreview.style.display = "none";
+    }
+
+    if (uploadPlaceholder) {
+        uploadPlaceholder.style.display = "block";
+    }
+
+    if (selectedFilePreview) {
+        selectedFilePreview.style.display = "none";
     }
 
     if (resultBox) {

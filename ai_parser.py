@@ -8,7 +8,6 @@ import unicodedata
 # ============================================================
 
 def normalize_text(text):
-
     if not text:
         return ""
 
@@ -39,7 +38,6 @@ def normalize_text(text):
 # ============================================================
 
 def normalize_digits(text):
-
     if not text:
         return ""
 
@@ -56,7 +54,6 @@ def normalize_digits(text):
 # ============================================================
 
 def clean_value(value):
-
     if not value:
         return ""
 
@@ -105,9 +102,10 @@ FIELD_LABELS = {
     ],
 
     "date": [
-        "تاريخ الخطاب",
-        "التاريخ",
-        "تاريخ"
+       "التاريخ",
+    "تاريخ",
+    "التاريخ الهجري",
+    "Date"
     ],
 
     "organization": [
@@ -125,6 +123,7 @@ FIELD_LABELS = {
 # ============================================================
 
 STOP_LABELS = [
+
     "رقم السجل المدني",
     "رقم الهوية",
     "رقم الهوية الوطنية",
@@ -261,7 +260,7 @@ def extract_client_name(lines):
             continue
 
         # ----------------------------------------------------
-        # البحث عن "الاسم الكامل" أولًا
+        # البحث عن عنوان الاسم
         # ----------------------------------------------------
 
         label = None
@@ -286,7 +285,6 @@ def extract_client_name(lines):
 
         if value:
 
-            # إزالة كلمات غير مرغوبة
             value = re.sub(
                 r"^[\s:：\-–—_/]+",
                 "",
@@ -296,17 +294,16 @@ def extract_client_name(lines):
             value = clean_value(value)
 
         # ----------------------------------------------------
-        # إذا لم توجد قيمة في نفس السطر
+        # تجميع أجزاء الاسم
         # ----------------------------------------------------
 
         collected = []
 
         if value and valid_name(value):
-
             collected.append(value)
 
         # ----------------------------------------------------
-        # نقرأ الأسطر التالية لاستكمال الاسم
+        # قراءة الأسطر التالية لاستكمال الاسم
         # ----------------------------------------------------
 
         for j in range(
@@ -361,7 +358,6 @@ def extract_client_name(lines):
 
             if valid_name(result):
 
-                # إزالة بقايا "الكامل"
                 result = re.sub(
                     r"^الكامل\s*[:：\-]?\s*",
                     "",
@@ -392,19 +388,21 @@ def extract_letter_number(lines):
         if not label:
             continue
 
+        # ----------------------------------------------------
+        # الرقم في نفس السطر
+        # ----------------------------------------------------
+
         value = get_after_label(
             line,
             label
         )
 
-        # إذا كان الرقم في نفس السطر
         if value:
 
             value = normalize_digits(
                 value
             )
 
-            # الاحتفاظ بالأرقام والحروف والرموز المعتادة
             value = re.sub(
                 r"[^\w\-/.]",
                 "",
@@ -418,7 +416,10 @@ def extract_letter_number(lines):
             ):
                 return value
 
+        # ----------------------------------------------------
         # الرقم في السطر التالي
+        # ----------------------------------------------------
+
         if i + 1 < len(lines):
 
             next_line = clean_value(
@@ -447,111 +448,114 @@ def extract_letter_number(lines):
     return ""
 
 
-# ============================================================
-# استخراج التاريخ
-# ============================================================
-
 def normalize_date(value):
 
     if not value:
         return ""
 
-    value = normalize_digits(
-        value
-    )
+    # تحويل الأرقام العربية والهندية إلى إنجليزية
+    value = normalize_digits(value)
 
-    value = value.replace(
-        "/",
-        "-"
-    )
-
-    value = value.replace(
-        ".",
-        "-"
-    )
-
+    # إزالة علامة هـ إن وجدت
     value = re.sub(
-        r"\s+",
+        r"\s*هـ\.?\s*",
         "",
         value
     )
 
-    # DD-MM-YYYY
+    # توحيد الفواصل
+    value = value.replace("/", "-")
+    value = value.replace(".", "-")
+    value = value.replace("\\", "-")
+
+    # إزالة المسافات حول الشرطات
+    value = re.sub(
+        r"\s*-\s*",
+        "-",
+        value
+    )
+
+    # ===============================
+    # التاريخ الهجري
+    # مثال: 18-08-1447
+    # ===============================
+
     match = re.search(
-        r"\b(\d{1,2})-(\d{1,2})-(\d{4})\b",
+        r"(?<!\d)(\d{1,2})-(\d{1,2})-(14\d{2})(?!\d)",
         value
     )
 
     if match:
 
-        day = int(
-            match.group(1)
-        )
-
-        month = int(
-            match.group(2)
-        )
-
-        year = int(
-            match.group(3)
-        )
+        day = int(match.group(1))
+        month = int(match.group(2))
+        year = int(match.group(3))
 
         if (
-            1 <= day <= 31
+            1 <= day <= 30
             and
             1 <= month <= 12
+            and
+            1400 <= year <= 1600
         ):
 
-            return (
-                f"{day:02d}-"
-                f"{month:02d}-"
-                f"{year}"
-            )
+            return f"{day:02d}-{month:02d}-{year}"
 
-    # YYYY-MM-DD
+
+    # ===============================
+    # التاريخ الميلادي
+    # مثال: 18-08-2026
+    # ===============================
+
     match = re.search(
-        r"\b(\d{4})-(\d{1,2})-(\d{1,2})\b",
+        r"(?<!\d)(\d{1,2})-(\d{1,2})-(\d{4})(?!\d)",
         value
     )
 
     if match:
 
-        year = int(
-            match.group(1)
-        )
-
-        month = int(
-            match.group(2)
-        )
-
-        day = int(
-            match.group(3)
-        )
+        day = int(match.group(1))
+        month = int(match.group(2))
+        year = int(match.group(3))
 
         if (
             1 <= day <= 31
             and
             1 <= month <= 12
+            and
+            1900 <= year <= 2100
         ):
 
-            return (
-                f"{day:02d}-"
-                f"{month:02d}-"
-                f"{year}"
-            )
+            return f"{day:02d}-{month:02d}-{year}"
+
 
     return ""
 
+   
+
+# ============================================================
+# استخراج التاريخ الهجري
+# ============================================================
 
 def extract_date(lines):
 
-    # أولًا ابحث عن التاريخ بجانب عنوانه
+    # ========================================================
+    # 1. البحث عن التاريخ بجانب عنوانه
+    # ========================================================
+
     for i, line in enumerate(lines):
+
+        if not line:
+            continue
 
         for label in FIELD_LABELS["date"]:
 
             if label not in line:
                 continue
+
+            # ------------------------------------------------
+            # التاريخ موجود في نفس السطر
+            # ------------------------------------------------
 
             value = get_after_label(
                 line,
@@ -565,16 +569,27 @@ def extract_date(lines):
             if result:
                 return result
 
+            # ------------------------------------------------
+            # التاريخ موجود في السطر التالي
+            # ------------------------------------------------
+
             if i + 1 < len(lines):
 
-                result = normalize_date(
+                next_line = clean_value(
                     lines[i + 1]
+                )
+
+                result = normalize_date(
+                    next_line
                 )
 
                 if result:
                     return result
 
-    # محاولة أخيرة: أي تاريخ في النص
+    # ========================================================
+    # 2. البحث عن أي تاريخ هجري في جميع الأسطر
+    # ========================================================
+
     for line in lines:
 
         result = normalize_date(
@@ -583,6 +598,21 @@ def extract_date(lines):
 
         if result:
             return result
+
+    # ========================================================
+    # 3. البحث في النص كاملًا
+    # ========================================================
+
+    full_text = " ".join(
+        lines
+    )
+
+    result = normalize_date(
+        full_text
+    )
+
+    if result:
+        return result
 
     return ""
 
@@ -606,6 +636,10 @@ def extract_organization(lines):
         if not label:
             continue
 
+        # ----------------------------------------------------
+        # الجهة في نفس السطر
+        # ----------------------------------------------------
+
         value = get_after_label(
             line,
             label
@@ -613,7 +647,6 @@ def extract_organization(lines):
 
         if value:
 
-            # إزالة رموز البداية
             value = clean_value(
                 value
             )
@@ -621,7 +654,10 @@ def extract_organization(lines):
             if len(value) >= 3:
                 return value
 
+        # ----------------------------------------------------
         # الجهة في السطر التالي
+        # ----------------------------------------------------
+
         if i + 1 < len(lines):
 
             next_line = clean_value(
@@ -635,7 +671,6 @@ def extract_organization(lines):
                 and
                 len(next_line) >= 3
             ):
-
                 return next_line
 
     return ""
@@ -648,22 +683,37 @@ def extract_organization(lines):
 def parse_text(text):
 
     data = {
+
         "client_name": "",
+
         "letter_number": "",
+
         "date": "",
+
         "organization": ""
     }
 
     if not text:
         return data
 
+    # --------------------------------------------------------
+    # تنظيف النص
+    # --------------------------------------------------------
+
     text = normalize_text(
         text
     )
 
+    # --------------------------------------------------------
+    # تقسيم النص إلى أسطر
+    # --------------------------------------------------------
+
     lines = [
+
         clean_value(line)
+
         for line in text.splitlines()
+
         if clean_value(line)
     ]
 
@@ -695,7 +745,9 @@ def parse_text(text):
     # --------------------------------------------------------
 
     print("=" * 60)
+
     print("PARSED DATA")
+
     print("=" * 60)
 
     print(
@@ -709,7 +761,7 @@ def parse_text(text):
     )
 
     print(
-        "التاريخ:",
+        "التاريخ الهجري:",
         data["date"]
     )
 

@@ -25,7 +25,6 @@
     );
 
     --shadow:0 15px 35px rgba(15,76,129,.12);
-
 }
 
 body{
@@ -37,7 +36,6 @@ body{
     padding:40px;
 
     color:var(--text);
-
 }
 
 .container{
@@ -45,11 +43,11 @@ body{
     max-width:1500px;
 
     margin:auto;
-
 }
 
+
 /*====================================
-            TOP
+                TOP
 ====================================*/
 
 .top{
@@ -61,7 +59,6 @@ body{
     align-items:center;
 
     margin-bottom:35px;
-
 }
 
 .top h1{
@@ -71,7 +68,6 @@ body{
     font-weight:800;
 
     color:var(--primary);
-
 }
 
 .actions{
@@ -81,7 +77,6 @@ body{
     gap:15px;
 
     align-items:center;
-
 }
 
 #dark{
@@ -101,13 +96,11 @@ body{
     cursor:pointer;
 
     transition:.3s;
-
 }
 
 #dark:hover{
 
     transform:rotate(15deg);
-
 }
 
 .actions a{
@@ -125,14 +118,57 @@ body{
     font-weight:700;
 
     transition:.3s;
-
 }
 
 .actions a:hover{
 
     transform:translateY(-3px);
-
 }
+
+
+/*====================================
+                LOGO
+====================================*/
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+#logo,
+.project-logo,
+.logo img{
+
+    width:60px !important;
+
+    height:60px !important;
+
+    object-fit:contain;
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+    padding:6px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+    transition:.3s;
+
+    flex-shrink:0;
+}
+
+.logo h1,
+.logo h2{
+
+    margin:0;
+}
+
+
 /*====================================
             SEARCH CARD
 ====================================*/
@@ -149,6 +185,9 @@ body{
 
     margin-bottom:35px;
 
+    position:relative;
+
+    z-index:20;
 }
 
 .search-card h2{
@@ -158,7 +197,6 @@ body{
     color:var(--primary);
 
     margin-bottom:25px;
-
 }
 
 .search-grid{
@@ -169,14 +207,16 @@ body{
 
     gap:20px;
 
+    align-items:start;
 }
 
-.search-grid div{
+.search-grid > div{
 
     display:flex;
 
     flex-direction:column;
 
+    min-width:0;
 }
 
 .search-grid label{
@@ -186,12 +226,15 @@ body{
     font-weight:700;
 
     margin-bottom:8px;
-
 }
 
 .search-grid input{
 
-    padding:15px;
+    width:100%;
+
+    height:52px;
+
+    padding:12px 15px;
 
     border:2px solid var(--border);
 
@@ -205,6 +248,7 @@ body{
 
     background:white;
 
+    color:var(--text);
 }
 
 .search-grid input:focus{
@@ -212,8 +256,341 @@ body{
     border-color:var(--secondary);
 
     box-shadow:0 0 0 4px rgba(46,139,139,.15);
+}
+
+
+/*====================================
+        DATE INPUT
+====================================*/
+
+.date-field{
+
+    position:relative;
+
+    z-index:100;
+}
+
+.date-input-wrapper{
+
+    position:relative;
+
+    width:100%;
+}
+
+.date-input-wrapper input{
+
+    padding-left:52px;
+}
+
+.calendar-button{
+
+    position:absolute;
+
+    left:7px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:transparent;
+
+    color:var(--primary);
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:18px;
+
+    transition:.2s;
+
+    z-index:2;
+}
+
+.calendar-button:hover{
+
+    background:#EEF6FA;
+
+    color:var(--secondary);
+}
+
+
+/*====================================
+        HIJRI CALENDAR
+====================================*/
+
+.hijri-calendar{
+
+    display:none;
+
+    position:absolute;
+
+    top:82px;
+
+    right:0;
+
+    width:340px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:15px;
+
+    box-shadow:0 18px 45px rgba(15,23,42,.18);
+
+    z-index:9999;
+}
+
+.hijri-calendar.open{
+
+    display:block;
+}
+
+
+/*====================================
+        CALENDAR HEADER
+====================================*/
+
+.calendar-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:8px;
+
+    margin-bottom:15px;
+}
+
+.calendar-nav{
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#F1F5F9;
+
+    color:var(--primary);
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    flex-shrink:0;
+}
+
+.calendar-nav:hover{
+
+    background:var(--primary);
+
+    color:white;
+}
+
+.calendar-title{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    flex:1;
+}
+
+.calendar-title select{
+
+    height:38px;
+
+    border:1px solid var(--border);
+
+    border-radius:9px;
+
+    padding:0 7px;
+
+    background:white;
+
+    color:var(--text);
+
+    font-size:13px;
+
+    font-weight:700;
+
+    outline:none;
+
+    cursor:pointer;
 
 }
+
+#calendarMonth{
+
+    width:120px;
+}
+
+#calendarYear{
+
+    width:82px;
+}
+
+
+/*====================================
+        WEEK DAYS
+====================================*/
+
+.calendar-weekdays{
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:4px;
+
+    margin-bottom:6px;
+}
+
+.calendar-weekdays span{
+
+    text-align:center;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    color:var(--gray);
+
+    padding:5px 0;
+}
+
+
+/*====================================
+        DAYS
+====================================*/
+
+.calendar-days{
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:5px;
+}
+
+.calendar-day{
+
+    height:38px;
+
+    border:none;
+
+    border-radius:9px;
+
+    background:#F8FAFC;
+
+    color:var(--text);
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    transition:.15s;
+}
+
+.calendar-day:hover{
+
+    background:#E8F3F7;
+
+    color:var(--primary);
+
+    transform:translateY(-1px);
+}
+
+.calendar-day.empty{
+
+    background:transparent;
+
+    cursor:default;
+
+    pointer-events:none;
+}
+
+.calendar-day.selected{
+
+    background:var(--gradient);
+
+    color:white;
+
+    font-weight:800;
+}
+
+
+/*====================================
+        CALENDAR FOOTER
+====================================*/
+
+.calendar-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:13px;
+
+    padding-top:11px;
+
+    border-top:1px solid var(--border);
+}
+
+.calendar-footer button{
+
+    border:none;
+
+    background:transparent;
+
+    color:var(--primary);
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    padding:5px 8px;
+
+    border-radius:7px;
+}
+
+.calendar-footer button:hover{
+
+    background:#EEF6FA;
+}
+
+
+/*====================================
+        SEARCH BUTTONS
+====================================*/
 
 .search-buttons{
 
@@ -224,7 +601,6 @@ body{
     gap:18px;
 
     margin-top:30px;
-
 }
 
 .search-buttons button{
@@ -246,7 +622,6 @@ body{
     cursor:pointer;
 
     transition:.3s;
-
 }
 
 .search-buttons button:hover{
@@ -254,10 +629,11 @@ body{
     transform:translateY(-4px);
 
     box-shadow:var(--shadow);
-
 }
+
+
 /*====================================
-            TABLE
+                TABLE
 ====================================*/
 
 .table-card{
@@ -274,6 +650,9 @@ body{
 
     overflow-x:auto;
 
+    position:relative;
+
+    z-index:1;
 }
 
 .table-card h2{
@@ -283,7 +662,29 @@ body{
     color:var(--primary);
 
     margin-bottom:25px;
+}
 
+.table-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.table-header h2{
+
+    margin-bottom:0;
+}
+
+#recordCount{
+
+    color:var(--gray);
+
+    font-weight:700;
 }
 
 table{
@@ -293,7 +694,6 @@ table{
     min-width:950px;
 
     border-collapse:collapse;
-
 }
 
 thead{
@@ -301,7 +701,6 @@ thead{
     background:var(--gradient);
 
     color:white;
-
 }
 
 thead th{
@@ -311,7 +710,6 @@ thead th{
     font-size:16px;
 
     font-weight:700;
-
 }
 
 tbody td{
@@ -321,19 +719,16 @@ tbody td{
     text-align:center;
 
     border-bottom:1px solid var(--border);
-
 }
 
 tbody tr{
 
     transition:.3s;
-
 }
 
 tbody tr:hover{
 
     background:#F6FBFD;
-
 }
 
 
@@ -358,37 +753,59 @@ td button{
     transition:.3s;
 
     font-weight:700;
-
 }
 
 td button:hover{
 
     transform:translateY(-3px);
-
 }
 
 .view{
 
     background:var(--primary);
-
 }
 
 .edit{
 
     background:#F59E0B;
-
 }
 
 .delete{
 
     background:#DC2626;
-
 }
 
 .word{
 
     background:var(--secondary);
+}
 
+
+/*====================================
+        EMPTY MESSAGE
+====================================*/
+
+.empty-message{
+
+    text-align:center;
+
+    padding:45px 20px;
+
+    color:var(--gray);
+}
+
+.empty-message i{
+
+    font-size:45px;
+
+    margin-bottom:12px;
+}
+
+.empty-message h3{
+
+    margin-bottom:7px;
+
+    color:var(--primary);
 }
 
 
@@ -405,11 +822,9 @@ td button:hover{
     gap:20px;
 
     flex-wrap:wrap;
-
 }
 
 .bottom-actions button,
-
 .bottom-actions a{
 
     border:none;
@@ -431,20 +846,19 @@ td button:hover{
     cursor:pointer;
 
     transition:.3s;
-
 }
 
 .bottom-actions button:hover,
-
 .bottom-actions a:hover{
 
     transform:translateY(-4px);
 
     box-shadow:var(--shadow);
-
 }
+
+
 /*====================================
-            MODAL
+                MODAL
 ====================================*/
 
 .modal{
@@ -467,8 +881,7 @@ td button:hover{
 
     align-items:center;
 
-    z-index:999;
-
+    z-index:99999;
 }
 
 .modal-content{
@@ -492,7 +905,6 @@ td button:hover{
     box-shadow:var(--shadow);
 
     animation:fadeUp .4s ease;
-
 }
 
 .close{
@@ -510,13 +922,11 @@ td button:hover{
     color:var(--gray);
 
     transition:.3s;
-
 }
 
 .close:hover{
 
     color:#DC2626;
-
 }
 
 .modal-buttons{
@@ -530,7 +940,6 @@ td button:hover{
     margin-top:30px;
 
     flex-wrap:wrap;
-
 }
 
 .modal-buttons button{
@@ -548,7 +957,6 @@ td button:hover{
     font-weight:700;
 
     transition:.3s;
-
 }
 
 .modal-buttons button:hover{
@@ -556,25 +964,21 @@ td button:hover{
     transform:translateY(-4px);
 
     box-shadow:var(--shadow);
-
 }
 
 #editRecord{
 
     background:#F59E0B;
-
 }
 
 #downloadWord{
 
     background:var(--secondary);
-
 }
 
 #deleteRecord{
 
     background:#DC2626;
-
 }
 
 
@@ -587,17 +991,16 @@ body.dark{
     background:#0F172A;
 
     color:white;
-
 }
 
 body.dark .search-card,
 body.dark .table-card,
-body.dark .modal-content{
+body.dark .modal-content,
+body.dark .hijri-calendar{
 
     background:#1E293B;
 
     box-shadow:none;
-
 }
 
 body.dark h1,
@@ -605,7 +1008,6 @@ body.dark h2,
 body.dark label{
 
     color:white;
-
 }
 
 body.dark input{
@@ -615,37 +1017,101 @@ body.dark input{
     color:white;
 
     border:2px solid #475569;
-
 }
 
 body.dark input::placeholder{
 
     color:#CBD5E1;
-
 }
 
 body.dark table{
 
     color:white;
-
 }
 
 body.dark tbody td{
 
     border-bottom:1px solid #475569;
-
 }
 
 body.dark tbody tr:hover{
 
     background:#273449;
-
 }
 
 body.dark .close{
 
     color:white;
+}
 
+
+/*====================================
+        DARK CALENDAR
+====================================*/
+
+body.dark .calendar-button{
+
+    color:#CBD5E1;
+}
+
+body.dark .calendar-button:hover{
+
+    background:#334155;
+
+    color:white;
+}
+
+body.dark .calendar-nav{
+
+    background:#334155;
+
+    color:white;
+}
+
+body.dark .calendar-title select{
+
+    background:#334155;
+
+    color:white;
+
+    border-color:#475569;
+}
+
+body.dark .calendar-weekdays span{
+
+    color:#CBD5E1;
+}
+
+body.dark .calendar-day{
+
+    background:#334155;
+
+    color:white;
+}
+
+body.dark .calendar-day:hover{
+
+    background:#475569;
+}
+
+body.dark .calendar-day.empty{
+
+    background:transparent;
+}
+
+body.dark .calendar-footer{
+
+    border-color:#475569;
+}
+
+body.dark .calendar-footer button{
+
+    color:#CBD5E1;
+}
+
+body.dark .calendar-footer button:hover{
+
+    background:#334155;
 }
 
 
@@ -655,79 +1121,89 @@ body.dark .close{
 
 @media(max-width:992px){
 
-.search-grid{
+    .search-grid{
 
-    grid-template-columns:repeat(2,1fr);
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .top{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
 
 }
 
-.top{
-
-    flex-direction:column;
-
-    align-items:flex-start;
-
-    gap:20px;
-
-}
-
-}
 
 @media(max-width:768px){
 
-body{
+    body{
 
-    padding:20px;
+        padding:20px;
+
+    }
+
+    .search-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .top h1{
+
+        font-size:28px;
+
+    }
+
+    .modal-content{
+
+        padding:25px;
+
+    }
+
+    .modal-buttons{
+
+        flex-direction:column;
+
+    }
+
+    .modal-buttons button{
+
+        width:100%;
+
+    }
+
+    .hijri-calendar{
+
+        width:100%;
+
+        max-width:340px;
+
+    }
 
 }
 
-.search-grid{
-
-    grid-template-columns:1fr;
-
-}
-
-.top h1{
-
-    font-size:28px;
-
-}
-
-.modal-content{
-
-    padding:25px;
-
-}
-
-.modal-buttons{
-
-    flex-direction:column;
-
-}
-
-.modal-buttons button{
-
-    width:100%;
-
-}
-
-}
 
 @media(max-width:480px){
 
-.actions{
+    .actions{
 
-    flex-wrap:wrap;
+        flex-wrap:wrap;
 
-}
+    }
 
-.actions a{
+    .actions a{
 
-    width:100%;
+        width:100%;
 
-    text-align:center;
+        text-align:center;
 
-}
+    }
 
 }
 
@@ -760,62 +1236,143 @@ body{
 .table-card{
 
     animation:fadeUp .5s ease;
-
 }
 
-/* ==========================
-   Unified Logo Style
-========================== */
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-#logo,
-.project-logo,
-.logo img{
-
-    width:60px !important;
-    height:60px !important;
-
-    object-fit:contain;
-
-    border-radius:14px;
-
-    background:#ffffff;
-
-    padding:6px;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.12);
-
-    transition:.3s;
-
-    flex-shrink:0;
-
-}
-
-.logo h1,
-.logo h2{
-    margin:0;
-}
-
-/* الوضع الليلي */
-
-
-body.dark #logo,
-body.dark .project-logo,
-body.dark .logo img{
-
-    background:#0C1524;
-
-    border:none;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
-
-}
 
 /*====================================
                 END
 ====================================*/
+
+/* ====================================
+        MOBILE PORTRAIT FIX
+==================================== */
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 10px;
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .top {
+        width: 100%;
+        gap: 15px;
+    }
+
+    .logo {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .logo-text {
+        min-width: 0;
+    }
+
+    .logo-text h2 {
+        font-size: 19px;
+    }
+
+    .logo-text small {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .top h1 {
+        width: 100%;
+        font-size: 26px;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions a {
+        width: auto;
+        flex: 1;
+    }
+
+    .search-card,
+    .table-card {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .search-card h2,
+    .table-card h2 {
+        font-size: 22px;
+    }
+
+    .search-grid {
+        width: 100%;
+    }
+
+    .search-grid input {
+        font-size: 14px;
+    }
+
+    .search-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-buttons button {
+        width: 100%;
+    }
+
+    .table-card {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 700px;
+    }
+
+    .bottom-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .bottom-actions button,
+    .bottom-actions a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hijri-calendar {
+        right: 0;
+        left: auto;
+        width: min(100%, 340px);
+    }
+
+}
+/* ====================================
+      MOBILE - ARCHIVE TABLE
+==================================== */
+
+@media (max-width: 576px) {
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-wrapper table {
+        width: 950px;
+        min-width: 950px;
+    }
+
+}

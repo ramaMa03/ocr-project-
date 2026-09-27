@@ -1,7 +1,8 @@
 
 from docx import Document
+
 import os
-from datetime import datetime
+import re
 
 
 # ==================================
@@ -24,78 +25,146 @@ os.makedirs(
 
 
 # ==================================
-# إنشاء ملف Word من النموذج الجاهز
+# تحويل الأرقام العربية إلى إنجليزية
 # ==================================
 
-def create_word(data):
+def normalize_digits(value):
 
-    # --------------------------------
-    # التأكد من وجود النموذج
-    # --------------------------------
+    arabic_digits = "٠١٢٣٤٥٦٧٨٩"
 
-    if not os.path.exists(TEMPLATE_FILE):
+    english_digits = "0123456789"
 
-        raise FileNotFoundError(
-            f"لم يتم العثور على نموذج Word: {TEMPLATE_FILE}"
+    translation = str.maketrans(
+        arabic_digits,
+        english_digits
+    )
+
+    return str(value).translate(
+        translation
+    )
+
+
+# ==================================
+# تحويل التاريخ الهجري إلى قيمة
+# قابلة للترتيب
+# ==================================
+
+def hijri_sort_key(date_value):
+
+    date_text = normalize_digits(
+        date_value
+    ).strip()
+
+    numbers = re.findall(
+        r"\d+",
+        date_text
+    )
+
+
+    if len(numbers) >= 3:
+
+        day = int(numbers[0])
+
+        month = int(numbers[1])
+
+        year = int(numbers[2])
+
+        return (
+            year,
+            month,
+            day
         )
 
 
-    # --------------------------------
-    # اسم الملف الجديد
-    # --------------------------------
-
-    now = datetime.now().strftime(
-        "%Y%m%d_%H%M%S_%f"
-    )
-
-    filename = f"archive_{now}.docx"
-
-    output_path = os.path.join(
-        OUTPUT_FOLDER,
-        filename
+    return (
+        9999,
+        99,
+        99
     )
 
 
-    # --------------------------------
-    # فتح نموذج Word الجاهز
-    # --------------------------------
+# ==================================
+# ترتيب السجلات حسب التاريخ الهجري
+# ==================================
 
-    doc = Document(TEMPLATE_FILE)
+def sort_records(records):
 
+    return sorted(
 
-    # ==================================
-    # بيانات الأرشفة
-    # ==================================
+        records,
 
-    client_name = data.get(
-        "client_name",
-        ""
-    )
+        key=lambda record:
+        hijri_sort_key(
+            record["date"] or ""
+        )
 
-    letter_number = data.get(
-        "letter_number",
-        ""
-    )
-
-    date = data.get(
-        "date",
-        ""
-    )
-
-    organization = data.get(
-        "organization",
-        ""
     )
 
 
-    # ==================================
-    # البحث عن جدول الأرشفة
-    # ==================================
+# ==================================
+# تقسيم السجلات
+# كل 20 سجل
+# ==================================
+
+def split_records(records):
+
+    groups = []
+
+    for index in range(
+
+        0,
+
+        len(records),
+
+        20
+
+    ):
+
+        groups.append(
+
+            records[
+                index:index + 20
+            ]
+
+        )
+
+    return groups
+
+
+# ==================================
+# تجهيز ملف Word واحد
+# ==================================
+
+def create_group_word(
+
+    records,
+
+    group_number
+
+):
+
+    if not os.path.exists(
+        TEMPLATE_FILE
+    ):
+
+        raise FileNotFoundError(
+
+            f"لم يتم العثور على نموذج Word: {TEMPLATE_FILE}"
+
+        )
+
+
+    doc = Document(
+        TEMPLATE_FILE
+    )
+
 
     if not doc.tables:
 
         raise ValueError(
+
             "نموذج Word لا يحتوي على جدول."
+
         )
 
 
@@ -103,84 +172,190 @@ def create_word(data):
 
 
     # ==================================
-    # إضافة صف جديد
+    # التأكد من وجود 20 صفًا للبيانات
+    # الصف الأول هو العناوين
     # ==================================
 
-    row = table.add_row()
+    while len(table.rows) < 21:
+
+        table.add_row()
 
 
     # ==================================
-    # تعبئة الصف
-    #
-    # النموذج يحتوي على:
-    #
-    # العدد
-    # رقم الخطاب
-    # التاريخ
-    # الجهة
-    # اسم المواطن/ة
-    #
+    # مسح البيانات القديمة
     # ==================================
 
-    cells = row.cells
+    for row_index in range(
+
+        1,
+
+        len(table.rows)
+
+    ):
+
+        for cell in table.rows[row_index].cells:
+
+            cell.text = ""
 
 
-    if len(cells) >= 5:
+    # ==================================
+    # تعبئة السجلات
+    # ==================================
 
-        # --------------------------------
+    for index, record in enumerate(
+
+        records,
+
+        start=1
+
+    ):
+
+        row = table.rows[index]
+
+        cells = row.cells
+
+
+        if len(cells) < 5:
+
+            raise ValueError(
+
+                "نموذج Word لا يحتوي على الأعمدة الخمسة المطلوبة."
+
+            )
+
+
         # العدد
-        # --------------------------------
-        # لا يتم إدخاله لأن المستخدم
-        # لا يحتاج إلى كتابة العدد.
-        cells[0].text = ""
+
+        cells[0].text = str(index)
 
 
-        # --------------------------------
         # رقم الخطاب
-        # --------------------------------
 
-        cells[1].text = letter_number
-
-
-        # --------------------------------
-        # التاريخ
-        # --------------------------------
-
-        cells[2].text = date
+        cells[1].text = (
+            record["letter_number"] or ""
+        )
 
 
-        # --------------------------------
+        # التاريخ الهجري
+
+        cells[2].text = (
+            record["date"] or ""
+        )
+
+
         # الجهة
-        # --------------------------------
 
-        cells[3].text = organization
+        cells[3].text = (
+            record["organization"] or ""
+        )
 
 
-        # --------------------------------
         # اسم المواطن/ة
-        # --------------------------------
 
-        cells[4].text = client_name
-
-
-    else:
-
-        raise ValueError(
-            "نموذج Word لا يحتوي على الأعمدة الخمسة المطلوبة."
+        cells[4].text = (
+            record["client_name"] or ""
         )
 
 
     # ==================================
-    # حفظ نسخة الأرشفة
+    # اسم الملف
     # ==================================
+
+    filename = (
+        f"archive_group_{group_number}.docx"
+    )
+
+
+    output_path = os.path.join(
+
+        OUTPUT_FOLDER,
+
+        filename
+
+    )
+
 
     doc.save(
         output_path
     )
 
 
-    # ==================================
-    # إرجاع مسار الملف
-    # ==================================
-
     return f"word_files/{filename}"
+
+
+# ==================================
+# إنشاء جميع ملفات Word
+# ==================================
+
+def create_word_files(records):
+
+    sorted_records = sort_records(
+        records
+    )
+
+
+    groups = split_records(
+        sorted_records
+    )
+
+
+    generated_files = []
+
+    for group_number, group in enumerate(
+
+        groups,
+
+        start=1
+
+    ):
+
+        word_file = create_group_word(
+
+            group,
+
+            group_number
+
+        )
+
+
+        generated_files.append({
+
+            "records":
+            group,
+
+            "word_file":
+            word_file
+
+        })
+
+
+    return generated_files
+
+
+# ==================================
+# الحصول على ملف Word الخاص بسجل
+# ==================================
+
+def get_word_for_record(
+
+    records,
+
+    record_id
+
+):
+
+    generated_files = create_word_files(
+        records
+    )
+
+
+    for group in generated_files:
+
+        for record in group["records"]:
+
+            if record["id"] == record_id:
+
+                return group["word_file"]
+
+
+    return None

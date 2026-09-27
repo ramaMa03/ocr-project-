@@ -969,6 +969,286 @@ body.dark .logo img{
     box-shadow:0 8px 20px rgba(0,0,0,.25);
 
 }
+
+
+/* ====================================
+   معاينة الملف داخل مربع الرفع
+==================================== */
+
+.upload-placeholder{
+    text-align:center;
+}
+
+.selected-file-preview{
+    width:100%;
+    min-height:280px;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:18px;
+}
+
+#previewImage{
+    display:block;
+
+    max-width:100%;
+    max-height:380px;
+
+    object-fit:contain;
+
+    border-radius:18px;
+
+    border:2px solid var(--border);
+
+    box-shadow:0 10px 25px rgba(15,76,129,.10);
+}
+
+.pdf-preview{
+    min-height:180px;
+
+    width:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:15px;
+
+    border:2px dashed var(--secondary);
+
+    border-radius:18px;
+
+    background:white;
+}
+
+.pdf-preview i{
+    font-size:70px;
+    color:#dc2626;
+}
+
+.pdf-preview span{
+    font-size:20px;
+    font-weight:700;
+    color:var(--primary);
+}
+
+#fileName{
+    max-width:100%;
+
+    font-weight:700;
+
+    color:var(--text);
+
+    word-break:break-word;
+
+    text-align:center;
+}
+
+.change-file{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:6px;
+
+    padding:4px 10px;
+
+    border-radius:10px;
+
+    background:var(--gradient);
+
+    color:white;
+
+    font-size:14px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+.change-file:hover{
+    transform:translateY(-3px);
+}
+
+
+/* ====================================
+   البيانات المستخرجة
+==================================== */
+
+.extracted-fields{
+
+    display:grid;
+
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+
+    gap:22px;
+
+    align-items:end;
+
+}
+
+.field{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:9px;
+
+}
+
+.field label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.field label i{
+    color:var(--secondary);
+}
+
+.field input{
+
+    width:100%;
+
+    min-height:55px;
+
+    padding:12px 16px;
+
+    border:2px solid var(--border);
+
+    border-radius:14px;
+
+    background:white;
+
+    color:var(--text);
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.field input:focus{
+
+    border-color:var(--secondary);
+
+    box-shadow:0 0 0 4px rgba(46,139,139,.10);
+
+}
+
+.save-btn{
+
+    grid-column:1 / -1;
+
+    width:min(100%, 400px);
+
+    justify-self:center;
+
+    margin-top:10px;
+
+    padding:17px 30px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:var(--gradient);
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 10px 25px rgba(15,76,129,.18);
+
+}
+
+.save-btn:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 16px 30px rgba(15,76,129,.22);
+
+}
+
+.save-btn i{
+    margin-left:8px;
+}
+
+
+/* ====================================
+   الوضع الليلي
+==================================== */
+
+body.dark .field input{
+
+    background:#1E293B;
+
+    border-color:#475569;
+
+    color:white;
+
+}
+
+body.dark .pdf-preview{
+
+    background:#1E293B;
+
+    border-color:#2E8B8B;
+
+}
+
+body.dark #fileName{
+    color:#E2E8F0;
+}
+
+
+/* ====================================
+   الجوال
+==================================== */
+
+@media(max-width:768px){
+
+    .extracted-fields{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .save-btn{
+
+        width:100%;
+
+    }
+
+}
+
 /*====================================
                 END
 ====================================*/

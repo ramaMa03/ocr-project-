@@ -1,7 +1,6 @@
 /*====================================
         BAYAN OCR DASHBOARD
 ====================================*/
-
 *{
     margin:0;
     padding:0;
@@ -166,6 +165,7 @@ body{
     background:rgba(255,255,255,.25);
 
 }
+
 /*====================================
             MAIN
 ====================================*/
@@ -349,6 +349,7 @@ body{
     font-size:16px;
 
 }
+
 /*====================================
         CONTENT
 ====================================*/
@@ -465,33 +466,45 @@ tbody tr:hover{
 
 .success{
 
+    display:inline-block;
+
+    white-space:nowrap;
+
     background:#D1FAE5;
 
     color:#059669;
 
-    padding:8px 15px;
+    padding:6px 14px;
 
-    border-radius:25px;
+    border-radius:20px;
 
-    font-size:14px;
+    font-size:13px;
 
     font-weight:bold;
+
+    line-height:1.4;
 
 }
 
 .pending{
 
+    display:inline-block;
+
+    white-space:nowrap;
+
     background:#FEF3C7;
 
     color:#B45309;
 
-    padding:8px 15px;
+    padding:6px 14px;
 
-    border-radius:25px;
+    border-radius:20px;
 
-    font-size:14px;
+    font-size:13px;
 
     font-weight:bold;
+
+    line-height:1.4;
 
 }
 
@@ -588,6 +601,7 @@ tbody tr:hover{
     transform:scale(1.05);
 
 }
+
 /*====================================
         CHART
 ====================================*/
@@ -735,6 +749,7 @@ body.dark .quick-card:hover{
     border-color:#2E8B8B;
 
 }
+
 body.dark .logo img{
 
     background:#FFFFFF;
@@ -762,6 +777,23 @@ body.dark .view{
     background:#2E8B8B;
 
 }
+
+body.dark .success {
+
+    background-color: rgba(5, 150, 105, 0.25);
+
+    color: #34D399;
+
+}
+
+body.dark .pending {
+
+    background-color: rgba(180, 83, 9, 0.25);
+
+    color: #FBBF24;
+
+}
+
 /*====================================
         RESPONSIVE
 ====================================*/
@@ -1049,6 +1081,410 @@ body.dark .logo img{
     box-shadow:0 8px 20px rgba(0,0,0,.25);
 
 }
+
 /*====================================
         END
 ====================================*/
+
+/* ====================================
+        MOBILE PORTRAIT FIX
+==================================== */
+
+@media (max-width: 576px) {
+
+    body {
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* الشريط الجانبي */
+    .sidebar {
+        width: 64px;
+        right: 0;
+        padding: 20px 7px;
+    }
+
+    /* إخفاء اسم المشروع والوصف داخل الشريط */
+    .sidebar .logo-text {
+        display: none;
+    }
+
+    .sidebar .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .sidebar .logo img {
+        width: 46px !important;
+        height: 46px !important;
+        padding: 5px;
+    }
+
+    /* القوائم */
+    .sidebar li {
+        margin-bottom: 10px;
+    }
+
+    .sidebar li a {
+        justify-content: center;
+        padding: 12px 6px;
+        gap: 0;
+        font-size: 0;
+        white-space: nowrap;
+    }
+
+    .sidebar li a i {
+        width: auto;
+        font-size: 18px;
+        margin: 0;
+    }
+
+    /* المحتوى الرئيسي */
+    .main {
+        margin-right: 64px;
+        width: calc(100% - 64px);
+        min-width: 0;
+        padding: 16px;
+    }
+
+    /* العنوان */
+    .topbar {
+        width: 100%;
+        margin-bottom: 22px;
+    }
+
+    .topbar > div:first-child {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .topbar h1 {
+        font-size: 23px;
+    }
+
+    .welcome-text {
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    /* الإحصائيات */
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 18px 12px;
+    }
+
+    .card h2 {
+        font-size: 28px;
+    }
+
+    /* المحتوى */
+    .content {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .recent,
+    .quick,
+    .chart-box {
+        width: 100%;
+        min-width: 0;
+        padding: 18px;
+    }
+
+    /* عنوان آخر العمليات */
+    .title {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .title h2 {
+        font-size: 20px;
+    }
+
+    .view {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    /* جدول آخر العمليات */
+    .recent table {
+        width: 600px;
+        min-width: 600px;
+    }
+
+    /* الرسم البياني */
+    .chart-box canvas {
+        max-width: 100% !important;
+    }
+
+}
+/* ====================================
+      MOBILE - RECENT TABLE
+==================================== */
+
+@media (max-width: 576px) {
+
+    .topbar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    /* الأيقونات في أقصى اليمين */
+    .icons {
+        order: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+    }
+
+    .topbar > div:first-child {
+        order: 2;
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+    }
+
+    .topbar h1 {
+        white-space: nowrap;
+        font-size: 21px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .welcome-text {
+        white-space: nowrap;
+        font-size: 11px;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .menu-toggle,
+    .icons #dark {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+}
+/* ====================================
+        MOBILE MENU
+==================================== */
+
+/* زر القائمة مخفي في الكمبيوتر */
+.menu-toggle {
+    display: none;
+}
+
+
+/* الخلفية خلف القائمة */
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* ====================================
+        MOBILE
+==================================== */
+
+@media (max-width: 576px) {
+
+    /* إخفاء الـSidebar القديم */
+    .sidebar {
+        width: 260px;
+        right: 0;
+        left: auto;
+
+        padding: 25px 20px;
+
+        transform: translateX(110%);
+        transition: transform .3s ease;
+
+        z-index: 10000;
+
+        overflow-y: auto;
+    }
+
+    /* عندما تفتح القائمة */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* إظهار الشعار والنص داخل القائمة */
+    .sidebar .logo-text {
+        display: flex;
+    }
+
+    .sidebar .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 35px;
+        gap: 12px;
+    }
+
+    .sidebar .logo img {
+        width: 55px !important;
+        height: 55px !important;
+    }
+
+    .sidebar .logo h2 {
+        display: block;
+        font-size: 22px;
+    }
+
+    .sidebar .logo span {
+        display: block;
+        font-size: 11px;
+        color: rgba(255,255,255,.85);
+    }
+
+    /* إظهار أسماء القائمة */
+    .sidebar li a {
+        justify-content: flex-start;
+        gap: 14px;
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    .sidebar li a i {
+        width: 25px;
+        font-size: 18px;
+    }
+
+
+    /* ==============================
+            MAIN
+    ============================== */
+
+    .main {
+        margin-right: 0;
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+    }
+
+
+    /* ==============================
+            TOP BAR
+    ============================== */
+
+    .topbar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .topbar > div:first-child {
+        min-width: 0;
+    }
+
+    .topbar h1 {
+        font-size: 23px;
+    }
+
+    .welcome-text {
+        font-size: 13px;
+    }
+
+
+    /* ==============================
+            ICONS
+    ============================== */
+
+    .icons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .icons #dark,
+    .menu-toggle {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+    }
+
+    /* زر الثلاث خطوط */
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 50%;
+
+        background: var(--gradient);
+
+        color: white;
+
+        cursor: pointer;
+
+        font-size: 18px;
+
+        box-shadow: var(--shadow);
+
+        transition: .3s;
+    }
+
+    .menu-toggle:hover {
+        transform: scale(1.05);
+    }
+
+
+    /* ==============================
+            OVERLAY
+    ============================== */
+
+    .sidebar-overlay {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        background: rgba(0,0,0,.45);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        transition: .3s;
+
+        z-index: 9999;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+    /* ==============================
+            منع تحرك الصفحة
+    ============================== */
+
+    body.menu-open {
+        overflow: hidden;
+    }
+
+}

@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .vscode/
 static/uploads/*
+.\.venv\Scripts\python.exe -c "import requests; print(requests.get('https://api.mistral.ai/v1/models', headers={'Authorization':'Bearer LYXDRqCDfMZHcct00HmVI70NeDFrOtDJ'}).status_code)"

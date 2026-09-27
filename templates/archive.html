@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
+
 <head>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/responsive.css') }}">
 
     <meta charset="UTF-8">
 
@@ -11,14 +14,11 @@
 
     <title>الأرشيف | Bayan OCR</title>
 
-
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/archive.css') }}">
 
-
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
           rel="stylesheet">
-
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -38,15 +38,12 @@
 
     <div class="top">
 
-
         <div class="logo">
-
 
             <img id="logo"
                  src="{{ url_for('static', filename='images/logo.jpg') }}"
                  alt="Bayan OCR"
                  class="page-logo">
-
 
             <div class="logo-text">
 
@@ -58,19 +55,15 @@
 
             </div>
 
-
         </div>
 
 
         <h1>
-
-            الأرشيف 
-
+            الأرشيف
         </h1>
 
 
         <div class="actions">
-
 
             <button
                 id="dark"
@@ -89,9 +82,7 @@
 
             </a>
 
-
         </div>
-
 
     </div>
 
@@ -102,7 +93,6 @@
     ========================== -->
 
     <div class="search-card">
-
 
         <h2>
 
@@ -121,17 +111,13 @@
             <div>
 
                 <label>
-
                     اسم المواطن/ة
-
                 </label>
-
 
                 <input
                     type="text"
                     id="searchName"
                     placeholder="ابحث بالاسم">
-
 
             </div>
 
@@ -142,17 +128,13 @@
             <div>
 
                 <label>
-
                     رقم الخطاب
-
                 </label>
-
 
                 <input
                     type="text"
                     id="searchLetter"
                     placeholder="رقم الخطاب">
-
 
             </div>
 
@@ -160,19 +142,126 @@
 
             <!-- التاريخ -->
 
-            <div>
+            <div class="date-field">
 
                 <label>
-
-                    التاريخ
-
+                    التاريخ الهجري
                 </label>
 
 
-                <input
-                    type="date"
-                    id="searchDate">
+                <div class="date-input-wrapper">
 
+                    <input
+                        type="text"
+                        id="searchDate"
+                        placeholder="مثال: 10/01/1447"
+                        autocomplete="off"
+                        inputmode="numeric">
+
+                    <button
+                        type="button"
+                        id="calendarButton"
+                        class="calendar-button"
+                        aria-label="فتح التقويم">
+
+                        <i class="fa-solid fa-calendar-days"></i>
+
+                    </button>
+
+                </div>
+
+
+                <!-- =========================
+                     التقويم الهجري
+                ========================== -->
+
+                <div
+                    id="hijriCalendar"
+                    class="hijri-calendar"
+                    aria-hidden="true">
+
+
+                    <div class="calendar-header">
+
+
+                        <button
+                            type="button"
+                            id="prevMonth"
+                            class="calendar-nav">
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </button>
+
+
+                        <div class="calendar-title">
+
+                            <select
+                                id="calendarMonth"
+                                aria-label="الشهر">
+                            </select>
+
+
+                            <select
+                                id="calendarYear"
+                                aria-label="السنة">
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            id="nextMonth"
+                            class="calendar-nav">
+
+                            <i class="fa-solid fa-chevron-left"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="calendar-weekdays">
+
+                        <span>أحد</span>
+                        <span>اثن</span>
+                        <span>ثلا</span>
+                        <span>أرب</span>
+                        <span>خمي</span>
+                        <span>جمع</span>
+                        <span>سبت</span>
+
+                    </div>
+
+
+                    <div
+                        id="calendarDays"
+                        class="calendar-days">
+                    </div>
+
+
+                    <div class="calendar-footer">
+
+                        <button
+                            type="button"
+                            id="todayHijri">
+
+                            اليوم
+
+                        </button>
+
+                        <button
+                            type="button"
+                            id="closeCalendar">
+
+                            إغلاق
+
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -183,17 +272,13 @@
             <div>
 
                 <label>
-
                     الجهة
-
                 </label>
-
 
                 <input
                     type="text"
                     id="searchDepartment"
                     placeholder="الجهة">
-
 
             </div>
 
@@ -201,8 +286,8 @@
         </div>
 
 
-        <div class="search-buttons">
 
+        <div class="search-buttons">
 
             <button
                 id="searchBtn"
@@ -225,9 +310,7 @@
 
             </button>
 
-
         </div>
-
 
     </div>
 
@@ -239,9 +322,7 @@
 
     <div class="table-card">
 
-
         <div class="table-header">
-
 
             <h2>
 
@@ -253,65 +334,42 @@
 
 
             <span id="recordCount">
-
                 0 سجل
-
             </span>
-
 
         </div>
 
 
-
         <div class="table-wrapper">
 
-
             <table>
-
 
                 <thead>
 
                     <tr>
 
                         <th>
-
                             العدد
-
                         </th>
 
-
                         <th>
-
                             رقم الخطاب
-
                         </th>
 
-
                         <th>
-
                             التاريخ
-
                         </th>
 
-
                         <th>
-
                             الجهة
-
                         </th>
 
-
                         <th>
-
                             اسم المواطن/ة
-
                         </th>
 
-
                         <th>
-
                             الإجراءات
-
                         </th>
 
                     </tr>
@@ -320,17 +378,12 @@
 
 
                 <tbody id="archiveTable">
-
                 </tbody>
-
 
             </table>
 
-
         </div>
 
-
-        <!-- حالة عدم وجود سجلات -->
 
         <div
             id="emptyMessage"
@@ -340,19 +393,14 @@
             <i class="fa-solid fa-folder-open"></i>
 
             <h3>
-
                 لا توجد سجلات
-
             </h3>
 
             <p>
-
                 لم يتم العثور على أي سجلات مطابقة.
-
             </p>
 
         </div>
-
 
     </div>
 
@@ -363,7 +411,6 @@
     ========================== -->
 
     <div class="bottom-actions">
-
 
         <button
             id="refreshTable"
@@ -384,22 +431,19 @@
 
         </a>
 
-
     </div>
 
 
 
     <!-- =========================
-            نافذة عرض البيانات
+            نافذة التفاصيل
     ========================== -->
 
     <div
         class="modal"
         id="viewModal">
 
-
         <div class="modal-content">
-
 
             <span
                 class="close"
@@ -420,12 +464,10 @@
 
 
             <div id="modalBody">
-
             </div>
 
 
             <div class="modal-buttons">
-
 
                 <button
                     id="editRecord"
@@ -459,12 +501,9 @@
 
                 </button>
 
-
             </div>
 
-
         </div>
-
 
     </div>
 

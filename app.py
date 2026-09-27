@@ -23,10 +23,12 @@ from database import (
     get_today_count
 )
 
-from ocr import extract_text
+from  mistral_ocr import extract_text
 from ai_parser import parse_text
-from word_generator import create_word
-
+from word_generator import (
+    create_word_files,
+    get_word_for_record
+)
 
 # ==================================
 # إنشاء التطبيق
@@ -155,7 +157,7 @@ def archive_data():
 
             "id": record["id"],
 
-            "name":
+            "client_name":
             record["client_name"] or "",
 
             "letter_number":
@@ -164,7 +166,7 @@ def archive_data():
             "date":
             record["date"] or "",
 
-            "department":
+            "organization":
             record["organization"] or "",
 
             "count":
@@ -193,10 +195,10 @@ def result():
         )
 
     return render_template(
-        "result.html",
-
-        data=record
-    )
+    "result.html",
+    data=record,
+    image=request.args.get("image")
+)
 
 
 # ==================================
@@ -667,11 +669,18 @@ def save():
 
 
         # ==================================
-        # إنشاء ملف Word
+        # إنشاء ملفات Word وتحديد الملف
         # ==================================
 
-        word_file = create_word(
-            archive_data
+        all_records = get_records()
+
+        word_files = create_word_files(
+            all_records
+        )
+
+        word_file = get_word_for_record(
+            all_records,
+            record_id
         )
 
 
@@ -768,6 +777,10 @@ def update(record_id):
             archive_data
         )
 
+        create_word_files(
+            get_records()
+        )
+
 
         return jsonify({
 
@@ -828,6 +841,10 @@ def delete(record_id):
             record_id
         )
 
+        create_word_files(
+            get_records()
+        )
+
 
         return jsonify({
 
@@ -877,26 +894,19 @@ def word(record_id):
         )
 
 
-    data = {
+    all_records = get_records()
 
-        "client_name":
-        record["client_name"] or "",
-
-        "letter_number":
-        record["letter_number"] or "",
-
-        "date":
-        record["date"] or "",
-
-        "organization":
-        record["organization"] or ""
-
-    }
-
-
-    word_file = create_word(
-        data
+    word_file = get_word_for_record(
+        all_records,
+        record_id
     )
+
+    if not word_file:
+
+        return (
+            "تعذر العثور على ملف Word الخاص بهذا السجل.",
+            404
+        )
 
 
     file_path = os.path.join(

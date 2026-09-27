@@ -5,3 +5,9 @@ opencv-python
 python-docx
 Pillow
 numpy
+requests
+python-dotenv
+PyMuPDF
+pytesseract
+arabic-reshaper
+python-bidi
